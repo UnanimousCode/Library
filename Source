@@ -109,6 +109,7 @@ function Library:New()
 	local SliderCount = 1
 	local InfoCount = 1
 	local DropdownCount = 1
+	local KeybindCount = 1
 
 	-- Displaying
 	local DisplayCooldown = 0.2
@@ -479,6 +480,10 @@ function Library:New()
 		NewLibrary["Settings-Frame"].Size = UDim2.new(0.9649999737739563, 0, 0.9649999737739563, 0);
 		NewLibrary["Settings-Frame"].Position = UDim2.new(0.017000000923871994, 0, 0.03500000014901161, 0);
 		NewLibrary["Settings-Frame"].Name = "Settings";
+		
+		NewLibrary["Settings-Layout"] = Instance.new("UIListLayout", NewLibrary["Settings-Frame"]);
+		NewLibrary["Settings-Layout"].Padding = UDim.new(0, 8);
+		NewLibrary["Settings-Layout"].SortOrder = Enum.SortOrder.LayoutOrder;
 	end
 
 	-- Gui.Main.ContentHolder.Help
@@ -806,55 +811,57 @@ function Library:New()
 				local ToggleName = "Toggle "..ToggleCount
 				local ToggleTitle = options.title
 				local ToggleParent = options.target.."-Frame"
+				
+				do
+					NewToggle[ToggleName] = Instance.new("TextButton", NewLibrary[ToggleParent]);
+					NewToggle[ToggleName].ZIndex = 6;
+					NewToggle[ToggleName].BorderSizePixel = 0;
+					NewToggle[ToggleName].TextSize = 14;
+					NewToggle[ToggleName].BackgroundColor3 = Color3.fromRGB(49, 49, 49);
+					NewToggle[ToggleName].TextColor3 = Color3.fromRGB(0, 0, 0);
+					NewToggle[ToggleName].Size = UDim2.new(1, 0, 0, 50);
+					NewToggle[ToggleName].Name = "Toggle";
+					NewToggle[ToggleName].Text = "";
+					NewToggle[ToggleName].Font = Enum.Font.SourceSans;
+					NewToggle[ToggleName].BackgroundTransparency = 1;
 
-				NewToggle[ToggleName] = Instance.new("TextButton", NewLibrary[ToggleParent]);
-				NewToggle[ToggleName].ZIndex = 6;
-				NewToggle[ToggleName].BorderSizePixel = 0;
-				NewToggle[ToggleName].TextSize = 14;
-				NewToggle[ToggleName].BackgroundColor3 = Color3.fromRGB(49, 49, 49);
-				NewToggle[ToggleName].TextColor3 = Color3.fromRGB(0, 0, 0);
-				NewToggle[ToggleName].Size = UDim2.new(1, 0, 0, 50);
-				NewToggle[ToggleName].Name = "Toggle";
-				NewToggle[ToggleName].Text = "";
-				NewToggle[ToggleName].Font = Enum.Font.SourceSans;
-				NewToggle[ToggleName].BackgroundTransparency = 1;
+					NewToggle[ToggleName.."-Info"] = Instance.new("Frame", NewToggle[ToggleName]);
+					NewToggle[ToggleName.."-Info"].ZIndex = 4;
+					NewToggle[ToggleName.."-Info"].BackgroundColor3 = Color3.fromRGB(51, 51, 51);
+					NewToggle[ToggleName.."-Info"].Size = UDim2.new(1, 0, 1, 0);
+					NewToggle[ToggleName.."-Info"].Name = "Info";
 
-				NewToggle[ToggleName.."-Info"] = Instance.new("Frame", NewToggle[ToggleName]);
-				NewToggle[ToggleName.."-Info"].ZIndex = 4;
-				NewToggle[ToggleName.."-Info"].BackgroundColor3 = Color3.fromRGB(51, 51, 51);
-				NewToggle[ToggleName.."-Info"].Size = UDim2.new(1, 0, 1, 0);
-				NewToggle[ToggleName.."-Info"].Name = "Info";
+					NewToggle[ToggleName.."-Info-Corner"] = Instance.new("UICorner", NewToggle[ToggleName.."-Info"]);
 
-				NewToggle[ToggleName.."-Info-Corner"] = Instance.new("UICorner", NewToggle[ToggleName.."-Info"]);
+					NewToggle[ToggleName.."-Info-Text"] = Instance.new("TextLabel", NewToggle[ToggleName.."-Info"]);
+					NewToggle[ToggleName.."-Info-Text"].ZIndex = 5;
+					NewToggle[ToggleName.."-Info-Text"].TextXAlignment = Enum.TextXAlignment.Left;
+					NewToggle[ToggleName.."-Info-Text"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+					NewToggle[ToggleName.."-Info-Text"].TextSize = 20;
+					NewToggle[ToggleName.."-Info-Text"].TextColor3 = Color3.fromRGB(255, 255, 255);
+					NewToggle[ToggleName.."-Info-Text"].Size = UDim2.new(1, -50, 1, 0);
+					NewToggle[ToggleName.."-Info-Text"].Text = ToggleTitle;
+					NewToggle[ToggleName.."-Info-Text"].Name = "Text";
+					NewToggle[ToggleName.."-Info-Text"].Font = Enum.Font.SourceSansBold;
+					NewToggle[ToggleName.."-Info-Text"].BackgroundTransparency = 1;
+					NewToggle[ToggleName.."-Info-Text"].Position = UDim2.new(0, 10, 0, 0);
 
-				NewToggle[ToggleName.."-Info-Text"] = Instance.new("TextLabel", NewToggle[ToggleName.."-Info"]);
-				NewToggle[ToggleName.."-Info-Text"].ZIndex = 5;
-				NewToggle[ToggleName.."-Info-Text"].TextXAlignment = Enum.TextXAlignment.Left;
-				NewToggle[ToggleName.."-Info-Text"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
-				NewToggle[ToggleName.."-Info-Text"].TextSize = 20;
-				NewToggle[ToggleName.."-Info-Text"].TextColor3 = Color3.fromRGB(255, 255, 255);
-				NewToggle[ToggleName.."-Info-Text"].Size = UDim2.new(1, -50, 1, 0);
-				NewToggle[ToggleName.."-Info-Text"].Text = ToggleTitle;
-				NewToggle[ToggleName.."-Info-Text"].Name = "Text";
-				NewToggle[ToggleName.."-Info-Text"].Font = Enum.Font.SourceSansBold;
-				NewToggle[ToggleName.."-Info-Text"].BackgroundTransparency = 1;
-				NewToggle[ToggleName.."-Info-Text"].Position = UDim2.new(0, 10, 0, 0);
+					NewToggle[ToggleName.."-Info-Toggle"] = Instance.new("Frame", NewToggle[ToggleName.."-Info"]);
+					NewToggle[ToggleName.."-Info-Toggle"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+					NewToggle[ToggleName.."-Info-Toggle"].AnchorPoint = Vector2.new(1, 0.5);
+					NewToggle[ToggleName.."-Info-Toggle"].BackgroundTransparency = 1;
+					NewToggle[ToggleName.."-Info-Toggle"].Size = UDim2.new(0, 15, 0, 15);
+					NewToggle[ToggleName.."-Info-Toggle"].Position = UDim2.new(1, -18, 0.5, 0);
+					NewToggle[ToggleName.."-Info-Toggle"].Name = "Toggle";
 
-				NewToggle[ToggleName.."-Info-Toggle"] = Instance.new("Frame", NewToggle[ToggleName.."-Info"]);
-				NewToggle[ToggleName.."-Info-Toggle"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
-				NewToggle[ToggleName.."-Info-Toggle"].AnchorPoint = Vector2.new(1, 0.5);
-				NewToggle[ToggleName.."-Info-Toggle"].BackgroundTransparency = 1;
-				NewToggle[ToggleName.."-Info-Toggle"].Size = UDim2.new(0, 15, 0, 15);
-				NewToggle[ToggleName.."-Info-Toggle"].Position = UDim2.new(1, -18, 0.5, 0);
-				NewToggle[ToggleName.."-Info-Toggle"].Name = "Toggle";
+					NewToggle[ToggleName.."-Info-Toggle-Corner"] = Instance.new("UICorner", NewToggle[ToggleName.."-Info-Toggle"]);
+					NewToggle[ToggleName.."-Info-Toggle-Corner"]["CornerRadius"] = UDim.new(0, 4);
 
-				NewToggle[ToggleName.."-Info-Toggle-Corner"] = Instance.new("UICorner", NewToggle[ToggleName.."-Info-Toggle"]);
-				NewToggle[ToggleName.."-Info-Toggle-Corner"]["CornerRadius"] = UDim.new(0, 4);
-
-				NewToggle[ToggleName.."-Info-Toggle-Stroke"] = Instance.new("UIStroke", NewToggle[ToggleName.."-Info-Toggle"]);
-				NewToggle[ToggleName.."-Info-Toggle-Stroke"]["Color"] = Color3.fromRGB(255, 255, 255);
-				NewToggle[ToggleName.."-Info-Toggle-Stroke"]["Thickness"] = 2;
-				NewToggle[ToggleName.."-Info-Toggle-Stroke"]["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border;
+					NewToggle[ToggleName.."-Info-Toggle-Stroke"] = Instance.new("UIStroke", NewToggle[ToggleName.."-Info-Toggle"]);
+					NewToggle[ToggleName.."-Info-Toggle-Stroke"]["Color"] = Color3.fromRGB(255, 255, 255);
+					NewToggle[ToggleName.."-Info-Toggle-Stroke"]["Thickness"] = 2;
+					NewToggle[ToggleName.."-Info-Toggle-Stroke"]["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border;
+				end
 
 				-- Tweening
 				local OldBackground = Color3.fromRGB(51, 51, 51)
@@ -895,6 +902,7 @@ function Library:New()
 				end
 
 				-- Returning
+				ToggleCount=ToggleCount+1
 				return NewToggle
 			end
 		end
@@ -1129,7 +1137,223 @@ function Library:New()
 		return nil
 	end
 	
+	function NewLibrary:CreateKeybindButton(options)
+		
+		-- Validation
+		local succ, err = pcall(function()
+			options = Library:Validate({
+				target = nil,
+				title = "Keybind "..KeybindCount,
+				keybind = "...",
+				callback = function() end
+			}, options or {})
+		end)
+		if succ and options.target then
+			
+			-- Creation
+			local NewKeybind = {
+				Selected = false
+			}
+			local KeybindName = "Keybind "..KeybindCount
+			local KeybindTitle = options.title
+			do
+				NewKeybind[KeybindName] = Instance.new("TextButton", NewLibrary[options.target.."-Frame"]);
+				NewKeybind[KeybindName]["ZIndex"] = 6;
+				NewKeybind[KeybindName]["BorderSizePixel"] = 0;
+				NewKeybind[KeybindName]["TextSize"] = 14;
+				NewKeybind[KeybindName]["BackgroundColor3"] = Color3.fromRGB(49, 49, 49);
+				NewKeybind[KeybindName]["TextColor3"] = Color3.fromRGB(0, 0, 0);
+				NewKeybind[KeybindName]["Size"] = UDim2.new(1, 0, 0, 50);
+				NewKeybind[KeybindName]["Name"] = [[Keybind]];
+				NewKeybind[KeybindName]["Text"] = [[]];
+				NewKeybind[KeybindName]["Font"] = Enum.Font.SourceSans;
+				NewKeybind[KeybindName]["BackgroundTransparency"] = 1;
 
+				NewKeybind[KeybindName.."-Info"] = Instance.new("Frame", NewKeybind[KeybindName]);
+				NewKeybind[KeybindName.."-Info"]["ZIndex"] = 4;
+				NewKeybind[KeybindName.."-Info"]["BackgroundColor3"] = Color3.fromRGB(51, 51, 51);
+				NewKeybind[KeybindName.."-Info"]["Size"] = UDim2.new(1, 0, 1, 0);
+				NewKeybind[KeybindName.."-Info"]["Name"] = [[Info]];
+
+				NewKeybind[KeybindName.."-Info-Corner"] = Instance.new("UICorner", NewKeybind[KeybindName.."-Info"]);
+
+				NewKeybind[KeybindName.."-Info-Text"] = Instance.new("TextLabel", NewKeybind[KeybindName.."-Info"]);
+				NewKeybind[KeybindName.."-Info-Text"]["ZIndex"] = 5;
+				NewKeybind[KeybindName.."-Info-Text"]["TextXAlignment"] = Enum.TextXAlignment.Left;
+				NewKeybind[KeybindName.."-Info-Text"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+				NewKeybind[KeybindName.."-Info-Text"]["TextSize"] = 20;
+				NewKeybind[KeybindName.."-Info-Text"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+				NewKeybind[KeybindName.."-Info-Text"]["Size"] = UDim2.new(1, -50, 1, 0);
+				NewKeybind[KeybindName.."-Info-Text"]["Text"] = KeybindTitle;
+				NewKeybind[KeybindName.."-Info-Text"]["Name"] = [[Text]];
+				NewKeybind[KeybindName.."-Info-Text"]["Font"] = Enum.Font.SourceSansBold;
+				NewKeybind[KeybindName.."-Info-Text"]["BackgroundTransparency"] = 1;
+				NewKeybind[KeybindName.."-Info-Text"]["Position"] = UDim2.new(0, 10, 0, 0);
+
+				NewKeybind[KeybindName.."-Info-Arguments"] = Instance.new("Frame", NewKeybind[KeybindName.."-Info"]);
+				NewKeybind[KeybindName.."-Info-Arguments"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+				NewKeybind[KeybindName.."-Info-Arguments"]["AnchorPoint"] = Vector2.new(0, 0.5);
+				NewKeybind[KeybindName.."-Info-Arguments"]["BackgroundTransparency"] = 1;
+				NewKeybind[KeybindName.."-Info-Arguments"]["Size"] = UDim2.new(0.6000000238418579, 0, 0, 25);
+				NewKeybind[KeybindName.."-Info-Arguments"]["Position"] = UDim2.new(0.30000001192092896, 0, 0.5, 0);
+				NewKeybind[KeybindName.."-Info-Arguments"]["Name"] = [[Arguments]];
+
+				NewKeybind[KeybindName.."-Info-Arguments-Layout"] = Instance.new("UIListLayout", NewKeybind[KeybindName.."-Info-Arguments"]);
+				NewKeybind[KeybindName.."-Info-Arguments-Layout"]["FillDirection"] = Enum.FillDirection.Horizontal;
+				NewKeybind[KeybindName.."-Info-Arguments-Layout"]["HorizontalAlignment"] = Enum.HorizontalAlignment.Right;
+				NewKeybind[KeybindName.."-Info-Arguments-Layout"]["Padding"] = UDim.new(0.029999999329447746, 0);
+				NewKeybind[KeybindName.."-Info-Arguments-Layout"]["SortOrder"] = Enum.SortOrder.LayoutOrder;
+
+				NewKeybind[KeybindName.."-Info-Value"] = Instance.new("TextLabel", NewKeybind[KeybindName.."-Info"]);
+				NewKeybind[KeybindName.."-Info-Value"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+				NewKeybind[KeybindName.."-Info-Value"]["TextSize"] = 14;
+				NewKeybind[KeybindName.."-Info-Value"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+				NewKeybind[KeybindName.."-Info-Value"]["AnchorPoint"] = Vector2.new(1, 0.5);
+				NewKeybind[KeybindName.."-Info-Value"]["BackgroundTransparency"] = 1;
+				NewKeybind[KeybindName.."-Info-Value"]["Size"] = UDim2.new(0, 25, 0, 25);
+				NewKeybind[KeybindName.."-Info-Value"]["Text"] = "["..options.keybind.."]";
+				NewKeybind[KeybindName.."-Info-Value"]["Position"] = UDim2.new(1, -15, 0.5, 0);
+				NewKeybind[KeybindName.."-Info-Value"]["Font"] = Enum.Font.SourceSansBold;
+				NewKeybind[KeybindName.."-Info-Value"]["Name"] = [[Value]];
+			end
+			
+			-- Tweening
+			local OldBackground = Color3.fromRGB(51, 51, 51)
+			
+			NewKeybind[KeybindName].MouseEnter:Connect(function()
+				Library:Tween(NewKeybind[KeybindName], {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
+			end)
+
+			NewKeybind[KeybindName].MouseLeave:Connect(function()
+				Library:Tween(NewKeybind[KeybindName], {BackgroundColor3 = OldBackground})
+			end)
+			
+			-- Methods
+			
+			function NewKeybind:UpdateKeybind(String)
+				options.keybind = String
+				NewKeybind[KeybindName.."-Info-Value"].Text = "["..String.."]"
+				if String ~= "..." then
+					NewKeybind.Selected = false
+				end
+			end
+			
+			function NewKeybind:SetCallback(func)
+				options.callback = func
+			end
+			
+			NewKeybind[KeybindName].MouseButton1Click:Connect(function()
+				if not NewKeybind.Selected then
+					NewKeybind.Selected = true
+					NewKeybind:UpdateKeybind("...")
+				end
+			end)
+			
+			UserInputService.InputBegan:Connect(function(input)
+				if NewKeybind.Selected then
+					local StringKeycode = UserInputService:GetStringForKeyCode(input.KeyCode)
+					if StringKeycode then
+						if string.len(StringKeycode) == 1 then
+							NewKeybind:UpdateKeybind(StringKeycode)
+						end
+					end
+				else
+					if UserInputService:GetStringForKeyCode(input.KeyCode) == options.keybind then
+						options.callback()
+					end
+				end
+			end)
+			
+			KeybindCount=KeybindCount+1
+			return NewKeybind
+		end
+		return nil
+	end
+	
+	-- Settings
+	local SettingsTitle = NewLibrary:CreateInfo({
+		target = "Settings",
+		title = "Settings"
+	})
+	
+	-- Dragging
+	local CanDragGui = false
+	local DraggingFrame = false
+	local DragSpeed = 5
+	local DragInput = nil
+	local DragStart = nil
+	local GuiStart = nil
+	local CurrentTween = nil
+	
+	local DragSpeedChanger = NewLibrary:CreateSlider({
+		target = "Settings",
+		title = "Gui Drag Speed",
+		min = 1,
+		max = 10,
+		default = DragSpeed
+	})
+	DragSpeedChanger:SetCallback(function(NewDragSpeed)
+		DragSpeed = NewDragSpeed
+	end)
+	
+	NewLibrary["TopBar"].MouseEnter:Connect(function()
+		CanDragGui = true
+	end)
+	NewLibrary["TopBar"].MouseLeave:Connect(function()
+		CanDragGui = false
+	end)
+	
+	local function UpdateGuiPos(input)
+		if DraggingFrame then
+			local delta = input.Position - DragStart
+			local NewPosition = UDim2.new(GuiStart.X.Scale, GuiStart.X.Offset + delta.X, GuiStart.Y.Scale, GuiStart.Y.Offset + delta.Y)
+			CurrentTween = TweenService:Create(NewLibrary["Main"], TweenInfo.new(1/DragSpeed, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = NewPosition})
+			CurrentTween:Play()
+		end
+	end
+	
+	UserInputService.InputBegan:Connect(function(input, processing)
+		if processing or CanDragGui == false then return end
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			DraggingFrame = true
+			DragStart = input.Position
+			GuiStart = NewLibrary["Main"].Position
+		end
+	end)
+	
+	UserInputService.InputEnded:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			DraggingFrame = false
+			if CurrentTween then
+				CurrentTween = nil
+			end
+		end
+	end)
+	
+	NewLibrary["Main"].InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement then
+			DragInput = input
+		end
+	end)
+	
+	UserInputService.InputChanged:Connect(function(input, processing)
+		if processing then return end
+		if input == DragInput and DraggingFrame then
+			UpdateGuiPos(input)
+		end
+	end)
+	
+	--// Toggling
+	
+	local ToggleKeybind = NewLibrary:CreateKeybindButton({
+		target = "Settings",
+		title = "Toggle Gui",
+		keybind = "Z",
+		callback = function()
+			NewLibrary["LibraryGui"].Enabled = not NewLibrary["LibraryGui"].Enabled
+		end,
+	})
+	
 	-- RETURNING
 	function NewLibrary:Initialize()
 		pcall(function()
