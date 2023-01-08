@@ -1,0 +1,1058 @@
+-- VERSION
+
+local ver = "V1"
+
+-- SERVICES
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local StarterGui = game:GetService("StarterGui")
+local CoreGui = game:GetService("CoreGui")
+local MarketplaceService = game:GetService("MarketplaceService")
+
+-- CONSTANTS
+
+local MyPlayer = Players.LocalPlayer
+local MyUserId = MyPlayer.UserId
+local MyMouse = MyPlayer:GetMouse()
+local PlaceId = game.PlaceId
+local GameName = MarketplaceService:GetProductInfo(PlaceId).Name
+local ViewportSize = workspace.CurrentCamera.ViewportSize
+local BaseTweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
+
+-- ICONS
+
+local icons = {
+	["home"] = "rbxassetid://12083746629",
+	["settings"] = "rbxassetid://12083386355",
+	["help"] = "rbxassetid://12083920357",
+	["click"] = "rbxassetid://12084736361",
+	["info"] = "rbxassetid://12093228351",
+	["dropdown"] = "rbxassetid://12093280677"
+}
+
+-- LIBRARY
+
+local CanInitialize = false
+local Library = {}
+
+function Library:Validate(defaults, options)
+	for i,v in pairs(defaults) do
+		if options[i] == nil then
+			options[i] = v
+		end
+	end
+	return options
+end
+
+function Library:Tween(object, goal, callback)
+	local tween = TweenService:Create(object, BaseTweenInfo, goal)
+	tween.Completed:Connect(callback or function() end)
+	tween:Play()
+end
+
+function Library:Wait()
+	return RunService.RenderStepped:Wait()
+end
+
+function Library:Warn(msg)
+	warn("Unanimous Library: ", msg)
+end
+
+function Library:SystemMessage(arguments)
+	pcall(function()
+		arguments = Library:Validate({
+			Text = nil,
+			Color = Color3.fromRGB(255,255,52)
+		}, arguments or {})
+		StarterGui:SetCore("ChatMakeSystemMessage", arguments)
+	end)
+end
+
+function Library:GetPlayerIcon(UserId)
+	return "rbxthumb://type=AvatarHeadShot&id="..UserId.."&w=420&h=420"
+end
+
+function Library:FormatTime(date)
+	local date = os.date("*t")
+	return ("%02d:%02d"):format(((date.hour % 24) - 1) % 12 + 1, date.min)
+end
+
+function Library:Round(num)
+	return math.floor(num+0.5)
+end
+
+function Library:New()
+
+	-- Variables
+	local NewLibrary = {}
+	local TabCount = 1
+	local ButtonCount = 1
+	local ToggleCount = 1
+	local SliderCount = 1
+	local InfoCount = 1
+	local DropdownCount = 1
+
+	-- Displaying
+	local DisplayCooldown = 0.2
+	local CanChangeDisplay = true
+	local function ChangeDisplaying(ToDisplay)
+		if CanChangeDisplay then
+			CanChangeDisplay = false
+			if NewLibrary[ToDisplay.."-Frame"].Parent ~= NewLibrary["Displaying"] then
+				for _, button in pairs(NewLibrary["TopBar"]:GetChildren()) do
+					if button.Name ~= "UIListLayout" then
+						local buttonInfo = button.Info
+						local buttonIcon = buttonInfo.Icon
+						local buttonName = buttonInfo.name
+						if button.Name == ToDisplay then
+							buttonIcon.ImageColor3 = Color3.fromRGB(255,255,255)
+							buttonName.TextColor3 = Color3.fromRGB(255,255,255)
+							buttonInfo.BackgroundTransparency = 0
+						else
+							buttonIcon.ImageColor3 = Color3.fromRGB(128,128,128)
+							buttonName.TextColor3 = Color3.fromRGB(128,128,128)
+							buttonInfo.BackgroundTransparency = 1
+						end
+					end
+				end
+				ToDisplay = ToDisplay.."-Frame"
+				CanChangeDisplay = false
+				local OldDisplaying = NewLibrary["Displaying"]:FindFirstChildOfClass("Frame") or NewLibrary["Displaying"]:FindFirstChildOfClass("ScrollingFrame")
+				OldDisplaying.Parent = NewLibrary["ContentHolder"]
+				NewLibrary[ToDisplay].Parent = NewLibrary["Displaying"]
+			end
+			task.wait(DisplayCooldown)
+			CanChangeDisplay = true
+		end
+	end
+
+	-- GUI CREATION
+	-- Gui
+	do
+		NewLibrary["LibraryGui"] = Instance.new("ScreenGui", RunService:IsStudio() and Players.LocalPlayer:WaitForChild("PlayerGui") or CoreGui)
+		NewLibrary["LibraryGui"].Name = "UnanimousCode Lib "..ver
+		NewLibrary["LibraryGui"].ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+		NewLibrary["LibraryGui"].IgnoreGuiInset = true
+		NewLibrary["LibraryGui"].Enabled = false
+		NewLibrary["LibraryGui"].ResetOnSpawn = false
+	end
+
+	-- Gui.Main
+	do
+		NewLibrary["Main"] = Instance.new("Frame", NewLibrary["LibraryGui"])
+		NewLibrary["Main"].BackgroundColor3 = Color3.fromRGB(59, 59, 59)
+		NewLibrary["Main"].AnchorPoint = Vector2.new(0, 0)
+		NewLibrary["Main"].Size = UDim2.new(0, 600, 0, 400)
+		NewLibrary["Main"].BorderColor3 = Color3.fromRGB(28, 43, 54)
+		NewLibrary["Main"].Position = UDim2.fromOffset((ViewportSize.X/2)-(NewLibrary["Main"].Size.X.Offset/2),(ViewportSize.Y/2)-(NewLibrary["Main"].Size.Y.Offset/2))
+		NewLibrary["Main"].Name = "Main"
+
+		NewLibrary["Main-Corner"] = Instance.new("UICorner", NewLibrary["Main"])
+		NewLibrary["Main-Corner"].CornerRadius = UDim.new(0, 6)
+	end
+
+	-- Gui.Main.Shadow
+	do
+		NewLibrary["Shadow"] = Instance.new("Frame", NewLibrary["Main"])
+		NewLibrary["Shadow"].ZIndex = 0
+		NewLibrary["Shadow"].BorderSizePixel = 0
+		NewLibrary["Shadow"].BackgroundTransparency = 1
+		NewLibrary["Shadow"].Size = UDim2.new(1, 0, 1, 0)
+		NewLibrary["Shadow"].Name = "Shadow"
+
+		NewLibrary["DropShadow"] = Instance.new("ImageLabel", NewLibrary["Shadow"])
+		NewLibrary["DropShadow"].ZIndex = 0
+		NewLibrary["DropShadow"].BorderSizePixel = 0
+		NewLibrary["DropShadow"].SliceCenter = Rect.new(49, 49, 450, 450)
+		NewLibrary["DropShadow"].ScaleType = Enum.ScaleType.Slice
+		NewLibrary["DropShadow"].ImageColor3 = Color3.fromRGB(0, 0, 0)
+		NewLibrary["DropShadow"].ImageTransparency = 0.5
+		NewLibrary["DropShadow"].AnchorPoint = Vector2.new(0.5, 0.5)
+		NewLibrary["DropShadow"].Image = "rbxassetid://6014261993"
+		NewLibrary["DropShadow"].Size = UDim2.new(1, 47, 1, 47)
+		NewLibrary["DropShadow"].Name = "DropShadow"
+		NewLibrary["DropShadow"].BackgroundTransparency = 1
+		NewLibrary["DropShadow"].Position = UDim2.new(0.5, 0, 0.5, 0)
+	end 
+
+	-- Gui.Main.TopBar
+	do
+		NewLibrary["TopBar"] = Instance.new("Frame", NewLibrary["Main"])
+		NewLibrary["TopBar"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		NewLibrary["TopBar"].AnchorPoint = Vector2.new(0.5, 0)
+		NewLibrary["TopBar"].BackgroundTransparency = 1
+		NewLibrary["TopBar"].Size = UDim2.new(0.949999988079071, 0, 0.10000000149011612, 0)
+		NewLibrary["TopBar"].Position = UDim2.new(0.5, 0, 0, 4)
+		NewLibrary["TopBar"].Name = "TopBar"
+
+		NewLibrary["TopBar-Layout"] = Instance.new("UIListLayout", NewLibrary["TopBar"])
+		NewLibrary["TopBar-Layout"].VerticalAlignment = Enum.VerticalAlignment.Center
+		NewLibrary["TopBar-Layout"].FillDirection = Enum.FillDirection.Horizontal
+		NewLibrary["TopBar-Layout"].Padding = UDim.new(0, 6)
+		NewLibrary["TopBar-Layout"].SortOrder = Enum.SortOrder.LayoutOrder
+
+		NewLibrary["Home-Button"] = Instance.new("TextButton", NewLibrary["TopBar"])
+		NewLibrary["Home-Button"].TextSize = 14
+		NewLibrary["Home-Button"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		NewLibrary["Home-Button"].TextColor3 = Color3.fromRGB(0, 0, 0)
+		NewLibrary["Home-Button"].AnchorPoint = Vector2.new(0.5, 0.5)
+		NewLibrary["Home-Button"].Size = UDim2.new(0, 100, 0, 33)
+		NewLibrary["Home-Button"].Name = "Home"
+		NewLibrary["Home-Button"].Text = ""
+		NewLibrary["Home-Button"].Font = Enum.Font.SourceSans
+		NewLibrary["Home-Button"].BackgroundTransparency = 1
+
+		NewLibrary["Home-Info"] = Instance.new("Frame", NewLibrary["Home-Button"])
+		NewLibrary["Home-Info"].BackgroundColor3 = Color3.fromRGB(43, 43, 43)
+		NewLibrary["Home-Info"].Size = UDim2.new(0, 100, 0, 33)
+		NewLibrary["Home-Info"].Name = "Info"
+
+		NewLibrary["Home-Info-Corner"] = Instance.new("UICorner", NewLibrary["Home-Info"])
+		NewLibrary["Home-Info-Corner"].CornerRadius = UDim.new(0, 6)
+
+		NewLibrary["Home-Info-Icon"] = Instance.new("ImageLabel", NewLibrary["Home-Info"])
+		NewLibrary["Home-Info-Icon"].BackgroundColor3 = Color3.fromRGB(129, 129, 129)
+		NewLibrary["Home-Info-Icon"].AnchorPoint = Vector2.new(0, 0.5)
+		NewLibrary["Home-Info-Icon"].Image = "rbxassetid://12083746629"
+		NewLibrary["Home-Info-Icon"].Size = UDim2.new(0, 25, 0, 25)
+		NewLibrary["Home-Info-Icon"].Name = "Icon"
+		NewLibrary["Home-Info-Icon"].BackgroundTransparency = 1
+		NewLibrary["Home-Info-Icon"].Position = UDim2.new(0, 4, 0.5, 0)
+
+		NewLibrary["Home-Info-Name"] = Instance.new("TextLabel", NewLibrary["Home-Info"])
+		NewLibrary["Home-Info-Name"].TextXAlignment = Enum.TextXAlignment.Left
+		NewLibrary["Home-Info-Name"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		NewLibrary["Home-Info-Name"].TextSize = 15
+		NewLibrary["Home-Info-Name"].TextColor3 = Color3.fromRGB(255, 255, 255)
+		NewLibrary["Home-Info-Name"].AnchorPoint = Vector2.new(0, 0.5)
+		NewLibrary["Home-Info-Name"].Size = UDim2.new(0, 50, 0.5, 0)
+		NewLibrary["Home-Info-Name"].Text = "Home"
+		NewLibrary["Home-Info-Name"].Name = "name"
+		NewLibrary["Home-Info-Name"].Font = Enum.Font.Gotham
+		NewLibrary["Home-Info-Name"].BackgroundTransparency = 1
+		NewLibrary["Home-Info-Name"].Position = UDim2.new(0, 35, 0.5, 1)
+
+		NewLibrary["Settings-Button"] = Instance.new("TextButton", NewLibrary["TopBar"])
+		NewLibrary["Settings-Button"].TextSize = 14
+		NewLibrary["Settings-Button"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		NewLibrary["Settings-Button"].TextColor3 = Color3.fromRGB(0, 0, 0)
+		NewLibrary["Settings-Button"].AnchorPoint = Vector2.new(0.5, 0.5)
+		NewLibrary["Settings-Button"].Size = UDim2.new(0, 100, 0, 33)
+		NewLibrary["Settings-Button"].Name = "Settings"
+		NewLibrary["Settings-Button"].Text = ""
+		NewLibrary["Settings-Button"].Font = Enum.Font.SourceSans
+		NewLibrary["Settings-Button"].BackgroundTransparency = 1
+
+		NewLibrary["Settings-Info"] = Instance.new("Frame", NewLibrary["Settings-Button"])
+		NewLibrary["Settings-Info"].BackgroundColor3 = Color3.fromRGB(43, 43, 43)
+		NewLibrary["Settings-Info"].BackgroundTransparency = 1
+		NewLibrary["Settings-Info"].Size = UDim2.new(0, 100, 0, 33)
+		NewLibrary["Settings-Info"].Name = "Info"
+
+		NewLibrary["Settings-Info-Corner"] = Instance.new("UICorner", NewLibrary["Settings-Info"])
+		NewLibrary["Settings-Info-Corner"].CornerRadius = UDim.new(0, 6)
+
+		NewLibrary["Settings-Info-Icon"] = Instance.new("ImageLabel", NewLibrary["Settings-Info"])
+		NewLibrary["Settings-Info-Icon"].BackgroundColor3 = Color3.fromRGB(129, 129, 129)
+		NewLibrary["Settings-Info-Icon"].ImageColor3 = Color3.fromRGB(129, 129, 129)
+		NewLibrary["Settings-Info-Icon"].AnchorPoint = Vector2.new(0, 0.5)
+		NewLibrary["Settings-Info-Icon"].Image = "rbxassetid://12083894664"
+		NewLibrary["Settings-Info-Icon"].Size = UDim2.new(0, 25, 0, 25)
+		NewLibrary["Settings-Info-Icon"].Name = "Icon"
+		NewLibrary["Settings-Info-Icon"].BackgroundTransparency = 1
+		NewLibrary["Settings-Info-Icon"].Position = UDim2.new(0, 4, 0.5, 0)
+
+		NewLibrary["Settings-Info-Name"] = Instance.new("TextLabel", NewLibrary["Settings-Info"])
+		NewLibrary["Settings-Info-Name"].TextXAlignment = Enum.TextXAlignment.Left
+		NewLibrary["Settings-Info-Name"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		NewLibrary["Settings-Info-Name"].TextSize = 15
+		NewLibrary["Settings-Info-Name"].TextColor3 = Color3.fromRGB(129, 129, 129)
+		NewLibrary["Settings-Info-Name"].AnchorPoint = Vector2.new(0, 0.5)
+		NewLibrary["Settings-Info-Name"].Size = UDim2.new(0, 50, 0.5, 0)
+		NewLibrary["Settings-Info-Name"].Text = "Settings"
+		NewLibrary["Settings-Info-Name"].Name = "name"
+		NewLibrary["Settings-Info-Name"].Font = Enum.Font.Gotham
+		NewLibrary["Settings-Info-Name"].BackgroundTransparency = 1
+		NewLibrary["Settings-Info-Name"].Position = UDim2.new(0, 35, 0.5, 1)
+
+		NewLibrary["Help-Button"] = Instance.new("TextButton", NewLibrary["TopBar"])
+		NewLibrary["Help-Button"].TextSize = 14
+		NewLibrary["Help-Button"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		NewLibrary["Help-Button"].TextColor3 = Color3.fromRGB(0, 0, 0)
+		NewLibrary["Help-Button"].AnchorPoint = Vector2.new(0.5, 0.5)
+		NewLibrary["Help-Button"].Size = UDim2.new(0, 100, 0, 33)
+		NewLibrary["Help-Button"].Name = "Help"
+		NewLibrary["Help-Button"].Text = ""
+		NewLibrary["Help-Button"].Font = Enum.Font.SourceSans
+		NewLibrary["Help-Button"].BackgroundTransparency = 1
+
+		NewLibrary["Help-Info"] = Instance.new("Frame", NewLibrary["Help-Button"])
+		NewLibrary["Help-Info"].BackgroundColor3 = Color3.fromRGB(43, 43, 43)
+		NewLibrary["Help-Info"].BackgroundTransparency = 1
+		NewLibrary["Help-Info"].Size = UDim2.new(0, 100, 0, 33)
+		NewLibrary["Help-Info"].Name = "Info"
+
+		NewLibrary["Help-Info-Corner"] = Instance.new("UICorner", NewLibrary["Help-Info"])
+		NewLibrary["Help-Info-Corner"].CornerRadius = UDim.new(0, 6)
+
+		NewLibrary["Help-Info-Icon"] = Instance.new("ImageLabel", NewLibrary["Help-Info"])
+		NewLibrary["Help-Info-Icon"].BackgroundColor3 = Color3.fromRGB(129, 129, 129)
+		NewLibrary["Help-Info-Icon"].ImageColor3 = Color3.fromRGB(129, 129, 129)
+		NewLibrary["Help-Info-Icon"].AnchorPoint = Vector2.new(0, 0.5)
+		NewLibrary["Help-Info-Icon"].Image = "rbxassetid://12083920357"
+		NewLibrary["Help-Info-Icon"].Size = UDim2.new(0, 25, 0, 25)
+		NewLibrary["Help-Info-Icon"].Name = "Icon"
+		NewLibrary["Help-Info-Icon"].BackgroundTransparency = 1
+		NewLibrary["Help-Info-Icon"].Position = UDim2.new(0, 4, 0.5, 0)
+
+		NewLibrary["Help-Info-Name"] = Instance.new("TextLabel", NewLibrary["Help-Info"])
+		NewLibrary["Help-Info-Name"].TextXAlignment = Enum.TextXAlignment.Left
+		NewLibrary["Help-Info-Name"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		NewLibrary["Help-Info-Name"].TextSize = 15
+		NewLibrary["Help-Info-Name"].TextColor3 = Color3.fromRGB(129, 129, 129)
+		NewLibrary["Help-Info-Name"].AnchorPoint = Vector2.new(0, 0.5)
+		NewLibrary["Help-Info-Name"].Size = UDim2.new(0, 50, 0.5, 0)
+		NewLibrary["Help-Info-Name"].Text = "Help"
+		NewLibrary["Help-Info-Name"].Name = "name"
+		NewLibrary["Help-Info-Name"].Font = Enum.Font.Gotham
+		NewLibrary["Help-Info-Name"].BackgroundTransparency = 1
+		NewLibrary["Help-Info-Name"].Position = UDim2.new(0, 35, 0.5, 1)
+
+		NewLibrary["Exit-Button"] = Instance.new("TextButton", NewLibrary["Main"])
+		NewLibrary["Exit-Button"].TextSize = 24
+		NewLibrary["Exit-Button"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		NewLibrary["Exit-Button"].TextColor3 = Color3.fromRGB(255, 255, 255)
+		NewLibrary["Exit-Button"].AnchorPoint = Vector2.new(1, 0)
+		NewLibrary["Exit-Button"].Size = UDim2.new(0, 33, 0, 33)
+		NewLibrary["Exit-Button"].Name = "Exit"
+		NewLibrary["Exit-Button"].Text = "x"
+		NewLibrary["Exit-Button"].Font = Enum.Font.SourceSans
+		NewLibrary["Exit-Button"].Position = UDim2.new(0.9816666841506958, -4, 0.007499999832361937, 4)
+		NewLibrary["Exit-Button"].BackgroundTransparency = 1
+		NewLibrary["Exit-Button"].MouseButton1Click:Connect(function()
+			NewLibrary["LibraryGui"]:Destroy()
+		end)
+	end
+
+	-- Gui.Main.Displaying
+	do
+		NewLibrary["Displaying"] = Instance.new("Frame", NewLibrary["Main"]);
+		NewLibrary["Displaying"].ZIndex = 2;
+		NewLibrary["Displaying"].BackgroundColor3 = Color3.fromRGB(43, 43, 43);
+		NewLibrary["Displaying"].AnchorPoint = Vector2.new(0.5, 0);
+		NewLibrary["Displaying"].Size = UDim2.new(0.949999988079071, 0, 0.8270000219345093, 0);
+		NewLibrary["Displaying"].Position = UDim2.new(0.5, 0, 0.11649772524833679, 8);
+		NewLibrary["Displaying"].Name = "Displaying";
+
+		NewLibrary["Displaying-Corner"] = Instance.new("UICorner", NewLibrary["Displaying"]);
+	end
+
+	-- Gui.Main.Displaying.Home
+	do
+		NewLibrary["Home-Frame"] = Instance.new("Frame", NewLibrary["Displaying"]);
+		NewLibrary["Home-Frame"].ZIndex = 3;
+		NewLibrary["Home-Frame"].BorderSizePixel = 0;
+		NewLibrary["Home-Frame"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+		NewLibrary["Home-Frame"].BackgroundTransparency = 1;
+		NewLibrary["Home-Frame"].Size = UDim2.new(0.9649999737739563, 0, 0.9649999737739563, 0);
+		NewLibrary["Home-Frame"].Position = UDim2.new(0.017000000923871994, 0, 0.03500000014901161, 0);
+		NewLibrary["Home-Frame"].Name = "Home";
+
+		NewLibrary["Home-PlayerInfo"] = Instance.new("Frame", NewLibrary["Home-Frame"]);
+		NewLibrary["Home-PlayerInfo"].ZIndex = 4;
+		NewLibrary["Home-PlayerInfo"].BackgroundColor3 = Color3.fromRGB(49, 49, 49);
+		NewLibrary["Home-PlayerInfo"].AnchorPoint = Vector2.new(0.5, 0);
+		NewLibrary["Home-PlayerInfo"].Size = UDim2.new(0.949999988079071, 0, 0.2858007550239563, 0);
+		NewLibrary["Home-PlayerInfo"].Position = UDim2.new(0.5, 0, -0.015682402998209, 8);
+		NewLibrary["Home-PlayerInfo"].Name = "PlayerInfo";
+
+		NewLibrary["Home-PlayerInfo-Corner"] = Instance.new("UICorner", NewLibrary["Home-PlayerInfo"]);
+
+		NewLibrary["Home-PlayerInfo-Icon"] = Instance.new("ImageLabel", NewLibrary["Home-PlayerInfo"]);
+		NewLibrary["Home-PlayerInfo-Icon"].ZIndex = 5;
+		NewLibrary["Home-PlayerInfo-Icon"].BackgroundColor3 = Color3.fromRGB(55, 55, 55);
+		NewLibrary["Home-PlayerInfo-Icon"].AnchorPoint = Vector2.new(0, 0.5);
+		NewLibrary["Home-PlayerInfo-Icon"].Image = "rbxasset://textures/ui/GuiImagePlaceholder.png";
+		NewLibrary["Home-PlayerInfo-Icon"].Size = UDim2.new(0, 67, 0, 67);
+		NewLibrary["Home-PlayerInfo-Icon"].Name = "PlayerIcon";
+		NewLibrary["Home-PlayerInfo-Icon"].Position = UDim2.new(0.025352483615279198, 0, 0.5, 0);
+
+		NewLibrary["Home-PlayerInfo-Icon-Corner"] = Instance.new("UICorner", NewLibrary["Home-PlayerInfo-Icon"]);
+		NewLibrary["Home-PlayerInfo-Icon-Corner"]["CornerRadius"] = UDim.new(1, 0);
+
+		NewLibrary["Home-PlayerInfo-Welcome"] = Instance.new("TextLabel", NewLibrary["Home-PlayerInfo"]);
+		NewLibrary["Home-PlayerInfo-Welcome"].ZIndex = 5;
+		NewLibrary["Home-PlayerInfo-Welcome"].TextXAlignment = Enum.TextXAlignment.Left;
+		NewLibrary["Home-PlayerInfo-Welcome"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+		NewLibrary["Home-PlayerInfo-Welcome"].TextSize = 16;
+		NewLibrary["Home-PlayerInfo-Welcome"].TextColor3 = Color3.fromRGB(255, 255, 255);
+		NewLibrary["Home-PlayerInfo-Welcome"].AnchorPoint = Vector2.new(0, 0.5);
+		NewLibrary["Home-PlayerInfo-Welcome"].Size = UDim2.new(0.5, 0, 0.30000001192092896, 0);
+		NewLibrary["Home-PlayerInfo-Welcome"].Text = "Welcome, Unknown";
+		NewLibrary["Home-PlayerInfo-Welcome"].Name = "WelcomeMessage";
+		NewLibrary["Home-PlayerInfo-Welcome"].Font = Enum.Font.SourceSansBold;
+		NewLibrary["Home-PlayerInfo-Welcome"].BackgroundTransparency = 1;
+		NewLibrary["Home-PlayerInfo-Welcome"].Position = UDim2.new(0.17649202048778534, 0, 0.2498224824666977, 0);
+
+		NewLibrary["Home-PlayerInfo-User"] = Instance.new("TextLabel", NewLibrary["Home-PlayerInfo"]);
+		NewLibrary["Home-PlayerInfo-User"].ZIndex = 5;
+		NewLibrary["Home-PlayerInfo-User"].TextXAlignment = Enum.TextXAlignment.Left;
+		NewLibrary["Home-PlayerInfo-User"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+		NewLibrary["Home-PlayerInfo-User"].TextSize = 14;
+		NewLibrary["Home-PlayerInfo-User"].TextColor3 = Color3.fromRGB(255, 255, 255);
+		NewLibrary["Home-PlayerInfo-User"].AnchorPoint = Vector2.new(0, 0.5);
+		NewLibrary["Home-PlayerInfo-User"].Size = UDim2.new(0.5, 0, 0.25, 0);
+		NewLibrary["Home-PlayerInfo-User"].Text = "@Unknown";
+		NewLibrary["Home-PlayerInfo-User"].Name = "ActualUser";
+		NewLibrary["Home-PlayerInfo-User"].Font = Enum.Font.SourceSans;
+		NewLibrary["Home-PlayerInfo-User"].BackgroundTransparency = 1;
+		NewLibrary["Home-PlayerInfo-User"].Position = UDim2.new(0.17649202048778534, 0, 0.4998224973678589, 0);
+
+		NewLibrary["Home-PlayerInfo-Time"] = Instance.new("TextLabel", NewLibrary["Home-PlayerInfo"]);
+		NewLibrary["Home-PlayerInfo-Time"].ZIndex = 5;
+		NewLibrary["Home-PlayerInfo-Time"].TextXAlignment = Enum.TextXAlignment.Left;
+		NewLibrary["Home-PlayerInfo-Time"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+		NewLibrary["Home-PlayerInfo-Time"].TextSize = 14;
+		NewLibrary["Home-PlayerInfo-Time"].TextColor3 = Color3.fromRGB(129, 129, 129);
+		NewLibrary["Home-PlayerInfo-Time"].AnchorPoint = Vector2.new(0, 0.5);
+		NewLibrary["Home-PlayerInfo-Time"].Size = UDim2.new(0.5, 0, 0.25, 0);
+		NewLibrary["Home-PlayerInfo-Time"].Text = "00:00";
+		NewLibrary["Home-PlayerInfo-Time"].Name = "Time";
+		NewLibrary["Home-PlayerInfo-Time"].Font = Enum.Font.SourceSans;
+		NewLibrary["Home-PlayerInfo-Time"].BackgroundTransparency = 1;
+		NewLibrary["Home-PlayerInfo-Time"].Position = UDim2.new(0.17649202048778534, 0, 0.7483431696891785, 0);
+
+		NewLibrary["Home-Options"] = Instance.new("Frame", NewLibrary["Home-Frame"]);
+		NewLibrary["Home-Options"].ZIndex = 4;
+		NewLibrary["Home-Options"].BackgroundColor3 = Color3.fromRGB(49, 49, 49);
+		NewLibrary["Home-Options"].AnchorPoint = Vector2.new(0.5, 0);
+		NewLibrary["Home-Options"].BackgroundTransparency = 1;
+		NewLibrary["Home-Options"].Size = UDim2.new(0.949999988079071, 0, 0.6257396936416626, 0);
+		NewLibrary["Home-Options"].Position = UDim2.new(0.5, 0, 0.3159763216972351, 8);
+		NewLibrary["Home-Options"].Name = "Options";
+
+		NewLibrary["Home-Options-Corner"] = Instance.new("UIGridLayout", NewLibrary["Home-Options"]);
+		NewLibrary["Home-Options-Corner"].SortOrder = Enum.SortOrder.LayoutOrder;
+		NewLibrary["Home-Options-Corner"].CellSize = UDim2.new(0, 75, 0, 75);
+		NewLibrary["Home-Options-Corner"].CellPadding = UDim2.new(0, 10, 0, 10);
+	end
+
+	-- Gui.Main.ContentHolder
+	do
+		NewLibrary["ContentHolder"] = Instance.new("Frame", NewLibrary["Main"]);
+		NewLibrary["ContentHolder"].ZIndex = 2;
+		NewLibrary["ContentHolder"].BackgroundColor3 = Color3.fromRGB(43, 43, 43);
+		NewLibrary["ContentHolder"].AnchorPoint = Vector2.new(0.5, 0);
+		NewLibrary["ContentHolder"].Size = UDim2.new(0.949999988079071, 0, 0.8270000219345093, 0);
+		NewLibrary["ContentHolder"].Position = UDim2.new(0.5, 0, 0.11599999666213989, 8);
+		NewLibrary["ContentHolder"].Visible = false;
+		NewLibrary["ContentHolder"].Name = "ContentHolder";
+
+		NewLibrary["ContentHolder-Corner"] = Instance.new("UICorner", NewLibrary["ContentHolder"]);
+	end
+
+	-- Gui.Main.ContentHolder.Settings
+	do
+		NewLibrary["Settings-Frame"] = Instance.new("Frame", NewLibrary["ContentHolder"]);
+		NewLibrary["Settings-Frame"].ZIndex = 3;
+		NewLibrary["Settings-Frame"].BorderSizePixel = 0;
+		NewLibrary["Settings-Frame"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+		NewLibrary["Settings-Frame"].BackgroundTransparency = 1;
+		NewLibrary["Settings-Frame"].Size = UDim2.new(0.9649999737739563, 0, 0.9649999737739563, 0);
+		NewLibrary["Settings-Frame"].Position = UDim2.new(0.017000000923871994, 0, 0.03500000014901161, 0);
+		NewLibrary["Settings-Frame"].Name = "Settings";
+	end
+
+	-- Gui.Main.ContentHolder.Help
+	do
+		NewLibrary["Help-Frame"] = Instance.new("Frame", NewLibrary["ContentHolder"]);
+		NewLibrary["Help-Frame"].ZIndex = 3;
+		NewLibrary["Help-Frame"].BorderSizePixel = 0;
+		NewLibrary["Help-Frame"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+		NewLibrary["Help-Frame"].BackgroundTransparency = 1;
+		NewLibrary["Help-Frame"].Size = UDim2.new(0.9649999737739563, 0, 0.9649999737739563, 0);
+		NewLibrary["Help-Frame"].Position = UDim2.new(0.017000000923871994, 0, 0.03500000014901161, 0);
+		NewLibrary["Help-Frame"].Name = "Help";
+	end
+
+	-- GUI HANDLING
+	-- PlayerInfo Handler
+	NewLibrary["Home-PlayerInfo-Icon"].Image = Library:GetPlayerIcon(MyUserId)
+	NewLibrary["Home-PlayerInfo-Welcome"].Text = "Welcome, "..MyPlayer.DisplayName
+	NewLibrary["Home-PlayerInfo-User"].Text = "@"..MyPlayer.Name
+	NewLibrary["Home-PlayerInfo-Time"].Text = Library:FormatTime()
+
+	-- TopBar Handler
+	NewLibrary["Home-Button"].MouseButton1Click:Connect(function()
+		--pcall(function()
+		ChangeDisplaying("Home")
+		--end)
+	end)
+	NewLibrary["Settings-Button"].MouseButton1Click:Connect(function()
+		--pcall(function()
+		ChangeDisplaying("Settings")
+		--end)
+	end)
+	NewLibrary["Help-Button"].MouseButton1Click:Connect(function()
+		--pcall(function()
+		ChangeDisplaying("Help")
+		--end)
+	end)
+
+	-- Gui Functions
+	function NewLibrary:CreateTab(options)
+
+		-- Validation
+		options = Library:Validate({
+			title = "Tab "..TabCount,
+			icon = icons["click"],
+			buttoncount = 12
+		}, options or {})
+		if not NewLibrary[options.name] then
+
+			-- Creation
+			local TabName = "Tab "..TabCount
+			local TabTitle = options.title
+			local NewTab = {}
+
+			NewLibrary[TabName] = Instance.new("TextButton", NewLibrary["Home-Options"]);
+			NewLibrary[TabName].ZIndex = 7;
+			NewLibrary[TabName].TextSize = 14;
+			NewLibrary[TabName].BackgroundColor3 = Color3.fromRGB(49, 49, 49);
+			NewLibrary[TabName].TextColor3 = Color3.fromRGB(0, 0, 0);
+			NewLibrary[TabName].Size = UDim2.new(0, 200, 0, 50);
+			NewLibrary[TabName].Name = TabName;
+			NewLibrary[TabName].Text = "";
+			NewLibrary[TabName].Font = Enum.Font.SourceSans;
+			NewLibrary[TabName].BackgroundTransparency = 1;
+
+			NewLibrary[TabName.."-Info"] = Instance.new("Frame", NewLibrary[TabName]);
+			NewLibrary[TabName.."-Info"].ZIndex = 5;
+			NewLibrary[TabName.."-Info"].BackgroundColor3 = Color3.fromRGB(51, 51, 51);
+			NewLibrary[TabName.."-Info"].Size = UDim2.new(1, 0, 1, 0);
+			NewLibrary[TabName.."-Info"].Name = "Info";
+
+			NewLibrary[TabName.."-Info-Corner"] = Instance.new("UICorner", NewLibrary[TabName.."-Info"]);
+			NewLibrary[TabName.."-Info-Corner"]["CornerRadius"] = UDim.new(0, 6);
+
+			NewLibrary[TabName.."-Info-Name"] = Instance.new("TextLabel", NewLibrary[TabName.."-Info"]);
+			NewLibrary[TabName.."-Info-Name"].ZIndex = 6;
+			NewLibrary[TabName.."-Info-Name"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+			NewLibrary[TabName.."-Info-Name"].TextSize = 14;
+			NewLibrary[TabName.."-Info-Name"].TextColor3 = Color3.fromRGB(255, 255, 255);
+			NewLibrary[TabName.."-Info-Name"].AnchorPoint = Vector2.new(0.5, 1);
+			NewLibrary[TabName.."-Info-Name"].Size = UDim2.new(1, 0, 0.20000000298023224, 0);
+			NewLibrary[TabName.."-Info-Name"].Text = TabTitle;
+			NewLibrary[TabName.."-Info-Name"].Name = "name";
+			NewLibrary[TabName.."-Info-Name"].Font = Enum.Font.SourceSansBold;
+			NewLibrary[TabName.."-Info-Name"].BackgroundTransparency = 1;
+			NewLibrary[TabName.."-Info-Name"].Position = UDim2.new(0.5, 0, 1, -4);
+
+			NewLibrary[TabName.."-Info-Image"] = Instance.new("ImageLabel", NewLibrary[TabName.."-Info"]);
+			NewLibrary[TabName.."-Info-Image"].ZIndex = 6;
+			NewLibrary[TabName.."-Info-Image"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+			NewLibrary[TabName.."-Info-Image"].AnchorPoint = Vector2.new(0.5, 0);
+			NewLibrary[TabName.."-Info-Image"].Image = options.icon;
+			NewLibrary[TabName.."-Info-Image"].Size = UDim2.new(0, 45, 0, 45);
+			NewLibrary[TabName.."-Info-Image"].Name = "Image";
+			NewLibrary[TabName.."-Info-Image"].BackgroundTransparency = 1;
+			NewLibrary[TabName.."-Info-Image"].Position = UDim2.new(0.5, 0, 0.09300000220537186, 0);
+
+			NewLibrary[TabName.."-Frame"] = Instance.new("ScrollingFrame", NewLibrary["ContentHolder"]);
+			NewLibrary[TabName.."-Frame"].Active = true;
+			NewLibrary[TabName.."-Frame"].ZIndex = 3;
+			NewLibrary[TabName.."-Frame"].BorderSizePixel = 0;
+			NewLibrary[TabName.."-Frame"].ScrollBarImageTransparency = 1;
+			NewLibrary[TabName.."-Frame"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+			NewLibrary[TabName.."-Frame"].BackgroundTransparency = 1;
+			NewLibrary[TabName.."-Frame"].Size = UDim2.new(0.965, 0, 0.965, 0);
+			NewLibrary[TabName.."-Frame"].ScrollBarImageColor3 = Color3.fromRGB(33, 33, 33);
+			NewLibrary[TabName.."-Frame"].ScrollBarThickness = 0;
+			NewLibrary[TabName.."-Frame"].Position = UDim2.new(0.017273858189582825, 0, 0.03454773873090744, 0);
+			NewLibrary[TabName.."-Frame"].Name = TabName;
+			NewLibrary[TabName.."-Frame"].CanvasSize = UDim2.new(0,0,0,10+(100*options.buttoncount))
+
+			NewLibrary[TabName.."-Frame-Layout"] = Instance.new("UIListLayout", NewLibrary[TabName.."-Frame"]);
+			NewLibrary[TabName.."-Frame-Layout"].Padding = UDim.new(0, 8);
+			NewLibrary[TabName.."-Frame-Layout"].SortOrder = Enum.SortOrder.LayoutOrder;
+
+			-- Tweening
+			local oldColor = Color3.fromRGB(51, 51, 51)
+			NewLibrary[TabName].MouseEnter:Connect(function()
+				Library:Tween(NewLibrary[TabName.."-Info"], {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
+			end)
+			NewLibrary[TabName].MouseLeave:Connect(function()
+				Library:Tween(NewLibrary[TabName.."-Info"], {BackgroundColor3 = oldColor})
+			end)
+			NewLibrary[TabName].MouseButton1Click:Connect(function()
+				--pcall(function()
+				ChangeDisplaying(TabName)
+				--end)
+			end)
+
+			-- Returning
+			TabCount=TabCount+1
+			return TabName
+		end
+		return nil
+	end
+
+	function NewLibrary:CreateButton(options)
+
+		-- Validation
+		local succ, err = pcall(function()
+			options = Library:Validate({
+				target = options.target,
+				title = "Button "..ButtonCount,
+				callback = function() end,
+			}, options or {})
+		end)
+		if succ then
+			if options.target then
+
+				-- Creation
+				local NewButton = {}
+				local ButtonName = "Button "..ButtonCount
+				local ButtonTitle = options.title
+				local ButtonParent = options.target.."-Frame"
+
+				if NewLibrary[ButtonParent] then
+					NewButton[ButtonName] = Instance.new("TextButton", NewLibrary[ButtonParent]);
+					NewButton[ButtonName].ZIndex = 6;
+					NewButton[ButtonName].BorderSizePixel = 0;
+					NewButton[ButtonName].TextSize = 14;
+					NewButton[ButtonName].BackgroundColor3 = Color3.fromRGB(49, 49, 49);
+					NewButton[ButtonName].TextColor3 = Color3.fromRGB(0, 0, 0);
+					NewButton[ButtonName].Size = UDim2.new(1, 0, 0, 50);
+					NewButton[ButtonName].Name = "Button";
+					NewButton[ButtonName].Text = "";
+					NewButton[ButtonName].Font = Enum.Font.SourceSans;
+					NewButton[ButtonName].BackgroundTransparency = 1;
+
+					NewButton[ButtonName.."-Info"] = Instance.new("Frame", NewButton[ButtonName]);
+					NewButton[ButtonName.."-Info"].ZIndex = 4;
+					NewButton[ButtonName.."-Info"].BackgroundColor3 = Color3.fromRGB(51, 51, 51);
+					NewButton[ButtonName.."-Info"].Size = UDim2.new(1, 0, 1, 0);
+					NewButton[ButtonName.."-Info"].Name = "Info";
+
+					NewButton[ButtonName.."-Info-Corner"] = Instance.new("UICorner", NewButton[ButtonName.."-Info"]);
+
+					NewButton[ButtonName.."-Info-Text"] = Instance.new("TextLabel", NewButton[ButtonName.."-Info"]);
+					NewButton[ButtonName.."-Info-Text"].ZIndex = 5;
+					NewButton[ButtonName.."-Info-Text"].TextXAlignment = Enum.TextXAlignment.Left;
+					NewButton[ButtonName.."-Info-Text"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+					NewButton[ButtonName.."-Info-Text"].TextSize = 20;
+					NewButton[ButtonName.."-Info-Text"].TextColor3 = Color3.fromRGB(255, 255, 255);
+					NewButton[ButtonName.."-Info-Text"].Size = UDim2.new(1, -50, 1, 0);
+					NewButton[ButtonName.."-Info-Text"].Text = ButtonTitle;
+					NewButton[ButtonName.."-Info-Text"].Name = "Text";
+					NewButton[ButtonName.."-Info-Text"].Font = Enum.Font.SourceSansBold;
+					NewButton[ButtonName.."-Info-Text"].BackgroundTransparency = 1;
+					NewButton[ButtonName.."-Info-Text"].Position = UDim2.new(0, 10, 0, 0);
+
+					NewButton[ButtonName.."-Info-Icon"] = Instance.new("ImageLabel", NewButton[ButtonName.."-Info"]);
+					NewButton[ButtonName.."-Info-Icon"].ZIndex = 5;
+					NewButton[ButtonName.."-Info-Icon"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+					NewButton[ButtonName.."-Info-Icon"].AnchorPoint = Vector2.new(1, 0.5);
+					NewButton[ButtonName.."-Info-Icon"].Image = icons["click"];
+					NewButton[ButtonName.."-Info-Icon"].Size = UDim2.new(0, 25, 0, 25);
+					NewButton[ButtonName.."-Info-Icon"].Name = "Image";
+					NewButton[ButtonName.."-Info-Icon"].BackgroundTransparency = 1;
+					NewButton[ButtonName.."-Info-Icon"].Position = UDim2.new(1, -15, 0.5, 0);
+
+					-- Tweening
+					local OldBackground = Color3.fromRGB(51, 51, 51)
+					local ClickColor = Color3.fromRGB(255,255,255)
+
+					NewButton[ButtonName].MouseEnter:Connect(function()
+						Library:Tween(NewButton[ButtonName.."-Info"], {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
+					end)
+					NewButton[ButtonName].MouseLeave:Connect(function()
+						Library:Tween(NewButton[ButtonName.."-Info"], {BackgroundColor3 = OldBackground})
+					end)
+					NewButton[ButtonName].MouseButton1Click:Connect(function()
+						spawn(options.callback)
+						Library:Tween(NewButton[ButtonName.."-Info-Icon"], {ImageColor3 = Color3.fromRGB(132,132,132)})
+						Library:Tween(NewButton[ButtonName.."-Info-Text"], {TextColor3 = Color3.fromRGB(132,132,132)})
+						task.wait(0.1)
+						Library:Tween(NewButton[ButtonName.."-Info-Icon"], {ImageColor3 = ClickColor})
+						Library:Tween(NewButton[ButtonName.."-Info-Text"], {TextColor3 = ClickColor})
+					end)
+
+					-- Methods
+					function NewButton:SetText(text)
+						NewButton[ButtonName.."-Info-Text"].Text = text
+					end
+
+					function NewButton:SetCallback(func)
+						options.callback = func
+					end
+
+					--Returning
+					ButtonCount=ButtonCount+1
+					return NewButton
+				end
+			end
+		end
+		return nil
+	end
+
+	function NewLibrary:CreateToggle(options)
+
+		-- Validation
+		local succ, err = pcall(function()
+			options = Library:Validate({
+				target = options.target,
+				title = "Toggle "..ToggleCount,
+				callback = function() end,
+				toggled = false
+			}, options or {})
+		end)
+		if succ then
+			if options.target then
+
+				-- Creation
+				local NewToggle = {}
+				local ToggleName = "Toggle "..ToggleCount
+				local ToggleTitle = options.title
+				local ToggleParent = options.target.."-Frame"
+
+				NewToggle[ToggleName] = Instance.new("TextButton", NewLibrary[ToggleParent]);
+				NewToggle[ToggleName].ZIndex = 6;
+				NewToggle[ToggleName].BorderSizePixel = 0;
+				NewToggle[ToggleName].TextSize = 14;
+				NewToggle[ToggleName].BackgroundColor3 = Color3.fromRGB(49, 49, 49);
+				NewToggle[ToggleName].TextColor3 = Color3.fromRGB(0, 0, 0);
+				NewToggle[ToggleName].Size = UDim2.new(1, 0, 0, 50);
+				NewToggle[ToggleName].Name = "Toggle";
+				NewToggle[ToggleName].Text = "";
+				NewToggle[ToggleName].Font = Enum.Font.SourceSans;
+				NewToggle[ToggleName].BackgroundTransparency = 1;
+
+				NewToggle[ToggleName.."-Info"] = Instance.new("Frame", NewToggle[ToggleName]);
+				NewToggle[ToggleName.."-Info"].ZIndex = 4;
+				NewToggle[ToggleName.."-Info"].BackgroundColor3 = Color3.fromRGB(51, 51, 51);
+				NewToggle[ToggleName.."-Info"].Size = UDim2.new(1, 0, 1, 0);
+				NewToggle[ToggleName.."-Info"].Name = "Info";
+
+				NewToggle[ToggleName.."-Info-Corner"] = Instance.new("UICorner", NewToggle[ToggleName.."-Info"]);
+
+				NewToggle[ToggleName.."-Info-Text"] = Instance.new("TextLabel", NewToggle[ToggleName.."-Info"]);
+				NewToggle[ToggleName.."-Info-Text"].ZIndex = 5;
+				NewToggle[ToggleName.."-Info-Text"].TextXAlignment = Enum.TextXAlignment.Left;
+				NewToggle[ToggleName.."-Info-Text"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+				NewToggle[ToggleName.."-Info-Text"].TextSize = 20;
+				NewToggle[ToggleName.."-Info-Text"].TextColor3 = Color3.fromRGB(255, 255, 255);
+				NewToggle[ToggleName.."-Info-Text"].Size = UDim2.new(1, -50, 1, 0);
+				NewToggle[ToggleName.."-Info-Text"].Text = ToggleTitle;
+				NewToggle[ToggleName.."-Info-Text"].Name = "Text";
+				NewToggle[ToggleName.."-Info-Text"].Font = Enum.Font.SourceSansBold;
+				NewToggle[ToggleName.."-Info-Text"].BackgroundTransparency = 1;
+				NewToggle[ToggleName.."-Info-Text"].Position = UDim2.new(0, 10, 0, 0);
+
+				NewToggle[ToggleName.."-Info-Toggle"] = Instance.new("Frame", NewToggle[ToggleName.."-Info"]);
+				NewToggle[ToggleName.."-Info-Toggle"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+				NewToggle[ToggleName.."-Info-Toggle"].AnchorPoint = Vector2.new(1, 0.5);
+				NewToggle[ToggleName.."-Info-Toggle"].BackgroundTransparency = 1;
+				NewToggle[ToggleName.."-Info-Toggle"].Size = UDim2.new(0, 15, 0, 15);
+				NewToggle[ToggleName.."-Info-Toggle"].Position = UDim2.new(1, -18, 0.5, 0);
+				NewToggle[ToggleName.."-Info-Toggle"].Name = "Toggle";
+
+				NewToggle[ToggleName.."-Info-Toggle-Corner"] = Instance.new("UICorner", NewToggle[ToggleName.."-Info-Toggle"]);
+				NewToggle[ToggleName.."-Info-Toggle-Corner"]["CornerRadius"] = UDim.new(0, 4);
+
+				NewToggle[ToggleName.."-Info-Toggle-Stroke"] = Instance.new("UIStroke", NewToggle[ToggleName.."-Info-Toggle"]);
+				NewToggle[ToggleName.."-Info-Toggle-Stroke"]["Color"] = Color3.fromRGB(255, 255, 255);
+				NewToggle[ToggleName.."-Info-Toggle-Stroke"]["Thickness"] = 2;
+				NewToggle[ToggleName.."-Info-Toggle-Stroke"]["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border;
+
+				-- Tweening
+				local OldBackground = Color3.fromRGB(51, 51, 51)
+				local ClickColor = Color3.fromRGB(255,255,255)
+
+				NewToggle[ToggleName].MouseEnter:Connect(function()
+					Library:Tween(NewToggle[ToggleName.."-Info"], {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
+				end)
+				NewToggle[ToggleName].MouseLeave:Connect(function()
+					Library:Tween(NewToggle[ToggleName.."-Info"], {BackgroundColor3 = OldBackground})
+				end)
+
+				local ClickCooldown = false
+				NewToggle[ToggleName].MouseButton1Click:Connect(function()
+					if not ClickCooldown then
+						ClickCooldown = true
+						NewToggle.toggled = not NewToggle.toggled
+						if NewToggle.toggled == true then
+							Library:Tween(NewToggle[ToggleName.."-Info-Toggle"], {BackgroundTransparency = 0}, nil)
+						else
+							Library:Tween(NewToggle[ToggleName.."-Info-Toggle"], {BackgroundTransparency = 1}, nil)
+						end
+						spawn(function()
+							task.wait(0.8)
+							ClickCooldown = false
+						end)
+						options.callback(NewToggle.toggled)
+					end
+				end)
+
+				-- Methods
+				function NewToggle:SetText(text)
+					NewToggle[ToggleName.."-Info-Text"].Text = text
+				end
+
+				function NewToggle:SetCallback(func)
+					options.callback = func
+				end
+
+				-- Returning
+				return NewToggle
+			end
+		end
+		return nil
+	end
+
+	function NewLibrary:CreateInfo(options)
+
+		-- Validation
+		local succ, err = pcall(function()
+			options = Library:Validate({
+				target = nil,
+				title = "Information "..InfoCount 
+			}, options or {})
+		end)
+
+		if succ and options.target then
+
+			-- Creation
+			local NewInfo = {}
+			local InfoName = "Info "..InfoCount
+			local InfoParent = options.target
+			local InfoTitle = options.title
+
+			do
+				NewInfo[InfoName] = Instance.new("Frame", NewLibrary[InfoParent.."-Frame"]);
+				NewInfo[InfoName].BackgroundColor3 = Color3.fromRGB(51, 51, 51);
+				NewInfo[InfoName].Size = UDim2.new(1, 0, 0, 50);
+				NewInfo[InfoName].Name = "Information";
+
+				NewInfo[InfoName.."-Corner"] = Instance.new("UICorner", NewInfo[InfoName]);
+
+				NewInfo[InfoName.."-Icon"] = Instance.new("ImageLabel", NewInfo[InfoName]);
+				NewInfo[InfoName.."-Icon"].ZIndex = 5;
+				NewInfo[InfoName.."-Icon"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+				NewInfo[InfoName.."-Icon"].AnchorPoint = Vector2.new(1, 0.5);
+				NewInfo[InfoName.."-Icon"].Image = icons["info"];
+				NewInfo[InfoName.."-Icon"].Size = UDim2.new(0, 25, 0, 25);
+				NewInfo[InfoName.."-Icon"].Name = "Image";
+				NewInfo[InfoName.."-Icon"].BackgroundTransparency = 1;
+				NewInfo[InfoName.."-Icon"].Position = UDim2.new(1, -15, 0.5, 0);
+
+				NewInfo[InfoName.."-Text"] = Instance.new("TextLabel", NewInfo[InfoName]);
+				NewInfo[InfoName.."-Text"].ZIndex = 5;
+				NewInfo[InfoName.."-Text"].TextXAlignment = Enum.TextXAlignment.Left;
+				NewInfo[InfoName.."-Text"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+				NewInfo[InfoName.."-Text"].TextSize = 20;
+				NewInfo[InfoName.."-Text"].TextColor3 = Color3.fromRGB(255, 255, 255);
+				NewInfo[InfoName.."-Text"].Size = UDim2.new(1, -50, 1, 0);
+				NewInfo[InfoName.."-Text"].Text = InfoTitle;
+				NewInfo[InfoName.."-Text"].Name = "Text";
+				NewInfo[InfoName.."-Text"].Font = Enum.Font.SourceSansBold;
+				NewInfo[InfoName.."-Text"].BackgroundTransparency = 1;
+				NewInfo[InfoName.."-Text"].Position = UDim2.new(0, 10, 0, 0);
+			end
+
+			-- Methods
+			function NewInfo:SetText(text)
+				NewInfo[InfoName.."-Text"].Text = text
+			end
+
+			-- Returning
+			InfoCount=InfoCount+1
+			return NewInfo
+		end
+		return nil
+	end
+
+	function NewLibrary:CreateSlider(options)
+
+		-- Validation
+		local succ, err = pcall(function()
+			options = Library:Validate({
+				target = nil,
+				title = "Slider "..SliderCount,
+				min = 0,
+				max = 100,
+				default = 50,
+				callback = function() end
+			}, options or {})
+		end)
+		if succ and options.target then
+
+			-- Creation
+			local NewSlider = {
+				Hovering = false,
+				Holding = false,
+				Connection = nil
+			}
+			local SliderName = "Slider "..SliderCount
+			local SliderParent = options.target
+			local SliderTitle = options.title
+
+			do
+				NewSlider[SliderName] = Instance.new("Frame", NewLibrary[SliderParent.."-Frame"]);
+				NewSlider[SliderName].ZIndex = 4;
+				NewSlider[SliderName].BackgroundColor3 = Color3.fromRGB(51, 51, 51);
+				NewSlider[SliderName].Size = UDim2.new(1, 0, 0, 60);
+				NewSlider[SliderName].Name = "Slider";
+
+				NewSlider[SliderName.."-SliderBack"] = Instance.new("Frame", NewSlider[SliderName]);
+				NewSlider[SliderName.."-SliderBack"].ZIndex = 5;
+				NewSlider[SliderName.."-SliderBack"].BorderSizePixel = 0;
+				NewSlider[SliderName.."-SliderBack"].BackgroundColor3 = Color3.fromRGB(19, 19, 19);
+				NewSlider[SliderName.."-SliderBack"].AnchorPoint = Vector2.new(0.5, 1);
+				NewSlider[SliderName.."-SliderBack"].Size = UDim2.new(0.949999988079071, 0, 0, 6);
+				NewSlider[SliderName.."-SliderBack"].Position = UDim2.new(0.5, 0, 1, -12);
+				NewSlider[SliderName.."-SliderBack"].Name = "SliderBack";
+
+				NewSlider[SliderName.."-SliderBack-Corner"] = Instance.new("UICorner", NewSlider[SliderName.."-SliderBack"]);
+				NewSlider[SliderName.."-SliderBack-Corner"]["CornerRadius"] = UDim.new(0, 6);
+
+				NewSlider[SliderName.."-SliderBack-Drag"] = Instance.new("Frame", NewSlider[SliderName.."-SliderBack"]);
+				NewSlider[SliderName.."-SliderBack-Drag"].ZIndex = 6;
+				NewSlider[SliderName.."-SliderBack-Drag"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+				NewSlider[SliderName.."-SliderBack-Drag"].Size = UDim2.new(0.5, 0, 1, 0);
+				NewSlider[SliderName.."-SliderBack-Drag"].Name = "Draggable";
+
+				NewSlider[SliderName.."-SliderBack-Drag-Corner"] = Instance.new("UICorner", NewSlider[SliderName.."-SliderBack-Drag"]);
+				NewSlider[SliderName.."-SliderBack-Drag-Corner"]["CornerRadius"] = UDim.new(0, 6);
+
+				NewSlider[SliderName.."-Text"] = Instance.new("TextLabel", NewSlider[SliderName]);
+				NewSlider[SliderName.."-Text"].ZIndex = 4;
+				NewSlider[SliderName.."-Text"].TextXAlignment = Enum.TextXAlignment.Left;
+				NewSlider[SliderName.."-Text"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+				NewSlider[SliderName.."-Text"].TextSize = 20;
+				NewSlider[SliderName.."-Text"].TextColor3 = Color3.fromRGB(255, 255, 255);
+				NewSlider[SliderName.."-Text"].Size = UDim2.new(1, -60, 1, -20);
+				NewSlider[SliderName.."-Text"].Text = SliderTitle;
+				NewSlider[SliderName.."-Text"].Name = "Text";
+				NewSlider[SliderName.."-Text"].Font = Enum.Font.SourceSansBold;
+				NewSlider[SliderName.."-Text"].BackgroundTransparency = 1;
+				NewSlider[SliderName.."-Text"].Position = UDim2.new(0, 10, 0, 0);
+
+				NewSlider[SliderName.."-Value"] = Instance.new("TextLabel", NewSlider[SliderName]);
+				NewSlider[SliderName.."-Value"].ZIndex = 4;
+				NewSlider[SliderName.."-Value"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+				NewSlider[SliderName.."-Value"].TextSize = 20;
+				NewSlider[SliderName.."-Value"].TextColor3 = Color3.fromRGB(255, 255, 255);
+				NewSlider[SliderName.."-Value"].AnchorPoint = Vector2.new(1, 0);
+				NewSlider[SliderName.."-Value"].Size = UDim2.new(0, 50, 1, -20);
+				NewSlider[SliderName.."-Value"].Text = options.default;
+				NewSlider[SliderName.."-Value"].Name = "Value";
+				NewSlider[SliderName.."-Value"].Font = Enum.Font.SourceSansBold;
+				NewSlider[SliderName.."-Value"].BackgroundTransparency = 1;
+				NewSlider[SliderName.."-Value"].Position = UDim2.new(1, -3, 0, 0);
+
+				NewSlider[SliderName.."-Corner"] = Instance.new("UICorner", NewSlider[SliderName]);
+			end
+
+			-- Tweening
+			local OldBackground = Color3.fromRGB(51, 51, 51)
+			local ClickColor = Color3.fromRGB(255,255,255)
+
+			NewSlider[SliderName].MouseEnter:Connect(function()
+				Library:Tween(NewSlider[SliderName], {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
+			end)
+			NewSlider[SliderName].MouseLeave:Connect(function()
+				Library:Tween(NewSlider[SliderName], {BackgroundColor3 = OldBackground})
+			end)
+
+			-- Methods
+			function NewSlider:SetValue(value)
+				if value == nil then
+					local percent = math.clamp((MyMouse.X - NewSlider[SliderName.."-SliderBack"].AbsolutePosition.X) / (NewSlider[SliderName.."-SliderBack"].AbsoluteSize.X),0,1)
+					local percentvalue = math.floor(((options.max - options.min) * percent) + options.min)
+					NewSlider[SliderName.."-Value"].Text = tostring(percentvalue)
+					NewSlider[SliderName.."-SliderBack-Drag"].Size = UDim2.fromScale(percent,1)
+				else
+					NewSlider[SliderName.."-Value"].Text = tostring(value)
+					NewSlider[SliderName.."-SliderBack-Drag"].Size = UDim2.fromScale(((value-options.min)/(options.max-options.min)),1)
+				end 
+				options.callback(NewSlider:GetValue())
+			end
+
+			function NewSlider:GetValue()
+				return tonumber(NewSlider[SliderName.."-Value"].Text)
+			end
+			
+			function NewSlider:SetCallback(func)
+				options.callback = func
+			end
+
+			-- Runner
+
+			do
+				repeat wait() until NewSlider[SliderName].Parent
+				local OldBackground = Color3.fromRGB(51, 51, 51)
+
+				NewSlider[SliderName].MouseEnter:Connect(function()
+					NewSlider.Hovering = true
+					Library:Tween(NewSlider[SliderName], {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
+				end)
+
+				NewSlider[SliderName].MouseLeave:Connect(function()
+					NewSlider.Hovering = false
+					Library:Tween(NewSlider[SliderName], {BackgroundColor3 = OldBackground})
+				end)
+
+				UserInputService.InputBegan:Connect(function(input, processed)
+					if input.UserInputType == Enum.UserInputType.MouseButton1 and NewSlider.Hovering then
+						NewSlider.Holding = true
+						if not NewSlider.Connection then
+							NewSlider.Connection = RunService.RenderStepped:Connect(function()
+								NewSlider:SetValue()
+							end)
+						end
+					end
+				end)
+
+				UserInputService.InputEnded:Connect(function(input, processed)
+					if input.UserInputType == Enum.UserInputType.MouseButton1 then
+						NewSlider.Holding = false
+						if NewSlider.Connection then
+							NewSlider.Connection:Disconnect()
+						end
+						NewSlider.Connection = nil
+					end
+				end)
+			end
+
+			do
+				RunService:BindToRenderStep(SliderName, Enum.RenderPriority.Input.Value, function()
+
+				end)
+			end
+			NewSlider:SetValue(options.default)
+			-- Returning
+			SliderCount=SliderCount+1
+			return NewSlider
+		end
+		return nil
+	end
+
+	-- RETURNING
+	function NewLibrary:Initialize()
+		pcall(function()
+			if syn then
+				syn.protect_gui(NewLibrary["LibraryGui"])
+			end
+		end)
+		NewLibrary["LibraryGui"].Enabled = true
+		print("UnanimousCode Lib "..ver..": Initalized.")
+	end
+	return NewLibrary
+end
+
+return Library
