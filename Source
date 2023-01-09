@@ -1,3 +1,4 @@
+-- Created by UC#8523
 -- VERSION
 
 local ver = "V1"
@@ -13,7 +14,7 @@ local CoreGui = game:GetService("CoreGui")
 local MarketplaceService = game:GetService("MarketplaceService")
 local HttpService = game:GetService("HttpService")
 
--- CONSTANTS
+-- VARIABLES/CONSTANTS
 
 local MyPlayer = Players.LocalPlayer
 local MyUserId = MyPlayer.UserId
@@ -30,7 +31,7 @@ local HttpRequest = (syn and syn.request) or http and http.request or http_reque
 local icons = {
 	["home"] = "rbxassetid://12083746629",
 	["settings"] = "rbxassetid://12083386355",
-	["help"] = "rbxassetid://12083920357",
+	["Info"] = "rbxassetid://12083920357",
 	["click"] = "rbxassetid://12084736361",
 	["info"] = "rbxassetid://12093228351",
 	["dropdown"] = "rbxassetid://12093280677"
@@ -99,7 +100,7 @@ function Library:WebhookSend(URL, data)
 	end
 end
 
-function Library:New()
+function Library:NewGui()
 
 	-- Variables
 	local NewLibrary = {}
@@ -294,48 +295,48 @@ function Library:New()
 		NewLibrary["Settings-Info-Name"].BackgroundTransparency = 1
 		NewLibrary["Settings-Info-Name"].Position = UDim2.new(0, 35, 0.5, 1)
 
-		NewLibrary["Help-Button"] = Instance.new("TextButton", NewLibrary["TopBar"])
-		NewLibrary["Help-Button"].TextSize = 14
-		NewLibrary["Help-Button"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		NewLibrary["Help-Button"].TextColor3 = Color3.fromRGB(0, 0, 0)
-		NewLibrary["Help-Button"].AnchorPoint = Vector2.new(0.5, 0.5)
-		NewLibrary["Help-Button"].Size = UDim2.new(0, 100, 0, 33)
-		NewLibrary["Help-Button"].Name = "Help"
-		NewLibrary["Help-Button"].Text = ""
-		NewLibrary["Help-Button"].Font = Enum.Font.SourceSans
-		NewLibrary["Help-Button"].BackgroundTransparency = 1
+		NewLibrary["Info-Button"] = Instance.new("TextButton", NewLibrary["TopBar"])
+		NewLibrary["Info-Button"].TextSize = 14
+		NewLibrary["Info-Button"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		NewLibrary["Info-Button"].TextColor3 = Color3.fromRGB(0, 0, 0)
+		NewLibrary["Info-Button"].AnchorPoint = Vector2.new(0.5, 0.5)
+		NewLibrary["Info-Button"].Size = UDim2.new(0, 100, 0, 33)
+		NewLibrary["Info-Button"].Name = "Info"
+		NewLibrary["Info-Button"].Text = ""
+		NewLibrary["Info-Button"].Font = Enum.Font.SourceSans
+		NewLibrary["Info-Button"].BackgroundTransparency = 1
 
-		NewLibrary["Help-Info"] = Instance.new("Frame", NewLibrary["Help-Button"])
-		NewLibrary["Help-Info"].BackgroundColor3 = Color3.fromRGB(43, 43, 43)
-		NewLibrary["Help-Info"].BackgroundTransparency = 1
-		NewLibrary["Help-Info"].Size = UDim2.new(0, 100, 0, 33)
-		NewLibrary["Help-Info"].Name = "Info"
+		NewLibrary["Info-Info"] = Instance.new("Frame", NewLibrary["Info-Button"])
+		NewLibrary["Info-Info"].BackgroundColor3 = Color3.fromRGB(43, 43, 43)
+		NewLibrary["Info-Info"].BackgroundTransparency = 1
+		NewLibrary["Info-Info"].Size = UDim2.new(0, 100, 0, 33)
+		NewLibrary["Info-Info"].Name = "Info"
 
-		NewLibrary["Help-Info-Corner"] = Instance.new("UICorner", NewLibrary["Help-Info"])
-		NewLibrary["Help-Info-Corner"].CornerRadius = UDim.new(0, 6)
+		NewLibrary["Info-Info-Corner"] = Instance.new("UICorner", NewLibrary["Info-Info"])
+		NewLibrary["Info-Info-Corner"].CornerRadius = UDim.new(0, 6)
 
-		NewLibrary["Help-Info-Icon"] = Instance.new("ImageLabel", NewLibrary["Help-Info"])
-		NewLibrary["Help-Info-Icon"].BackgroundColor3 = Color3.fromRGB(129, 129, 129)
-		NewLibrary["Help-Info-Icon"].ImageColor3 = Color3.fromRGB(129, 129, 129)
-		NewLibrary["Help-Info-Icon"].AnchorPoint = Vector2.new(0, 0.5)
-		NewLibrary["Help-Info-Icon"].Image = "rbxassetid://12083920357"
-		NewLibrary["Help-Info-Icon"].Size = UDim2.new(0, 25, 0, 25)
-		NewLibrary["Help-Info-Icon"].Name = "Icon"
-		NewLibrary["Help-Info-Icon"].BackgroundTransparency = 1
-		NewLibrary["Help-Info-Icon"].Position = UDim2.new(0, 4, 0.5, 0)
+		NewLibrary["Info-Info-Icon"] = Instance.new("ImageLabel", NewLibrary["Info-Info"])
+		NewLibrary["Info-Info-Icon"].BackgroundColor3 = Color3.fromRGB(129, 129, 129)
+		NewLibrary["Info-Info-Icon"].ImageColor3 = Color3.fromRGB(129, 129, 129)
+		NewLibrary["Info-Info-Icon"].AnchorPoint = Vector2.new(0, 0.5)
+		NewLibrary["Info-Info-Icon"].Image = "rbxassetid://12083920357"
+		NewLibrary["Info-Info-Icon"].Size = UDim2.new(0, 25, 0, 25)
+		NewLibrary["Info-Info-Icon"].Name = "Icon"
+		NewLibrary["Info-Info-Icon"].BackgroundTransparency = 1
+		NewLibrary["Info-Info-Icon"].Position = UDim2.new(0, 4, 0.5, 0)
 
-		NewLibrary["Help-Info-Name"] = Instance.new("TextLabel", NewLibrary["Help-Info"])
-		NewLibrary["Help-Info-Name"].TextXAlignment = Enum.TextXAlignment.Left
-		NewLibrary["Help-Info-Name"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		NewLibrary["Help-Info-Name"].TextSize = 15
-		NewLibrary["Help-Info-Name"].TextColor3 = Color3.fromRGB(129, 129, 129)
-		NewLibrary["Help-Info-Name"].AnchorPoint = Vector2.new(0, 0.5)
-		NewLibrary["Help-Info-Name"].Size = UDim2.new(0, 50, 0.5, 0)
-		NewLibrary["Help-Info-Name"].Text = "Help"
-		NewLibrary["Help-Info-Name"].Name = "name"
-		NewLibrary["Help-Info-Name"].Font = Enum.Font.Gotham
-		NewLibrary["Help-Info-Name"].BackgroundTransparency = 1
-		NewLibrary["Help-Info-Name"].Position = UDim2.new(0, 35, 0.5, 1)
+		NewLibrary["Info-Info-Name"] = Instance.new("TextLabel", NewLibrary["Info-Info"])
+		NewLibrary["Info-Info-Name"].TextXAlignment = Enum.TextXAlignment.Left
+		NewLibrary["Info-Info-Name"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		NewLibrary["Info-Info-Name"].TextSize = 15
+		NewLibrary["Info-Info-Name"].TextColor3 = Color3.fromRGB(129, 129, 129)
+		NewLibrary["Info-Info-Name"].AnchorPoint = Vector2.new(0, 0.5)
+		NewLibrary["Info-Info-Name"].Size = UDim2.new(0, 50, 0.5, 0)
+		NewLibrary["Info-Info-Name"].Text = "Info"
+		NewLibrary["Info-Info-Name"].Name = "name"
+		NewLibrary["Info-Info-Name"].Font = Enum.Font.Gotham
+		NewLibrary["Info-Info-Name"].BackgroundTransparency = 1
+		NewLibrary["Info-Info-Name"].Position = UDim2.new(0, 35, 0.5, 1)
 
 		NewLibrary["Exit-Button"] = Instance.new("TextButton", NewLibrary["Main"])
 		NewLibrary["Exit-Button"].TextSize = 24
@@ -486,16 +487,25 @@ function Library:New()
 		NewLibrary["Settings-Layout"].SortOrder = Enum.SortOrder.LayoutOrder;
 	end
 
-	-- Gui.Main.ContentHolder.Help
+	-- Gui.Main.ContentHolder.Examples
 	do
-		NewLibrary["Help-Frame"] = Instance.new("Frame", NewLibrary["ContentHolder"]);
-		NewLibrary["Help-Frame"].ZIndex = 3;
-		NewLibrary["Help-Frame"].BorderSizePixel = 0;
-		NewLibrary["Help-Frame"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
-		NewLibrary["Help-Frame"].BackgroundTransparency = 1;
-		NewLibrary["Help-Frame"].Size = UDim2.new(0.9649999737739563, 0, 0.9649999737739563, 0);
-		NewLibrary["Help-Frame"].Position = UDim2.new(0.017000000923871994, 0, 0.03500000014901161, 0);
-		NewLibrary["Help-Frame"].Name = "Help";
+		NewLibrary["Info-Frame"] = Instance.new("ScrollingFrame", NewLibrary["ContentHolder"]);
+		NewLibrary["Info-Frame"].Active = true;
+		NewLibrary["Info-Frame"].ZIndex = 3;
+		NewLibrary["Info-Frame"].BorderSizePixel = 0;
+		NewLibrary["Info-Frame"].ScrollBarImageTransparency = 1;
+		NewLibrary["Info-Frame"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+		NewLibrary["Info-Frame"].BackgroundTransparency = 1;
+		NewLibrary["Info-Frame"].Size = UDim2.new(0.965, 0, 0.965, 0);
+		NewLibrary["Info-Frame"].ScrollBarImageColor3 = Color3.fromRGB(33, 33, 33);
+		NewLibrary["Info-Frame"].ScrollBarThickness = 0;
+		NewLibrary["Info-Frame"].Position = UDim2.new(0.017273858189582825, 0, 0.03454773873090744, 0);
+		NewLibrary["Info-Frame"].Name = "Info";
+		NewLibrary["Info-Frame"].CanvasSize = UDim2.new(0,0,0,400)
+		
+		NewLibrary["Info-Layout"] = Instance.new("UIListLayout", NewLibrary["Info-Frame"]);
+		NewLibrary["Info-Layout"].Padding = UDim.new(0, 8);
+		NewLibrary["Info-Layout"].SortOrder = Enum.SortOrder.LayoutOrder;
 	end
 
 	-- GUI HANDLING
@@ -521,9 +531,9 @@ function Library:New()
 		ChangeDisplaying("Settings")
 		--end)
 	end)
-	NewLibrary["Help-Button"].MouseButton1Click:Connect(function()
+	NewLibrary["Info-Button"].MouseButton1Click:Connect(function()
 		--pcall(function()
-		ChangeDisplaying("Help")
+		ChangeDisplaying("Info")
 		--end)
 	end)
 
@@ -634,6 +644,7 @@ function Library:New()
 			options = Library:Validate({
 				target = options.target,
 				title = "Button "..ButtonCount,
+				arguments = {},
 				callback = function() end,
 			}, options or {})
 		end)
@@ -679,7 +690,7 @@ function Library:New()
 						NewButton[ButtonName.."-Info-Text"].TextColor3 = Color3.fromRGB(255, 255, 255);
 						NewButton[ButtonName.."-Info-Text"].Size = UDim2.new(1, -50, 1, 0);
 						NewButton[ButtonName.."-Info-Text"].Text = ButtonTitle;
-						NewButton[ButtonName.."-Info-Text"].Name = "Text";
+						NewButton[ButtonName.."-Info-Text"].Name = "text";
 						NewButton[ButtonName.."-Info-Text"].Font = Enum.Font.SourceSansBold;
 						NewButton[ButtonName.."-Info-Text"].BackgroundTransparency = 1;
 						NewButton[ButtonName.."-Info-Text"].Position = UDim2.new(0, 10, 0, 0);
@@ -767,7 +778,11 @@ function Library:New()
 							-- Runner
 							
 							NewArgument[ArgumentName].Changed:Connect(function()
-								NewButton.arguments[ArgumentName] = NewArgument[ArgumentName].Text
+								local argText = NewArgument[ArgumentName].Text
+								if tonumber(argText) then 
+									argText = tonumber(argText)
+								end
+								NewButton.arguments[ArgumentName] = argText
 							end)
 							
 							-- Methods
@@ -780,10 +795,20 @@ function Library:New()
 									NewArgument[ArgumentName].Text = "?"
 								end
 							end
+							return NewArgument
 						end
+					end
+					
+					function NewButton:GetArguments()
+						return NewButton.arguments
 					end
 
 					--Returning
+					if #options.arguments > 0 then
+						for index, arg in pairs(options.arguments) do
+							local NewArg = NewButton:AddArgument(arg)
+						end
+					end
 					ButtonCount=ButtonCount+1
 					return NewButton
 				end
@@ -841,7 +866,7 @@ function Library:New()
 					NewToggle[ToggleName.."-Info-Text"].TextColor3 = Color3.fromRGB(255, 255, 255);
 					NewToggle[ToggleName.."-Info-Text"].Size = UDim2.new(1, -50, 1, 0);
 					NewToggle[ToggleName.."-Info-Text"].Text = ToggleTitle;
-					NewToggle[ToggleName.."-Info-Text"].Name = "Text";
+					NewToggle[ToggleName.."-Info-Text"].Name = "text";
 					NewToggle[ToggleName.."-Info-Text"].Font = Enum.Font.SourceSansBold;
 					NewToggle[ToggleName.."-Info-Text"].BackgroundTransparency = 1;
 					NewToggle[ToggleName.."-Info-Text"].Position = UDim2.new(0, 10, 0, 0);
@@ -953,7 +978,7 @@ function Library:New()
 				NewInfo[InfoName.."-Text"].TextColor3 = Color3.fromRGB(255, 255, 255);
 				NewInfo[InfoName.."-Text"].Size = UDim2.new(1, -50, 1, 0);
 				NewInfo[InfoName.."-Text"].Text = InfoTitle;
-				NewInfo[InfoName.."-Text"].Name = "Text";
+				NewInfo[InfoName.."-Text"].Name = "text";
 				NewInfo[InfoName.."-Text"].Font = Enum.Font.SourceSansBold;
 				NewInfo[InfoName.."-Text"].BackgroundTransparency = 1;
 				NewInfo[InfoName.."-Text"].Position = UDim2.new(0, 10, 0, 0);
@@ -1032,7 +1057,7 @@ function Library:New()
 				NewSlider[SliderName.."-Text"].TextColor3 = Color3.fromRGB(255, 255, 255);
 				NewSlider[SliderName.."-Text"].Size = UDim2.new(1, -60, 1, -20);
 				NewSlider[SliderName.."-Text"].Text = SliderTitle;
-				NewSlider[SliderName.."-Text"].Name = "Text";
+				NewSlider[SliderName.."-Text"].Name = "text";
 				NewSlider[SliderName.."-Text"].Font = Enum.Font.SourceSansBold;
 				NewSlider[SliderName.."-Text"].BackgroundTransparency = 1;
 				NewSlider[SliderName.."-Text"].Position = UDim2.new(0, 10, 0, 0);
@@ -1145,6 +1170,7 @@ function Library:New()
 				target = nil,
 				title = "Keybind "..KeybindCount,
 				keybind = "...",
+				arguments = {},
 				callback = function() end
 			}, options or {})
 		end)
@@ -1185,7 +1211,7 @@ function Library:New()
 				NewKeybind[KeybindName.."-Info-Text"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
 				NewKeybind[KeybindName.."-Info-Text"]["Size"] = UDim2.new(1, -50, 1, 0);
 				NewKeybind[KeybindName.."-Info-Text"]["Text"] = KeybindTitle;
-				NewKeybind[KeybindName.."-Info-Text"]["Name"] = [[Text]];
+				NewKeybind[KeybindName.."-Info-Text"]["Name"] = [[text]];
 				NewKeybind[KeybindName.."-Info-Text"]["Font"] = Enum.Font.SourceSansBold;
 				NewKeybind[KeybindName.."-Info-Text"]["BackgroundTransparency"] = 1;
 				NewKeybind[KeybindName.."-Info-Text"]["Position"] = UDim2.new(0, 10, 0, 0);
@@ -1219,22 +1245,31 @@ function Library:New()
 			
 			-- Tweening
 			local OldBackground = Color3.fromRGB(51, 51, 51)
-			
-			NewKeybind[KeybindName].MouseEnter:Connect(function()
-				Library:Tween(NewKeybind[KeybindName], {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
-			end)
+			local ClickColor = Color3.fromRGB(255,255,255)
 
+			NewKeybind[KeybindName].MouseEnter:Connect(function()
+				Library:Tween(NewKeybind[KeybindName.."-Info"], {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
+			end)
 			NewKeybind[KeybindName].MouseLeave:Connect(function()
-				Library:Tween(NewKeybind[KeybindName], {BackgroundColor3 = OldBackground})
+				Library:Tween(NewKeybind[KeybindName.."-Info"], {BackgroundColor3 = OldBackground})
 			end)
 			
 			-- Methods
 			
-			function NewKeybind:UpdateKeybind(String)
-				options.keybind = String
-				NewKeybind[KeybindName.."-Info-Value"].Text = "["..String.."]"
-				if String ~= "..." then
-					NewKeybind.Selected = false
+			function NewKeybind:UpdateKeybind(newkeybind, resetselected)
+				print(newkeybind)
+				local NewKey = "..."
+				if tostring(newkeybind) and newkeybind ~= "" then
+					if string.len(newkeybind) == 1 then
+						NewKey = newkeybind
+					end
+				end
+				if NewKey then
+					options.keybind = NewKey
+					NewKeybind[KeybindName.."-Info-Value"].Text = "["..options.keybind.."]"
+					if resetselected then
+						NewKeybind.Selected = false
+					end
 				end
 			end
 			
@@ -1243,31 +1278,144 @@ function Library:New()
 			end
 			
 			NewKeybind[KeybindName].MouseButton1Click:Connect(function()
-				if not NewKeybind.Selected then
-					NewKeybind.Selected = true
-					NewKeybind:UpdateKeybind("...")
-				end
+				spawn(function()
+					if not NewKeybind.Selected then
+						NewKeybind.Selected = true
+						NewKeybind:UpdateKeybind("...", false)
+					end
+				end)
+				Library:Tween(NewKeybind[KeybindName.."-Info-Value"], {TextColor3 = Color3.fromRGB(132,132,132)})
+				Library:Tween(NewKeybind[KeybindName.."-Info-Text"], {TextColor3 = Color3.fromRGB(132,132,132)})
+				task.wait(0.1)
+				Library:Tween(NewKeybind[KeybindName.."-Info-Value"], {TextColor3 = ClickColor})
+				Library:Tween(NewKeybind[KeybindName.."-Info-Text"], {TextColor3 = ClickColor})
 			end)
 			
 			UserInputService.InputBegan:Connect(function(input)
-				if NewKeybind.Selected then
-					local StringKeycode = UserInputService:GetStringForKeyCode(input.KeyCode)
-					if StringKeycode then
-						if string.len(StringKeycode) == 1 then
-							NewKeybind:UpdateKeybind(StringKeycode)
+				if input.UserInputType ~= Enum.UserInputType.MouseMovement and input.UserInputType ~= Enum.UserInputType.MouseButton1 then
+					if NewKeybind.Selected then
+						NewKeybind:UpdateKeybind(UserInputService:GetStringForKeyCode(input.KeyCode), true)
+					else
+						if UserInputService:GetStringForKeyCode(input.KeyCode) == options.keybind then
+							options.callback()
 						end
-					end
-				else
-					if UserInputService:GetStringForKeyCode(input.KeyCode) == options.keybind then
-						options.callback()
 					end
 				end
 			end)
 			
+			-- Returning
 			KeybindCount=KeybindCount+1
 			return NewKeybind
 		end
 		return nil
+	end
+	
+	function NewLibrary:CreateDropdown(options)
+		
+		-- Validation
+		local succ, err = pcall(function()
+			options = Library:Validate({
+				target = nil,
+				title = "Dropdown "..DropdownCount,
+				options = {}
+			})
+		end)
+		
+		if succ and options.target then
+			
+			-- Creation
+			local NewDropdown = {}
+			local DropdownName = options.title
+			local DropdownParent = options.Target
+			do
+				NewDropdown[DropdownName] = Instance.new("TextButton", NewLibrary[DropdownParent.."-Frame"]);
+				NewDropdown[DropdownName]["ZIndex"] = 6;
+				NewDropdown[DropdownName]["BorderSizePixel"] = 0;
+				NewDropdown[DropdownName]["TextSize"] = 14;
+				NewDropdown[DropdownName]["BackgroundColor3"] = Color3.fromRGB(49, 49, 49);
+				NewDropdown[DropdownName]["TextColor3"] = Color3.fromRGB(0, 0, 0);
+				NewDropdown[DropdownName]["Size"] = UDim2.new(1, 0, 0, 50);
+				NewDropdown[DropdownName]["Name"] = [[Dropdown]];
+				NewDropdown[DropdownName]["ClipsDescendants"] = true;
+				NewDropdown[DropdownName]["Text"] = [[]];
+				NewDropdown[DropdownName]["Font"] = Enum.Font.SourceSans;
+				NewDropdown[DropdownName]["BackgroundTransparency"] = 1;
+
+				NewDropdown[DropdownName.."-Info"] = Instance.new("Frame", NewDropdown[DropdownName]);
+				NewDropdown[DropdownName.."-Info"]["ZIndex"] = 4;
+				NewDropdown[DropdownName.."-Info"]["BackgroundColor3"] = Color3.fromRGB(51, 51, 51);
+				NewDropdown[DropdownName.."-Info"]["Size"] = UDim2.new(1, 0, 1, 0);
+				NewDropdown[DropdownName.."-Info"]["Name"] = [[Info]];
+
+				NewDropdown[DropdownName.."-Info-Corner"] = Instance.new("UICorner", NewDropdown[DropdownName.."-Info"]);
+
+				NewDropdown[DropdownName.."-Info-Text"] = Instance.new("TextLabel", NewDropdown[DropdownName.."-Info"]);
+				NewDropdown[DropdownName.."-Info-Text"]["ZIndex"] = 5;
+				NewDropdown[DropdownName.."-Info-Text"]["TextXAlignment"] = Enum.TextXAlignment.Left;
+				NewDropdown[DropdownName.."-Info-Text"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+				NewDropdown[DropdownName.."-Info-Text"]["TextSize"] = 20;
+				NewDropdown[DropdownName.."-Info-Text"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+				NewDropdown[DropdownName.."-Info-Text"]["Size"] = UDim2.new(1, -50, 0, 50);
+				NewDropdown[DropdownName.."-Info-Text"]["Text"] = [[Dropdown]];
+				NewDropdown[DropdownName.."-Info-Text"]["Name"] = [[text]];
+				NewDropdown[DropdownName.."-Info-Text"]["Font"] = Enum.Font.SourceSansBold;
+				NewDropdown[DropdownName.."-Info-Text"]["BackgroundTransparency"] = 1;
+				NewDropdown[DropdownName.."-Info-Text"]["Position"] = UDim2.new(0, 10, 0, 0);
+
+				NewDropdown[DropdownName.."-Info-Image"] = Instance.new("ImageLabel", NewDropdown[DropdownName.."-Info"]);
+				NewDropdown[DropdownName.."-Info-Image"]["ZIndex"] = 5;
+				NewDropdown[DropdownName.."-Info-Image"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+				NewDropdown[DropdownName.."-Info-Image"]["AnchorPoint"] = Vector2.new(1, 1);
+				NewDropdown[DropdownName.."-Info-Image"]["Image"] = [[rbxassetid://12093280677]];
+				NewDropdown[DropdownName.."-Info-Image"]["Size"] = UDim2.new(0, 25, 0, 25);
+				NewDropdown[DropdownName.."-Info-Image"]["Name"] = [[Image]];
+				NewDropdown[DropdownName.."-Info-Image"]["BackgroundTransparency"] = 1;
+				NewDropdown[DropdownName.."-Info-Image"]["Position"] = UDim2.new(1, -15, 0, 40);
+
+				NewDropdown[DropdownName.."-Info-OptionHolder"] = Instance.new("Frame", NewDropdown[DropdownName.."-Info"]);
+				NewDropdown[DropdownName.."-Info-OptionHolder"]["ZIndex"] = 5;
+				NewDropdown[DropdownName.."-Info-OptionHolder"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+				NewDropdown[DropdownName.."-Info-OptionHolder"]["AnchorPoint"] = Vector2.new(0.5, 0);
+				NewDropdown[DropdownName.."-Info-OptionHolder"]["BackgroundTransparency"] = 1;
+				NewDropdown[DropdownName.."-Info-OptionHolder"]["Size"] = UDim2.new(1, -25, 1, -60);
+				NewDropdown[DropdownName.."-Info-OptionHolder"]["Position"] = UDim2.new(0.5, 0, 0, 50);
+				NewDropdown[DropdownName.."-Info-OptionHolder"]["Visible"] = false;
+				NewDropdown[DropdownName.."-Info-OptionHolder"]["Name"] = [[OptionHolder]];
+
+				NewDropdown[DropdownName.."-Info-OptionHolder-Layout"] = Instance.new("UIListLayout", NewDropdown[DropdownName.."-Info-OptionHolder"]);
+				NewDropdown[DropdownName.."-Info-OptionHolder-Layout"]["Padding"] = UDim.new(0, 10);
+				NewDropdown[DropdownName.."-Info-OptionHolder-Layout"]["SortOrder"] = Enum.SortOrder.LayoutOrder;
+				
+				NewDropdown[DropdownName.."-Info-Selected"] = Instance.new("TextLabel", NewDropdown[DropdownName.."-Info"]);
+				NewDropdown[DropdownName.."-Info-Selected"]["ZIndex"] = 5;
+				NewDropdown[DropdownName.."-Info-Selected"]["BackgroundColor3"] = Color3.fromRGB(45, 45, 45);
+				NewDropdown[DropdownName.."-Info-Selected"]["TextSize"] = 14;
+				NewDropdown[DropdownName.."-Info-Selected"]["TextColor3"] = Color3.fromRGB(179, 179, 179);
+				NewDropdown[DropdownName.."-Info-Selected"]["Size"] = UDim2.new(0, 100, 0, 25);
+				NewDropdown[DropdownName.."-Info-Selected"]["Text"] = #options.options.." selected";
+				NewDropdown[DropdownName.."-Info-Selected"]["Name"] = [[Selected]];
+				NewDropdown[DropdownName.."-Info-Selected"]["Font"] = Enum.Font.SourceSansBold;
+				NewDropdown[DropdownName.."-Info-Selected"]["Position"] = UDim2.new(0, 398, 0, 15);
+
+				NewDropdown[DropdownName.."-Info-Selected-Corner"] = Instance.new("UICorner", NewDropdown[DropdownName.."-Info-Selected"]);
+				NewDropdown[DropdownName.."-Info-Selected-Corner"]["CornerRadius"] = UDim.new(0, 5);
+			end
+			
+			-- Tweening
+			local OldBackground = Color3.fromRGB(51, 51, 51)
+
+			NewDropdown[DropdownName.."-Info"].MouseEnter:Connect(function()
+				Library:Tween(NewDropdown[DropdownName.."-Info"], {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
+			end)
+
+			NewDropdown[DropdownName.."-Info"].MouseLeave:Connect(function()
+				Library:Tween(NewDropdown[DropdownName.."-Info"], {BackgroundColor3 = OldBackground})
+			end)
+			
+			-- Returning
+			DropdownCount=DropdownCount+1
+			return NewDropdown
+		end
 	end
 	
 	-- Settings
@@ -1343,7 +1491,7 @@ function Library:New()
 		end
 	end)
 	
-	--// Toggling
+	-- Toggling
 	
 	local ToggleKeybind = NewLibrary:CreateKeybindButton({
 		target = "Settings",
@@ -1352,6 +1500,42 @@ function Library:New()
 		callback = function()
 			NewLibrary["LibraryGui"].Enabled = not NewLibrary["LibraryGui"].Enabled
 		end,
+	})
+	
+	-- Examples
+	
+	local ExampleInfo = NewLibrary:CreateInfo({
+		target = "Info",
+		title = "Info Bar"
+	})
+	
+	local ExampleButton = NewLibrary:CreateButton({
+		target = "Info",
+		title = "Normal Button",
+	})
+	
+	local ExampleButton2 = NewLibrary:CreateButton({
+		target = "Info",
+		title = "Button with arguments",
+		arguments = {"Argument 1", "Argument 2"}
+	})
+	
+	local ExampleToggle = NewLibrary:CreateToggle({
+		target = "Info",
+		title = "Toggle"
+	})
+	
+	local ExampleSlider = NewLibrary:CreateSlider({
+		target = "Info",
+		title = "Slider",
+		default = 16,
+		min = 0,
+		max = 100
+	})
+	
+	local ExampleKeybind = NewLibrary:CreateKeybindButton({
+		target = "Info",
+		title = "Keybind"
 	})
 	
 	-- RETURNING
