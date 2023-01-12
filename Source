@@ -1257,7 +1257,6 @@ function Library:NewGui()
 			-- Methods
 			
 			function NewKeybind:UpdateKeybind(newkeybind, resetselected)
-				print(newkeybind)
 				local NewKey = "..."
 				if tostring(newkeybind) and newkeybind ~= "" then
 					if string.len(newkeybind) == 1 then
