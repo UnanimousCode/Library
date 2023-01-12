@@ -13,6 +13,7 @@ local StarterGui = game:GetService("StarterGui")
 local CoreGui = game:GetService("CoreGui")
 local MarketplaceService = game:GetService("MarketplaceService")
 local HttpService = game:GetService("HttpService")
+local TeleportService = game:GetService("TeleportService")
 
 -- VARIABLES/CONSTANTS
 
@@ -1499,6 +1500,26 @@ function Library:NewGui()
 		callback = function()
 			NewLibrary["LibraryGui"].Enabled = not NewLibrary["LibraryGui"].Enabled
 		end,
+	})
+	
+	-- Rejoining
+	
+	local RejoinButton = NewLibrary:CreateButton({
+		target = "Settings",
+		title = "Rejoin",
+		callback = function()
+			TeleportService:Teleport(PlaceId, MyPlayer)
+		end,
+	})
+	
+	-- Resetting
+	
+	local ResetButton = NewLibrary:CreateButton({
+		target = "Settings",
+		title = "Reset Character",
+		callback = pcall(function()
+			MyPlayer.Character.Humanoid.Health = 0
+		end)
 	})
 	
 	-- Examples
