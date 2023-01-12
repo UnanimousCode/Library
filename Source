@@ -1541,7 +1541,7 @@ function Library:NewGui()
 		title = "Button with arguments",
 		arguments = {"Argument 1", "Argument 2"}
 	})
-	ExampleButton:SetCallback(function(args)
+	ExampleButton2:SetCallback(function(args)
 		print(args["Argument 1"], args["Argument 2"])
 	end)
 	
