@@ -1517,12 +1517,12 @@ function Library:NewGui()
 	local ResetButton = NewLibrary:CreateButton({
 		target = "Settings",
 		title = "Reset",
-		callback = function()
-			pcall(function()
-				MyPlayer.Character.Humanoid.Health = 0
-			end)
-		end
 	})
+	ResetButton:SetCallback(function()
+		pcall(function()
+			MyPlayer.Character.Humanoid.Health = 0
+		end)
+	end)
 	
 	-- Examples
 	
