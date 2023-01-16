@@ -1,0 +1,104 @@
+-- Created by UC#8523
+-- EXAMPLES
+
+-- LOADING THE Library
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/UnanimousCode/Unanimous-Code-Library/main/Source"))()
+local NewLibrary = Library:NewGui()
+
+-- VARIABLES
+
+local player = game.Players.LocalPlayer
+local mouse = player:GetMouse()
+
+-- EXAMPLE TAB 1
+
+local ExampleTab1 = NewLibrary:CreateTab({
+    title = "Example 1"
+})
+
+-- Title
+local ExampleTitle1 = NewLibrary:CreateInfo({
+	target = ExampleTab1,
+	title = "Example 1, Local Player"
+})
+
+-- Walkspeed
+local WalkspeedSlider = NewLibrary:CreateSlider({
+	target = ExampleTab1,
+	title = "Walkspeed",
+	default = 16,
+	max = 150
+})
+WalkspeedSlider:SetCallback(function(value)
+	player.Character.Humanoid.WalkSpeed = value
+end)
+WalkspeedSlider:SetValue(player.Character.Humanoid.WalkSpeed)
+
+-- Jumppower
+local JumpSlider = NewLibrary:CreateSlider({
+	target = ExampleTab1,
+	title = "Jumppower",
+	default = 50,
+	min = 0,
+	max = 200
+})
+JumpSlider:SetCallback(function(value)
+	player.Character.Humanoid.JumpPower = value
+end)
+JumpSlider:SetValue(player.Character.Humanoid.JumpPower)
+
+-- Spawnpoints
+local Spawnpoint = nil
+local SetSpawnpoint = NewLibrary:CreateButton({
+	target = ExampleTab1,
+	title = "Set Spawnpoint"
+})
+SetSpawnpoint:SetCallback(function()
+	if player.Character then
+		local root = player.Character:FindFirstChild("HumanoidRootPart")
+		if root then
+			Spawnpoint = root.CFrame
+			SetSpawnpoint:SetText("Set Spawnpoint: ("..Library:Round(Spawnpoint.X)..","..Library:Round(Spawnpoint.Y)..","..Library:Round(Spawnpoint.Z)..")")
+		end
+	end
+end)
+local RemoveSpawnpoint = NewLibrary:CreateButton({
+	target = ExampleTab1,
+	title = "Remove Spawnpoint"
+})
+RemoveSpawnpoint:SetCallback(function()
+	Spawnpoint = nil
+	SetSpawnpoint:SetText("Set Spawnpoint")
+end)
+player.CharacterAdded:Connect(function(NewCharacter)
+	if Spawnpoint then
+		repeat wait(0.2) until NewCharacter:FindFirstChild("HumanoidRootPart")
+		local root = NewCharacter:FindFirstChild("HumanoidRootPart")
+		root.CFrame = Spawnpoint
+	end
+end)
+
+-- Tp Keybind
+local TpKeybind = NewLibrary:CreateKeybindButton({
+    target = ExampleTab1,
+    title = "TP Keybind",
+    callback = function()
+        player.Character.HumanoidRootPart.CFrame = CFrame.new(mouse.hit.p + Vector3.new(0,1,0))
+    end
+})
+
+-- EXAMPLE TAB 2
+
+local ExampleTab2 = NewLibrary:CreateTab({
+    title = "Example 2"
+})
+
+local ExampleTitle2 = NewLibrary:CreateInfo({
+    target = ExampleTab2,
+    title = "For information on all the different buttons, check the 'info' tab"
+})
+
+-- INITIALIZATION
+
+NewLibrary:Initialize()
