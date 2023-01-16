@@ -1,7 +1,7 @@
 -- Created by UC#8523
 -- EXAMPLES
 
--- LOADING THE Library
+-- LOADING THE LIBRARY
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/UnanimousCode/Unanimous-Code-Library/main/Source"))()
 local NewLibrary = Library:NewGui()
