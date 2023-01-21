@@ -483,7 +483,7 @@ function Library:NewGui()
 		NewLibrary["Settings-Frame"].Size = UDim2.new(0.9649999737739563, 0, 0.9649999737739563, 0);
 		NewLibrary["Settings-Frame"].Position = UDim2.new(0.017000000923871994, 0, 0.03500000014901161, 0);
 		NewLibrary["Settings-Frame"].Name = "Settings";
-		
+
 		NewLibrary["Settings-Layout"] = Instance.new("UIListLayout", NewLibrary["Settings-Frame"]);
 		NewLibrary["Settings-Layout"].Padding = UDim.new(0, 8);
 		NewLibrary["Settings-Layout"].SortOrder = Enum.SortOrder.LayoutOrder;
@@ -503,8 +503,8 @@ function Library:NewGui()
 		NewLibrary["Info-Frame"].ScrollBarThickness = 0;
 		NewLibrary["Info-Frame"].Position = UDim2.new(0.017273858189582825, 0, 0.03454773873090744, 0);
 		NewLibrary["Info-Frame"].Name = "Info";
-		NewLibrary["Info-Frame"].CanvasSize = UDim2.new(0,0,0,400)
-		
+		NewLibrary["Info-Frame"].CanvasSize = UDim2.new(0,0,0,600)
+
 		NewLibrary["Info-Layout"] = Instance.new("UIListLayout", NewLibrary["Info-Frame"]);
 		NewLibrary["Info-Layout"].Padding = UDim.new(0, 8);
 		NewLibrary["Info-Layout"].SortOrder = Enum.SortOrder.LayoutOrder;
@@ -554,7 +554,7 @@ function Library:NewGui()
 			local TabName = "Tab "..TabCount
 			local TabTitle = options.title
 			local NewTab = {}
-			
+
 			do
 				NewLibrary[TabName] = Instance.new("TextButton", NewLibrary["Home-Options"]);
 				NewLibrary[TabName].ZIndex = 7;
@@ -662,7 +662,7 @@ function Library:NewGui()
 				local ButtonParent = options.target.."-Frame"
 
 				if NewLibrary[ButtonParent] then
-					
+
 					do
 						NewButton[ButtonName] = Instance.new("TextButton", NewLibrary[ButtonParent]);
 						NewButton[ButtonName].ZIndex = 6;
@@ -751,12 +751,12 @@ function Library:NewGui()
 					function NewButton:SetCallback(func)
 						options.callback = func
 					end
-					
+
 					function NewButton:AddArgument(ArgumentName)
-						
+
 						-- Validation
 						if ArgumentName then
-							
+
 							-- Creation
 							NewButton.arguments[ArgumentName] = nil
 							local NewArgument = {}
@@ -776,9 +776,9 @@ function Library:NewGui()
 								NewArgument[ArgumentName.."-Corner"] = Instance.new("UICorner", NewArgument[ArgumentName]);
 								NewArgument[ArgumentName.."-Corner"]["CornerRadius"] = UDim.new(0, 5);
 							end
-							
+
 							-- Runner
-							
+
 							NewArgument[ArgumentName].Changed:Connect(function()
 								local argText = NewArgument[ArgumentName].Text
 								if tonumber(argText) then 
@@ -786,9 +786,9 @@ function Library:NewGui()
 								end
 								NewButton.arguments[ArgumentName] = argText
 							end)
-							
+
 							-- Methods
-							
+
 							function NewArgument:SetValue(NewValue)
 								NewButton.arguments[ArgumentName] = NewValue
 								if tostring(NewValue) then
@@ -800,7 +800,7 @@ function Library:NewGui()
 							return NewArgument
 						end
 					end
-					
+
 					function NewButton:GetArguments()
 						return NewButton.arguments
 					end
@@ -826,6 +826,7 @@ function Library:NewGui()
 			options = Library:Validate({
 				target = options.target,
 				title = "Toggle "..ToggleCount,
+				arguments = {},
 				callback = function() end,
 				toggled = false
 			}, options or {})
@@ -834,11 +835,13 @@ function Library:NewGui()
 			if options.target then
 
 				-- Creation
-				local NewToggle = {}
+				local NewToggle = {
+					arguments = {}
+				}
 				local ToggleName = "Toggle "..ToggleCount
 				local ToggleTitle = options.title
 				local ToggleParent = options.target.."-Frame"
-				
+
 				do
 					NewToggle[ToggleName] = Instance.new("TextButton", NewLibrary[ToggleParent]);
 					NewToggle[ToggleName].ZIndex = 6;
@@ -888,6 +891,20 @@ function Library:NewGui()
 					NewToggle[ToggleName.."-Info-Toggle-Stroke"]["Color"] = Color3.fromRGB(255, 255, 255);
 					NewToggle[ToggleName.."-Info-Toggle-Stroke"]["Thickness"] = 2;
 					NewToggle[ToggleName.."-Info-Toggle-Stroke"]["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border;
+					
+					NewToggle[ToggleName.."Info-Arguments"] = Instance.new("Frame", NewToggle[ToggleName.."-Info"]);
+					NewToggle[ToggleName.."Info-Arguments"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+					NewToggle[ToggleName.."Info-Arguments"].AnchorPoint = Vector2.new(0, 0.5);
+					NewToggle[ToggleName.."Info-Arguments"].BackgroundTransparency = 1;
+					NewToggle[ToggleName.."Info-Arguments"].Size = UDim2.new(0.6000000238418579, 0, 0, 25);
+					NewToggle[ToggleName.."Info-Arguments"].Position = UDim2.new(0.30000001192092896, 0, 0.5, 0);
+					NewToggle[ToggleName.."Info-Arguments"].Name = [[Arguments]];
+
+					NewToggle[ToggleName.."Arguments-Layout"] = Instance.new("UIListLayout", NewToggle[ToggleName.."Info-Arguments"]);
+					NewToggle[ToggleName.."Arguments-Layout"]["FillDirection"] = Enum.FillDirection.Horizontal;
+					NewToggle[ToggleName.."Arguments-Layout"]["HorizontalAlignment"] = Enum.HorizontalAlignment.Right;
+					NewToggle[ToggleName.."Arguments-Layout"]["Padding"] = UDim.new(0.029999999329447746, 0);
+					NewToggle[ToggleName.."Arguments-Layout"]["SortOrder"] = Enum.SortOrder.LayoutOrder;
 				end
 
 				-- Tweening
@@ -915,7 +932,7 @@ function Library:NewGui()
 							task.wait(0.8)
 							ClickCooldown = false
 						end)
-						options.callback(NewToggle.toggled)
+						options.callback(NewToggle.toggled, NewToggle.arguments)
 					end
 				end)
 
@@ -928,7 +945,60 @@ function Library:NewGui()
 					options.callback = func
 				end
 
+				function NewToggle:AddArgument(ArgumentName)
+					-- Validation
+					if ArgumentName then
+
+						-- Creation
+						NewToggle.arguments[ArgumentName] = nil
+						local NewArgument = {}
+						do
+							NewArgument[ArgumentName] = Instance.new("TextBox", NewToggle[ToggleName.."Info-Arguments"]);
+							NewArgument[ArgumentName]["BorderSizePixel"] = 0;
+							NewArgument[ArgumentName]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+							NewArgument[ArgumentName]["TextWrapped"] = true;
+							NewArgument[ArgumentName]["TextSize"] = 14;
+							NewArgument[ArgumentName]["BackgroundColor3"] = Color3.fromRGB(45, 45, 45);
+							NewArgument[ArgumentName]["PlaceholderText"] = ArgumentName;
+							NewArgument[ArgumentName]["Size"] = UDim2.new(0.30000001192092896, 0, 1, 0);
+							NewArgument[ArgumentName]["Text"] = [[]];
+							NewArgument[ArgumentName]["Font"] = Enum.Font.SourceSansBold;
+							NewArgument[ArgumentName]["Name"] = [[Argument]];
+
+							NewArgument[ArgumentName.."-Corner"] = Instance.new("UICorner", NewArgument[ArgumentName]);
+							NewArgument[ArgumentName.."-Corner"]["CornerRadius"] = UDim.new(0, 5);
+						end
+
+						-- Runner
+
+						NewArgument[ArgumentName].Changed:Connect(function()
+							local argText = NewArgument[ArgumentName].Text
+							if tonumber(argText) then 
+								argText = tonumber(argText)
+							end
+							NewToggle.arguments[ArgumentName] = argText
+						end)
+
+						-- Methods
+
+						function NewArgument:SetValue(NewValue)
+							NewToggle.arguments[ArgumentName] = NewValue
+							if tostring(NewValue) then
+								NewArgument[ArgumentName].Text = NewValue
+							else
+								NewArgument[ArgumentName].Text = "?"
+							end
+						end
+						return NewArgument
+					end
+				end
+
 				-- Returning
+				if #options.arguments > 0 then
+					for index, arg in pairs(options.arguments) do
+						local NewArg = NewToggle:AddArgument(arg)
+					end
+				end
 				ToggleCount=ToggleCount+1
 				return NewToggle
 			end
@@ -1108,7 +1178,7 @@ function Library:NewGui()
 			function NewSlider:GetValue()
 				return tonumber(NewSlider[SliderName.."-Value"].Text)
 			end
-			
+
 			function NewSlider:SetCallback(func)
 				options.callback = func
 			end
@@ -1163,9 +1233,9 @@ function Library:NewGui()
 		end
 		return nil
 	end
-	
+
 	function NewLibrary:CreateKeybindButton(options)
-		
+
 		-- Validation
 		local succ, err = pcall(function()
 			options = Library:Validate({
@@ -1177,7 +1247,7 @@ function Library:NewGui()
 			}, options or {})
 		end)
 		if succ and options.target then
-			
+
 			-- Creation
 			local NewKeybind = {
 				Selected = false
@@ -1244,7 +1314,7 @@ function Library:NewGui()
 				NewKeybind[KeybindName.."-Info-Value"]["Font"] = Enum.Font.SourceSansBold;
 				NewKeybind[KeybindName.."-Info-Value"]["Name"] = [[Value]];
 			end
-			
+
 			-- Tweening
 			local OldBackground = Color3.fromRGB(51, 51, 51)
 			local ClickColor = Color3.fromRGB(255,255,255)
@@ -1255,9 +1325,9 @@ function Library:NewGui()
 			NewKeybind[KeybindName].MouseLeave:Connect(function()
 				Library:Tween(NewKeybind[KeybindName.."-Info"], {BackgroundColor3 = OldBackground})
 			end)
-			
+
 			-- Methods
-			
+
 			function NewKeybind:UpdateKeybind(newkeybind, resetselected)
 				local NewKey = "..."
 				if tostring(newkeybind) and newkeybind ~= "" then
@@ -1273,15 +1343,15 @@ function Library:NewGui()
 					end
 				end
 			end
-			
+
 			function NewKeybind:SetCallback(func)
 				options.callback = func
 			end
-			
+
 			function NewKeybind:GetKeybind()
 				return options.keybind
 			end
-			
+
 			NewKeybind[KeybindName].MouseButton1Click:Connect(function()
 				spawn(function()
 					if not NewKeybind.Selected then
@@ -1295,7 +1365,7 @@ function Library:NewGui()
 				Library:Tween(NewKeybind[KeybindName.."-Info-Value"], {TextColor3 = ClickColor})
 				Library:Tween(NewKeybind[KeybindName.."-Info-Text"], {TextColor3 = ClickColor})
 			end)
-			
+
 			UserInputService.InputBegan:Connect(function(input)
 				if input.UserInputType ~= Enum.UserInputType.MouseMovement and input.UserInputType ~= Enum.UserInputType.MouseButton1 then
 					if NewKeybind.Selected then
@@ -1307,33 +1377,37 @@ function Library:NewGui()
 					end
 				end
 			end)
-			
+
 			-- Returning
 			KeybindCount=KeybindCount+1
 			return NewKeybind
 		end
 		return nil
 	end
-	
+
 	function NewLibrary:CreateDropdown(options)
-		
+
 		-- Validation
 		local succ, err = pcall(function()
 			options = Library:Validate({
 				target = nil,
 				title = "Dropdown "..DropdownCount,
 				options = {}
-			})
+			}, options or {})
 		end)
-		
-		if succ and options.target then
-			
+
+		if options.target then
 			-- Creation
-			local NewDropdown = {}
+			local NewDropdown = {
+				open = false,
+				enabled = 0,
+				optioncount = 0,
+				options = {}
+			}
 			local DropdownName = options.title
-			local DropdownParent = options.Target
+			local DropdownParent = options.target
 			do
-				NewDropdown[DropdownName] = Instance.new("TextButton", NewLibrary[DropdownParent.."-Frame"]);
+				NewDropdown[DropdownName] = Instance.new("TextButton", NewLibrary[options.target.."-Frame"]);
 				NewDropdown[DropdownName]["ZIndex"] = 6;
 				NewDropdown[DropdownName]["BorderSizePixel"] = 0;
 				NewDropdown[DropdownName]["TextSize"] = 14;
@@ -1390,14 +1464,14 @@ function Library:NewGui()
 				NewDropdown[DropdownName.."-Info-OptionHolder-Layout"] = Instance.new("UIListLayout", NewDropdown[DropdownName.."-Info-OptionHolder"]);
 				NewDropdown[DropdownName.."-Info-OptionHolder-Layout"]["Padding"] = UDim.new(0, 10);
 				NewDropdown[DropdownName.."-Info-OptionHolder-Layout"]["SortOrder"] = Enum.SortOrder.LayoutOrder;
-				
+
 				NewDropdown[DropdownName.."-Info-Selected"] = Instance.new("TextLabel", NewDropdown[DropdownName.."-Info"]);
 				NewDropdown[DropdownName.."-Info-Selected"]["ZIndex"] = 5;
 				NewDropdown[DropdownName.."-Info-Selected"]["BackgroundColor3"] = Color3.fromRGB(45, 45, 45);
 				NewDropdown[DropdownName.."-Info-Selected"]["TextSize"] = 14;
 				NewDropdown[DropdownName.."-Info-Selected"]["TextColor3"] = Color3.fromRGB(179, 179, 179);
 				NewDropdown[DropdownName.."-Info-Selected"]["Size"] = UDim2.new(0, 100, 0, 25);
-				NewDropdown[DropdownName.."-Info-Selected"]["Text"] = #options.options.." selected";
+				NewDropdown[DropdownName.."-Info-Selected"]["Text"] = "0 selected";
 				NewDropdown[DropdownName.."-Info-Selected"]["Name"] = [[Selected]];
 				NewDropdown[DropdownName.."-Info-Selected"]["Font"] = Enum.Font.SourceSansBold;
 				NewDropdown[DropdownName.."-Info-Selected"]["Position"] = UDim2.new(0, 398, 0, 15);
@@ -1405,30 +1479,125 @@ function Library:NewGui()
 				NewDropdown[DropdownName.."-Info-Selected-Corner"] = Instance.new("UICorner", NewDropdown[DropdownName.."-Info-Selected"]);
 				NewDropdown[DropdownName.."-Info-Selected-Corner"]["CornerRadius"] = UDim.new(0, 5);
 			end
-			
+
 			-- Tweening
-			local OldBackground = Color3.fromRGB(51, 51, 51)
-
-			NewDropdown[DropdownName.."-Info"].MouseEnter:Connect(function()
+			local canpress = true
+			NewDropdown[DropdownName].MouseButton1Click:Connect(function()
 				Library:Tween(NewDropdown[DropdownName.."-Info"], {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
-			end)
-
-			NewDropdown[DropdownName.."-Info"].MouseLeave:Connect(function()
-				Library:Tween(NewDropdown[DropdownName.."-Info"], {BackgroundColor3 = OldBackground})
+				spawn(function()
+					task.wait(0.1)
+					Library:Tween(NewDropdown[DropdownName.."-Info"], {BackgroundColor3 = Color3.fromRGB(51, 51, 51)})
+				end)
+				if not canpress then return end
+				canpress = false
+				NewDropdown.open = not NewDropdown.open
+				if NewDropdown.open then
+					Library:Tween(NewDropdown[DropdownName], {Size = UDim2.new(1,0,0,50+(NewDropdown.optioncount*30))})
+					NewDropdown[DropdownName.."-Info-OptionHolder"].Visible = true
+				else
+					NewDropdown[DropdownName.."-Info-OptionHolder"].Visible = false
+					Library:Tween(NewDropdown[DropdownName], {Size = UDim2.new(1,0,0,50)})
+				end
+				task.wait(0.1)
+				canpress = true
 			end)
 			
+			-- Methods
+			
+			function NewDropdown:AddOption(OptionName)
+				if not NewDropdown.options[OptionName] then
+					NewDropdown.options[OptionName] = false
+					NewDropdown.optioncount=NewDropdown.optioncount+1
+					local NewOption = {}
+					
+					NewOption[OptionName] = Instance.new("TextButton", NewDropdown[DropdownName.."-Info-OptionHolder"]);
+					NewOption[OptionName]["ZIndex"] = 6;
+					NewOption[OptionName]["BorderSizePixel"] = 0;
+					NewOption[OptionName]["BackgroundColor3"] = Color3.fromRGB(57, 57, 57);
+					NewOption[OptionName]["TextSize"] = 14;
+					NewOption[OptionName]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+					NewOption[OptionName]["Size"] = UDim2.new(1, 0, 0, 20);
+					NewOption[OptionName]["Text"] = OptionName;
+					NewOption[OptionName]["Name"] = OptionName;
+					NewOption[OptionName]["Font"] = Enum.Font.SourceSansBold;
+
+					NewOption[OptionName.."-Corner"] = Instance.new("UICorner", NewOption[OptionName]);
+					NewOption[OptionName.."-Corner"]["CornerRadius"] = UDim.new(0, 5);
+
+					NewOption[OptionName.."-Stroke"] = Instance.new("UIStroke", NewOption[OptionName]);
+					NewOption[OptionName.."-Stroke"]["Color"] = Color3.fromRGB(63, 63, 63);
+					NewOption[OptionName.."-Stroke"]["Thickness"] = 2;
+					NewOption[OptionName.."-Stroke"]["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border;
+					
+					NewOption[OptionName].MouseButton1Click:Connect(function()
+						NewDropdown.options[OptionName] = not NewDropdown.options[OptionName]
+						if NewDropdown.options[OptionName] == true then
+							NewOption[OptionName.."-Stroke"].Color = Color3.fromRGB(202,202,202)
+							NewDropdown.enabled = NewDropdown.enabled + 1
+						else
+							NewDropdown.enabled = NewDropdown.enabled - 1
+							NewOption[OptionName.."-Stroke"].Color = Color3.fromRGB(62,62,62)
+						end
+						NewDropdown[DropdownName.."-Info-Selected"]["Text"] = NewDropdown.enabled.." selected";
+					end)
+				end
+			end
+			
+			function NewDropdown:RemoveOption(OptionName)
+				if NewDropdown.options[OptionName] then
+					NewDropdown.options[OptionName] = nil
+					NewDropdown.optioncount=NewDropdown.optioncount-1
+					pcall(function()
+						NewDropdown[DropdownName.."-Info-OptionHolder"][OptionName]:Destroy()
+					end)
+				end
+			end
+			
+			local BindedAdded = nil
+			local BindedRemoved = nil
+			function NewDropdown:BindToParent(path)
+				if BindedAdded then
+					BindedAdded:Disconnect()
+					BindedAdded = nil
+				end
+				if BindedRemoved then
+					BindedRemoved:Disconnect()
+					BindedRemoved = nil
+				end
+				BindedAdded = path.ChildAdded:Connect(function(added)
+					repeat task.wait(0.1) until added.Name and added.Parent
+					task.wait(0.1)
+					NewDropdown:AddOption(added.Name)
+				end)
+				BindedRemoved = path.ChildRemoved:Connect(function(removed)
+					NewDropdown:RemoveOption(removed.Name)
+				end)
+				for _,existing in pairs(path:GetChildren()) do
+					NewDropdown:AddOption(existing.Name)
+				end
+			end
+			
+			function NewDropdown:GetOptions()
+				return NewDropdown.options
+			end
+
 			-- Returning
+			if #options.options > 0 then
+				for i,option in pairs(options.options) do
+					NewDropdown:AddOption(option)
+				end
+			end
 			DropdownCount=DropdownCount+1
 			return NewDropdown
 		end
 	end
-	
+
 	-- Settings
 	local SettingsTitle = NewLibrary:CreateInfo({
 		target = "Settings",
 		title = "Settings"
 	})
-	
+
 	-- Dragging
 	local CanDragGui = false
 	local DraggingFrame = false
@@ -1437,7 +1606,7 @@ function Library:NewGui()
 	local DragStart = nil
 	local GuiStart = nil
 	local CurrentTween = nil
-	
+
 	local DragSpeedChanger = NewLibrary:CreateSlider({
 		target = "Settings",
 		title = "Gui Drag Speed",
@@ -1448,14 +1617,14 @@ function Library:NewGui()
 	DragSpeedChanger:SetCallback(function(NewDragSpeed)
 		DragSpeed = NewDragSpeed
 	end)
-	
+
 	NewLibrary["TopBar"].MouseEnter:Connect(function()
 		CanDragGui = true
 	end)
 	NewLibrary["TopBar"].MouseLeave:Connect(function()
 		CanDragGui = false
 	end)
-	
+
 	local function UpdateGuiPos(input)
 		if DraggingFrame then
 			local delta = input.Position - DragStart
@@ -1464,7 +1633,7 @@ function Library:NewGui()
 			CurrentTween:Play()
 		end
 	end
-	
+
 	UserInputService.InputBegan:Connect(function(input, processing)
 		if processing or CanDragGui == false then return end
 		if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -1473,7 +1642,7 @@ function Library:NewGui()
 			GuiStart = NewLibrary["Main"].Position
 		end
 	end)
-	
+
 	UserInputService.InputEnded:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseButton1 then
 			DraggingFrame = false
@@ -1482,22 +1651,22 @@ function Library:NewGui()
 			end
 		end
 	end)
-	
+
 	NewLibrary["Main"].InputChanged:Connect(function(input)
 		if input.UserInputType == Enum.UserInputType.MouseMovement then
 			DragInput = input
 		end
 	end)
-	
+
 	UserInputService.InputChanged:Connect(function(input, processing)
 		if processing then return end
 		if input == DragInput and DraggingFrame then
 			UpdateGuiPos(input)
 		end
 	end)
-	
+
 	-- Toggling
-	
+
 	local ToggleKeybind = NewLibrary:CreateKeybindButton({
 		target = "Settings",
 		title = "Toggle Gui",
@@ -1506,9 +1675,9 @@ function Library:NewGui()
 			NewLibrary["LibraryGui"].Enabled = not NewLibrary["LibraryGui"].Enabled
 		end,
 	})
-	
+
 	-- Rejoining
-	
+
 	local RejoinButton = NewLibrary:CreateButton({
 		target = "Settings",
 		title = "Rejoin",
@@ -1516,9 +1685,9 @@ function Library:NewGui()
 			TeleportService:Teleport(PlaceId, MyPlayer)
 		end,
 	})
-	
+
 	-- Resetting
-	
+
 	local ResetButton = NewLibrary:CreateButton({
 		target = "Settings",
 		title = "Reset",
@@ -1528,19 +1697,19 @@ function Library:NewGui()
 			MyPlayer.Character.Humanoid.Health = 0
 		end)
 	end)
-	
+
 	-- Examples
-	
+
 	local ExampleInfo = NewLibrary:CreateInfo({
 		target = "Info",
 		title = "Info Bar"
 	})
-	
+
 	local ExampleButton = NewLibrary:CreateButton({
 		target = "Info",
 		title = "Normal Button",
 	})
-	
+
 	local ExampleButton2 = NewLibrary:CreateButton({
 		target = "Info",
 		title = "Button with arguments",
@@ -1549,12 +1718,24 @@ function Library:NewGui()
 	ExampleButton2:SetCallback(function(args)
 		print(args["Argument 1"], args["Argument 2"])
 	end)
-	
+
 	local ExampleToggle = NewLibrary:CreateToggle({
 		target = "Info",
 		title = "Toggle"
 	})
 	
+	local ExampleToggle2 = NewLibrary:CreateToggle({
+		target = "Info",
+		title = "Toggle with arguments",
+		arguments = {"Argument 1"},
+		callback = function(toggled, args)
+			if toggled == true then
+				print(args["Argument 1"], args["Argument 2"])
+			end
+		end,
+	})
+	local ToggleArg = ExampleToggle2:AddArgument("Argument 2")
+
 	local ExampleSlider = NewLibrary:CreateSlider({
 		target = "Info",
 		title = "Slider",
@@ -1562,12 +1743,30 @@ function Library:NewGui()
 		min = 0,
 		max = 100
 	})
-	
+
 	local ExampleKeybind = NewLibrary:CreateKeybindButton({
 		target = "Info",
 		title = "Keybind"
 	})
 	
+	local ExampleDropdown = nil
+	local DropdownPrint = NewLibrary:CreateButton({
+		target = "Info",
+		title = "Print Dropdown Options",
+		callback = function()
+			local args = ExampleDropdown:GetOptions()
+			for i,v in pairs(args) do
+				print(i,v)
+			end
+		end,
+	})
+	ExampleDropdown = NewLibrary:CreateDropdown({
+		target = "Info",
+		title = "Dropdown",
+		options = {"Option 1"}
+	})
+	ExampleDropdown:AddOption("Option 2")
+
 	-- RETURNING
 	function NewLibrary:Initialize()
 		pcall(function()
