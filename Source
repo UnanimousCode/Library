@@ -1278,6 +1278,10 @@ function Library:NewGui()
 				options.callback = func
 			end
 			
+			function NewKeybind:GetKeybind()
+				return options.keybind
+			end
+			
 			NewKeybind[KeybindName].MouseButton1Click:Connect(function()
 				spawn(function()
 					if not NewKeybind.Selected then
