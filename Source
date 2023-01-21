@@ -891,7 +891,7 @@ function Library:NewGui()
 					NewToggle[ToggleName.."-Info-Toggle-Stroke"]["Color"] = Color3.fromRGB(255, 255, 255);
 					NewToggle[ToggleName.."-Info-Toggle-Stroke"]["Thickness"] = 2;
 					NewToggle[ToggleName.."-Info-Toggle-Stroke"]["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border;
-					
+
 					NewToggle[ToggleName.."Info-Arguments"] = Instance.new("Frame", NewToggle[ToggleName.."-Info"]);
 					NewToggle[ToggleName.."Info-Arguments"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
 					NewToggle[ToggleName.."Info-Arguments"].AnchorPoint = Vector2.new(0, 0.5);
@@ -1435,7 +1435,7 @@ function Library:NewGui()
 				NewDropdown[DropdownName.."-Info-Text"]["TextSize"] = 20;
 				NewDropdown[DropdownName.."-Info-Text"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
 				NewDropdown[DropdownName.."-Info-Text"]["Size"] = UDim2.new(1, -50, 0, 50);
-				NewDropdown[DropdownName.."-Info-Text"]["Text"] = [[Dropdown]];
+				NewDropdown[DropdownName.."-Info-Text"]["Text"] = DropdownName;
 				NewDropdown[DropdownName.."-Info-Text"]["Name"] = [[text]];
 				NewDropdown[DropdownName.."-Info-Text"]["Font"] = Enum.Font.SourceSansBold;
 				NewDropdown[DropdownName.."-Info-Text"]["BackgroundTransparency"] = 1;
@@ -1501,15 +1501,15 @@ function Library:NewGui()
 				task.wait(0.1)
 				canpress = true
 			end)
-			
+
 			-- Methods
-			
+
 			function NewDropdown:AddOption(OptionName)
 				if not NewDropdown.options[OptionName] then
 					NewDropdown.options[OptionName] = false
 					NewDropdown.optioncount=NewDropdown.optioncount+1
 					local NewOption = {}
-					
+
 					NewOption[OptionName] = Instance.new("TextButton", NewDropdown[DropdownName.."-Info-OptionHolder"]);
 					NewOption[OptionName]["ZIndex"] = 6;
 					NewOption[OptionName]["BorderSizePixel"] = 0;
@@ -1528,7 +1528,7 @@ function Library:NewGui()
 					NewOption[OptionName.."-Stroke"]["Color"] = Color3.fromRGB(63, 63, 63);
 					NewOption[OptionName.."-Stroke"]["Thickness"] = 2;
 					NewOption[OptionName.."-Stroke"]["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border;
-					
+
 					function NewOption:ToggleVal()
 						NewDropdown.options[OptionName] = not NewDropdown.options[OptionName]
 						if NewDropdown.options[OptionName] == true then
@@ -1541,40 +1541,35 @@ function Library:NewGui()
 						NewDropdown[DropdownName.."-Info-Selected"]["Text"] = NewDropdown.enabled.." selected";
 					end
 					
+					function NewOption:Remove()
+						NewDropdown.options[OptionName] = nil
+						NewDropdown.optioncount=NewDropdown.optioncount-1
+						NewOption[OptionName]:Destroy()
+					end
+
 					NewOption[OptionName].MouseButton1Click:Connect(function() NewOption:ToggleVal() end)
-					
+
 					return NewOption
 				end
 			end
-			
-			function NewDropdown:RemoveOption(OptionName)
-				if NewDropdown.options[OptionName] then
-					NewDropdown.options[OptionName] = nil
-					NewDropdown.optioncount=NewDropdown.optioncount-1
-					pcall(function()
-						NewDropdown[DropdownName.."-Info-OptionHolder"][OptionName]:Destroy()
-					end)
-				end
-			end
-			
+
 			local BindedAdded = nil
-			local BindedRemoved = nil
 			function NewDropdown:BindToParent(path)
 				if BindedAdded then
 					BindedAdded:Disconnect()
 					BindedAdded = nil
 				end
-				if BindedRemoved then
-					BindedRemoved:Disconnect()
-					BindedRemoved = nil
-				end
 				BindedAdded = path.ChildAdded:Connect(function(added)
 					repeat task.wait(0.1) until added.Name and added.Parent
 					task.wait(0.1)
-					NewDropdown:AddOption(added.Name)
-				end)
-				BindedRemoved = path.ChildRemoved:Connect(function(removed)
-					NewDropdown:RemoveOption(removed.Name)
+					if added.Parent then
+						local NewOpt = NewDropdown:AddOption(added.Name)
+						added.AncestryChanged:Connect(function()
+							if not added.Parent then
+								NewOpt:Remove()
+							end
+						end)
+					end
 				end)
 				for _,existing in pairs(path:GetChildren()) do
 					local NewOpt = NewDropdown:AddOption(existing.Name)
@@ -1585,7 +1580,7 @@ function Library:NewGui()
 					end
 				end
 			end
-			
+
 			function NewDropdown:GetOptions()
 				return NewDropdown.options
 			end
@@ -1732,7 +1727,7 @@ function Library:NewGui()
 		target = "Info",
 		title = "Toggle"
 	})
-	
+
 	local ExampleToggle2 = NewLibrary:CreateToggle({
 		target = "Info",
 		title = "Toggle with arguments",
@@ -1757,7 +1752,7 @@ function Library:NewGui()
 		target = "Info",
 		title = "Keybind"
 	})
-	
+
 	local ExampleDropdown = nil
 	local DropdownPrint = NewLibrary:CreateButton({
 		target = "Info",
@@ -1772,10 +1767,9 @@ function Library:NewGui()
 	ExampleDropdown = NewLibrary:CreateDropdown({
 		target = "Info",
 		title = "Dropdown",
-		--options = {"Option 1"}
+		options = {"Option 1"}
 	})
-	--ExampleDropdown:AddOption("Option 2")
-	ExampleDropdown:BindToParent(game.Players)
+	ExampleDropdown:AddOption("Option 2")
 
 	-- RETURNING
 	function NewLibrary:Initialize()
