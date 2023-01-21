@@ -1676,6 +1676,7 @@ function Library:NewGui()
 		title = "Toggle Gui",
 		keybind = "Z",
 		callback = function()
+			if UserInputService:GetFocusedTextBox() then return end
 			NewLibrary["LibraryGui"].Enabled = not NewLibrary["LibraryGui"].Enabled
 		end,
 	})
@@ -1779,7 +1780,7 @@ function Library:NewGui()
 			end
 		end)
 		NewLibrary["LibraryGui"].Enabled = true
-		print("UnanimousCode Lib "..ver..": Initalized.")
+		print("This gui was made using the Unanimous Code Library, "..ver)
 	end
 	return NewLibrary
 end
