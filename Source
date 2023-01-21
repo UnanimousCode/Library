@@ -1529,7 +1529,7 @@ function Library:NewGui()
 					NewOption[OptionName.."-Stroke"]["Thickness"] = 2;
 					NewOption[OptionName.."-Stroke"]["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border;
 					
-					NewOption[OptionName].MouseButton1Click:Connect(function()
+					function NewOption:ToggleVal()
 						NewDropdown.options[OptionName] = not NewDropdown.options[OptionName]
 						if NewDropdown.options[OptionName] == true then
 							NewOption[OptionName.."-Stroke"].Color = Color3.fromRGB(202,202,202)
@@ -1539,7 +1539,11 @@ function Library:NewGui()
 							NewOption[OptionName.."-Stroke"].Color = Color3.fromRGB(62,62,62)
 						end
 						NewDropdown[DropdownName.."-Info-Selected"]["Text"] = NewDropdown.enabled.." selected";
-					end)
+					end
+					
+					NewOption[OptionName].MouseButton1Click:Connect(function() NewOption:ToggleVal() end)
+					
+					return NewOption
 				end
 			end
 			
@@ -1573,7 +1577,12 @@ function Library:NewGui()
 					NewDropdown:RemoveOption(removed.Name)
 				end)
 				for _,existing in pairs(path:GetChildren()) do
-					NewDropdown:AddOption(existing.Name)
+					local NewOpt = NewDropdown:AddOption(existing.Name)
+					if path == game.Players then
+						if existing == MyPlayer then
+							NewOpt:ToggleVal()
+						end
+					end
 				end
 			end
 			
@@ -1763,9 +1772,10 @@ function Library:NewGui()
 	ExampleDropdown = NewLibrary:CreateDropdown({
 		target = "Info",
 		title = "Dropdown",
-		options = {"Option 1"}
+		--options = {"Option 1"}
 	})
-	ExampleDropdown:AddOption("Option 2")
+	--ExampleDropdown:AddOption("Option 2")
+	ExampleDropdown:BindToParent(game.Players)
 
 	-- RETURNING
 	function NewLibrary:Initialize()
