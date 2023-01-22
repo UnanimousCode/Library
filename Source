@@ -40,8 +40,11 @@ Library.icons = {
 	["click"] = "rbxassetid://12084736361",
 	["info"] = "rbxassetid://12093228351",
 	["dropdown"] = "rbxassetid://12093280677",
-	["wrench"] = "rbxassetid://12131420584",
-	["punch"] = "rbxassetid://12084548205"
+	["wrench"] = "rbxassetid://12232041526",
+	["punch"] = "rbxassetid://12084548142",
+	["player"] = "rbxassetid://12094157128",
+	["back"] = "rbxassetid://12232067948",
+	["sword"] = "rbxassetid://12232074067"
 }
 
 function Library:Validate(defaults, options)
