@@ -1367,12 +1367,14 @@ function Library:NewGui()
 			end)
 
 			UserInputService.InputBegan:Connect(function(input)
-				if input.UserInputType ~= Enum.UserInputType.MouseMovement and input.UserInputType ~= Enum.UserInputType.MouseButton1 then
-					if NewKeybind.Selected then
-						NewKeybind:UpdateKeybind(UserInputService:GetStringForKeyCode(input.KeyCode), true)
-					else
-						if UserInputService:GetStringForKeyCode(input.KeyCode) == options.keybind then
-							options.callback()
+				if not UserInputService:GetFocusedTextBox() then
+					if input.UserInputType ~= Enum.UserInputType.MouseMovement and input.UserInputType ~= Enum.UserInputType.MouseButton1 then
+						if NewKeybind.Selected then
+							NewKeybind:UpdateKeybind(UserInputService:GetStringForKeyCode(input.KeyCode), true)
+						else
+							if UserInputService:GetStringForKeyCode(input.KeyCode) == options.keybind then
+								options.callback()
+							end
 						end
 					end
 				end
