@@ -1552,6 +1552,7 @@ function Library:NewGui()
 						NewDropdown.options[OptionName] = nil
 						NewDropdown.optioncount=NewDropdown.optioncount-1
 						NewOption[OptionName]:Destroy()
+						NewDropdown[DropdownName.."-Info-Selected"]["Text"] = NewDropdown.enabled.." selected";
 					end
 
 					NewOption[OptionName].MouseButton1Click:Connect(function() NewOption:ToggleVal() end)
