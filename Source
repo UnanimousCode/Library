@@ -1593,6 +1593,10 @@ function Library:NewGui()
 			function NewDropdown:GetOptions()
 				return NewDropdown.options
 			end
+			
+			function NewDropdown:SetCallback(func)
+				options.callback = func
+			end
 
 			-- Returning
 			if #options.options > 0 then
