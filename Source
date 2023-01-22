@@ -1537,7 +1537,6 @@ function Library:NewGui()
 
 					function NewOption:ToggleVal()
 						NewDropdown.options[OptionName] = not NewDropdown.options[OptionName]
-						options.callback(OptionName)
 						if NewDropdown.options[OptionName] == true then
 							NewOption[OptionName.."-Stroke"].Color = Color3.fromRGB(202,202,202)
 							NewDropdown.enabled = NewDropdown.enabled + 1
@@ -1546,6 +1545,7 @@ function Library:NewGui()
 							NewOption[OptionName.."-Stroke"].Color = Color3.fromRGB(62,62,62)
 						end
 						NewDropdown[DropdownName.."-Info-Selected"]["Text"] = NewDropdown.enabled.." selected";
+						options.callback(OptionName)
 					end
 
 					function NewOption:Remove()
