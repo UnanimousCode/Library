@@ -43,7 +43,7 @@ Library.icons = {
 	["wrench"] = "rbxassetid://12232041526",
 	["punch"] = "rbxassetid://12084548142",
 	["player"] = "rbxassetid://12094157128",
-	["back"] = "rbxassetid://12232067948",
+	["bag"] = "rbxassetid://12232067948",
 	["sword"] = "rbxassetid://12232074067"
 }
 
