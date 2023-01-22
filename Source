@@ -1572,6 +1572,11 @@ function Library:NewGui()
 				end)
 				for _,existing in pairs(path:GetChildren()) do
 					local NewOpt = NewDropdown:AddOption(existing.Name)
+					existing.AncestryChanged:Connect(function()
+						if not existing.Parent then
+							NewOpt:Remove()
+						end
+					end)
 					if path == game.Players then
 						if existing == MyPlayer then
 							NewOpt:ToggleVal()
