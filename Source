@@ -1542,7 +1542,7 @@ function Library:NewGui()
 						end
 						NewDropdown[DropdownName.."-Info-Selected"]["Text"] = NewDropdown.enabled.." selected";
 					end
-					
+
 					function NewOption:Remove()
 						NewDropdown.options[OptionName] = nil
 						NewDropdown.optioncount=NewDropdown.optioncount-1
@@ -1562,16 +1562,13 @@ function Library:NewGui()
 					BindedAdded = nil
 				end
 				BindedAdded = path.ChildAdded:Connect(function(added)
-					repeat task.wait(0.1) until added.Name and added.Parent
-					task.wait(0.1)
-					if added.Parent then
-						local NewOpt = NewDropdown:AddOption(added.Name)
-						added.AncestryChanged:Connect(function()
-							if not added.Parent then
-								NewOpt:Remove()
-							end
-						end)
-					end
+					repeat task.wait() until added.Parent
+					local NewOpt = NewDropdown:AddOption(added.Name)
+					added.AncestryChanged:Connect(function()
+						if not added.Parent then
+							NewOpt:Remove()
+						end
+					end)
 				end)
 				for _,existing in pairs(path:GetChildren()) do
 					local NewOpt = NewDropdown:AddOption(existing.Name)
