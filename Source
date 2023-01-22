@@ -1397,6 +1397,7 @@ function Library:NewGui()
 			options = Library:Validate({
 				target = nil,
 				title = "Dropdown "..DropdownCount,
+				callback = function() end,
 				options = {}
 			}, options or {})
 		end)
@@ -1536,6 +1537,7 @@ function Library:NewGui()
 
 					function NewOption:ToggleVal()
 						NewDropdown.options[OptionName] = not NewDropdown.options[OptionName]
+						options.callback(OptionName)
 						if NewDropdown.options[OptionName] == true then
 							NewOption[OptionName.."-Stroke"].Color = Color3.fromRGB(202,202,202)
 							NewDropdown.enabled = NewDropdown.enabled + 1
