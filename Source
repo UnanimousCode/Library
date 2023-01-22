@@ -28,21 +28,21 @@ local BaseTweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirec
 
 local HttpRequest = (syn and syn.request) or http and http.request or http_request or (fluxus and fluxus.request) or request
 
--- ICONS
+-- LIBRARY
 
-local icons = {
+local CanInitialize = false
+local Library = {}
+
+Library.icons = {
 	["home"] = "rbxassetid://12083746629",
 	["settings"] = "rbxassetid://12083386355",
 	["Info"] = "rbxassetid://12083920357",
 	["click"] = "rbxassetid://12084736361",
 	["info"] = "rbxassetid://12093228351",
-	["dropdown"] = "rbxassetid://12093280677"
+	["dropdown"] = "rbxassetid://12093280677",
+	["wrench"] = "rbxassetid://12131420584",
+	["punch"] = "rbxassetid://12084548205"
 }
-
--- LIBRARY
-
-local CanInitialize = false
-local Library = {}
 
 function Library:Validate(defaults, options)
 	for i,v in pairs(defaults) do
@@ -545,7 +545,7 @@ function Library:NewGui()
 		-- Validation
 		options = Library:Validate({
 			title = "Tab "..TabCount,
-			icon = icons["click"],
+			icon = Library.icons["click"],
 			buttoncount = 12
 		}, options or {})
 		if not NewLibrary[options.name] then
@@ -701,7 +701,7 @@ function Library:NewGui()
 						NewButton[ButtonName.."-Info-Icon"].ZIndex = 5;
 						NewButton[ButtonName.."-Info-Icon"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
 						NewButton[ButtonName.."-Info-Icon"].AnchorPoint = Vector2.new(1, 0.5);
-						NewButton[ButtonName.."-Info-Icon"].Image = icons["click"];
+						NewButton[ButtonName.."-Info-Icon"].Image = Library.icons["click"];
 						NewButton[ButtonName.."-Info-Icon"].Size = UDim2.new(0, 25, 0, 25);
 						NewButton[ButtonName.."-Info-Icon"].Name = "Image";
 						NewButton[ButtonName.."-Info-Icon"].BackgroundTransparency = 1;
@@ -1036,7 +1036,7 @@ function Library:NewGui()
 				NewInfo[InfoName.."-Icon"].ZIndex = 5;
 				NewInfo[InfoName.."-Icon"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
 				NewInfo[InfoName.."-Icon"].AnchorPoint = Vector2.new(1, 0.5);
-				NewInfo[InfoName.."-Icon"].Image = icons["info"];
+				NewInfo[InfoName.."-Icon"].Image = Library.icons["info"];
 				NewInfo[InfoName.."-Icon"].Size = UDim2.new(0, 25, 0, 25);
 				NewInfo[InfoName.."-Icon"].Name = "Image";
 				NewInfo[InfoName.."-Icon"].BackgroundTransparency = 1;
