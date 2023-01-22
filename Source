@@ -1570,9 +1570,7 @@ function Library:NewGui()
 					repeat task.wait() until added.Parent
 					local NewOpt = NewDropdown:AddOption(added.Name)
 					added.AncestryChanged:Connect(function()
-						if not added.Parent then
-							NewOpt:Remove()
-						end
+						NewOpt:Remove()
 					end)
 				end)
 				for _,existing in pairs(path:GetChildren()) do
