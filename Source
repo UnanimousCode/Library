@@ -98,7 +98,7 @@ function Library:WebhookSend(URL, data)
 			Url = URL,
 			Method = "POST",
 			Headers = {
-				["Content-Type"] = "applcation/json"
+				["Content-Type"] = "application/json"
 			},
 			Body = HttpService:JSONEncode(data)
 		}
