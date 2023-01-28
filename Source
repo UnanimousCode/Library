@@ -94,7 +94,7 @@ end
 
 function Library:WebhookSend(URL, data)
 	if HttpRequest and URL and data then
-		local NewRequest = {
+		HttpRequest{
 			Url = URL,
 			Method = "POST",
 			Headers = {
