@@ -1181,21 +1181,21 @@ function Library:NewGui()
 			end)
 
 			-- Methods
+			
+			local percentvalue = options.default
+			
 			function NewSlider:SetValue(value)
 				if value == nil then
 					local percent = math.clamp((MyMouse.X - NewSlider[SliderName.."-SliderBack"].AbsolutePosition.X) / (NewSlider[SliderName.."-SliderBack"].AbsoluteSize.X),0,1)
-					local percentvalue = math.floor(((options.max - options.min) * percent) + options.min)
+					percentvalue = math.floor(((options.max - options.min) * percent) + options.min)
 					NewSlider[SliderName.."-Value"].Text = Library:AbbreviateNumber(percentvalue)
 					NewSlider[SliderName.."-SliderBack-Drag"].Size = UDim2.fromScale(percent,1)
 				else
-					NewSlider[SliderName.."-Value"].Text = Library:AbbreviateNumber(value)
+					percentvalue = value
+					NewSlider[SliderName.."-Value"].Text = Library:AbbreviateNumber(percentvalue)
 					NewSlider[SliderName.."-SliderBack-Drag"].Size = UDim2.fromScale(((value-options.min)/(options.max-options.min)),1)
 				end 
-				options.callback(NewSlider:GetValue())
-			end
-
-			function NewSlider:GetValue()
-				return tonumber(NewSlider[SliderName.."-Value"].Text)
+				options.callback(percentvalue)
 			end
 
 			function NewSlider:SetCallback(func)
