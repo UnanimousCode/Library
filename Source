@@ -105,6 +105,22 @@ function Library:WebhookSend(URL, data)
 	end
 end
 
+local NumberAbbreviations = {
+	K = 4,
+	M = 7,
+	B = 10
+}
+function Library:AbbreviateNumber(number)
+	local text = tostring(math.floor(number))
+	for abbreviation, length in pairs(NumberAbbreviations) do
+		if #text >= length and #text < (length+3) then
+			local rounded = (math.floor(number/10^(length-2))*10^(length-2))
+			return string.format("%.1f",(math.floor(number/10^(length-2))*10^(length-2))/10^(length-1))..abbreviation.."+"
+		end
+	end
+	return number
+end
+
 function Library:NewGui()
 
 	-- Variables
@@ -1169,10 +1185,10 @@ function Library:NewGui()
 				if value == nil then
 					local percent = math.clamp((MyMouse.X - NewSlider[SliderName.."-SliderBack"].AbsolutePosition.X) / (NewSlider[SliderName.."-SliderBack"].AbsoluteSize.X),0,1)
 					local percentvalue = math.floor(((options.max - options.min) * percent) + options.min)
-					NewSlider[SliderName.."-Value"].Text = tostring(percentvalue)
+					NewSlider[SliderName.."-Value"].Text = Library:AbbreviateNumber(percentvalue)
 					NewSlider[SliderName.."-SliderBack-Drag"].Size = UDim2.fromScale(percent,1)
 				else
-					NewSlider[SliderName.."-Value"].Text = tostring(value)
+					NewSlider[SliderName.."-Value"].Text = Library:AbbreviateNumber(value)
 					NewSlider[SliderName.."-SliderBack-Drag"].Size = UDim2.fromScale(((value-options.min)/(options.max-options.min)),1)
 				end 
 				options.callback(NewSlider:GetValue())
@@ -1592,7 +1608,7 @@ function Library:NewGui()
 			function NewDropdown:GetOptions()
 				return NewDropdown.options
 			end
-			
+
 			function NewDropdown:SetCallback(func)
 				options.callback = func
 			end
