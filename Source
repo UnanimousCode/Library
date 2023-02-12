@@ -115,7 +115,7 @@ function Library:AbbreviateNumber(number)
 	for abbreviation, length in pairs(NumberAbbreviations) do
 		if #text >= length and #text < (length+3) then
 			local rounded = (math.floor(number/10^(length-2))*10^(length-2))
-			return string.format("%.1f",(math.floor(number/10^(length-2))*10^(length-2))/10^(length-1))..abbreviation.."+"
+			return string.format("%.1f",(math.floor(number/10^(length-2))*10^(length-2))/10^(length-1))..abbreviation
 		end
 	end
 	return number
