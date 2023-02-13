@@ -501,7 +501,7 @@ function Library:NewGui()
 		NewLibrary["Home-PlayerInfo-Id"].TextColor3 = Color3.fromRGB(255, 255, 255);
 		NewLibrary["Home-PlayerInfo-Id"].AnchorPoint = Vector2.new(1, 0.5);
 		NewLibrary["Home-PlayerInfo-Id"].Size = UDim2.new(0.5, 0, 0.25, 0);
-		NewLibrary["Home-PlayerInfo-Id"].Text = [[@0]];
+		NewLibrary["Home-PlayerInfo-Id"].Text = [[0]];
 		NewLibrary["Home-PlayerInfo-Id"].Name = [[GameId]];
 		NewLibrary["Home-PlayerInfo-Id"].Font = Enum.Font.SourceSans;
 		NewLibrary["Home-PlayerInfo-Id"].BackgroundTransparency = 1;
@@ -594,7 +594,7 @@ function Library:NewGui()
 	NewLibrary["Home-PlayerInfo-User"].Text = "@"..MyPlayer.Name
 	NewLibrary["Home-PlayerInfo-Time"].Text = Library:FormatTime()
 	NewLibrary["Home-PlayerInfo-Game"].Text = GameName
-	NewLibrary["Home-PlayerInfo-Id"].Text = "@"..PlaceId
+	NewLibrary["Home-PlayerInfo-Id"].Text = PlaceId
 	coroutine.wrap(function()
 		while wait(60) do
 			NewLibrary["Home-PlayerInfo-Time"].Text = Library:FormatTime()
