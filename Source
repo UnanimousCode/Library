@@ -602,7 +602,7 @@ function Library:NewGui()
 	end)()
 	local Players = #game.Players:GetChildren()
 	local function UpdatePlayerCount()
-		NewLibrary["Home-PlayerInfo-Players"].Text #game.Players:GetChildren().." Player(s)"
+		NewLibrary["Home-PlayerInfo-Players"].Text = #game.Players:GetChildren().." Player(s)"
 	end
 	game.Players.PlayerAdded:Connect(UpdatePlayerCount)
 	game.Players.PlayerRemoving:Connect(UpdatePlayerCount)
