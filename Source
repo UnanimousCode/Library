@@ -56,9 +56,8 @@ function Library:Validate(defaults, options)
 	return options
 end
 
-function Library:Tween(object, goal, callback)
-	local tween = TweenService:Create(object, BaseTweenInfo, goal)
-	tween.Completed:Connect(callback or function() end)
+function Library:Tween(object, info, goal)
+	local tween = TweenService:Create(object, info, goal)
 	tween:Play()
 end
 
@@ -190,6 +189,23 @@ function Library:NewGui()
 
 		NewLibrary["Main-Corner"] = Instance.new("UICorner", NewLibrary["Main"])
 		NewLibrary["Main-Corner"].CornerRadius = UDim.new(0, 6)
+	end
+	
+	-- Gui.Notifications
+	do
+		NewLibrary["Notifcations"] = Instance.new("Frame", NewLibrary["LibraryGui"]);
+		NewLibrary["Notifcations"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+		NewLibrary["Notifcations"]["AnchorPoint"] = Vector2.new(1, 0.5);
+		NewLibrary["Notifcations"]["BackgroundTransparency"] = 1;
+		NewLibrary["Notifcations"]["Size"] = UDim2.new(0.20000000298023224, 0, 0.8999999761581421, 0);
+		NewLibrary["Notifcations"]["Position"] = UDim2.new(1, -20, 0.5, 0);
+		NewLibrary["Notifcations"]["Name"] = [[Notifications]];
+		
+		NewLibrary["Notifcations-Layout"] = Instance.new("UIListLayout", NewLibrary["Notifcations"]);
+		NewLibrary["Notifcations-Layout"]["VerticalAlignment"] = Enum.VerticalAlignment.Bottom;
+		NewLibrary["Notifcations-Layout"]["HorizontalAlignment"] = Enum.HorizontalAlignment.Right;
+		NewLibrary["Notifcations-Layout"]["Padding"] = UDim.new(0, 10);
+		NewLibrary["Notifcations-Layout"]["SortOrder"] = Enum.SortOrder.LayoutOrder;
 	end
 
 	-- Gui.Main.Shadow
@@ -691,10 +707,10 @@ function Library:NewGui()
 			-- Tweening
 			local oldColor = Color3.fromRGB(51, 51, 51)
 			NewLibrary[TabName].MouseEnter:Connect(function()
-				Library:Tween(NewLibrary[TabName.."-Info"], {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
+				Library:Tween(NewLibrary[TabName.."-Info"], BaseTweenInfo, {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
 			end)
 			NewLibrary[TabName].MouseLeave:Connect(function()
-				Library:Tween(NewLibrary[TabName.."-Info"], {BackgroundColor3 = oldColor})
+				Library:Tween(NewLibrary[TabName.."-Info"], BaseTweenInfo, {BackgroundColor3 = oldColor})
 			end)
 			NewLibrary[TabName].MouseButton1Click:Connect(function()
 				--pcall(function()
@@ -707,6 +723,114 @@ function Library:NewGui()
 			return TabName
 		end
 		return nil
+	end
+	
+	function NewLibrary:Notify(options)
+		options = Library:Validate({title = "Notification", text = nil, duration = 3}, options or {})
+		if options.text then
+			-- Creation
+			local NewNotification = {}
+			local NotificationName = "Notification"
+			do
+				NewNotification[NotificationName] = Instance.new("Frame", NewLibrary["Notifcations"]);
+				NewNotification[NotificationName]["BorderSizePixel"] = 0;
+				NewNotification[NotificationName]["BackgroundColor3"] = Color3.fromRGB(59, 59, 59);
+				NewNotification[NotificationName]["Size"] = UDim2.new(0, 200, 0, 80);
+				NewNotification[NotificationName]["Name"] = [[Notification]];
+
+				NewNotification[NotificationName.."-Corner"] = Instance.new("UICorner", NewNotification[NotificationName]);
+				NewNotification[NotificationName.."-Corner"]["CornerRadius"] = UDim.new(0, 6);
+
+				NewNotification[NotificationName.."-Title"] = Instance.new("TextLabel", NewNotification[NotificationName]);
+				NewNotification[NotificationName.."-Title"]["TextXAlignment"] = Enum.TextXAlignment.Left;
+				NewNotification[NotificationName.."-Title"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+				NewNotification[NotificationName.."-Title"]["TextSize"] = 16;
+				NewNotification[NotificationName.."-Title"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+				NewNotification[NotificationName.."-Title"]["Size"] = UDim2.new(0.7, 0, 0, 15);
+				NewNotification[NotificationName.."-Title"]["Text"] = options.title;
+				NewNotification[NotificationName.."-Title"]["Name"] = [[Title]];
+				NewNotification[NotificationName.."-Title"]["Font"] = Enum.Font.SourceSansBold;
+				NewNotification[NotificationName.."-Title"]["BackgroundTransparency"] = 1;
+				NewNotification[NotificationName.."-Title"]["Position"] = UDim2.new(0, 8, 0, 5);
+
+				NewNotification[NotificationName.."-ShadowHolder"] = Instance.new("Frame", NewNotification[NotificationName]);
+				NewNotification[NotificationName.."-ShadowHolder"]["ZIndex"] = 0;
+				NewNotification[NotificationName.."-ShadowHolder"]["BorderSizePixel"] = 0;
+				NewNotification[NotificationName.."-ShadowHolder"]["BackgroundTransparency"] = 1;
+				NewNotification[NotificationName.."-ShadowHolder"]["Size"] = UDim2.new(1, 0, 1, 0);
+				NewNotification[NotificationName.."-ShadowHolder"]["Name"] = [[DropShadowHolder]];
+
+				NewNotification[NotificationName.."-Shadow"] = Instance.new("ImageLabel", NewNotification[NotificationName.."-ShadowHolder"]);
+				NewNotification[NotificationName.."-Shadow"]["ZIndex"] = 0;
+				NewNotification[NotificationName.."-Shadow"]["BorderSizePixel"] = 0;
+				NewNotification[NotificationName.."-Shadow"]["SliceCenter"] = Rect.new(49, 49, 450, 450);
+				NewNotification[NotificationName.."-Shadow"]["ScaleType"] = Enum.ScaleType.Slice;
+				NewNotification[NotificationName.."-Shadow"]["ImageColor3"] = Color3.fromRGB(0, 0, 0);
+				NewNotification[NotificationName.."-Shadow"]["ImageTransparency"] = 0.8;
+				NewNotification[NotificationName.."-Shadow"]["AnchorPoint"] = Vector2.new(0.5, 0.5);
+				NewNotification[NotificationName.."-Shadow"]["Image"] = [[rbxassetid://6014261993]];
+				NewNotification[NotificationName.."-Shadow"]["Size"] = UDim2.new(1, 47, 1, 47);
+				NewNotification[NotificationName.."-Shadow"]["Name"] = [[DropShadow]];
+				NewNotification[NotificationName.."-Shadow"]["BackgroundTransparency"] = 1;
+				NewNotification[NotificationName.."-Shadow"]["Position"] = UDim2.new(0.5, 0, 0.5, 0);
+
+				NewNotification[NotificationName.."-Close"] = Instance.new("TextButton", NewNotification[NotificationName]);
+				NewNotification[NotificationName.."-Close"]["TextSize"] = 14;
+				NewNotification[NotificationName.."-Close"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+				NewNotification[NotificationName.."-Close"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+				NewNotification[NotificationName.."-Close"]["AnchorPoint"] = Vector2.new(1, 0);
+				NewNotification[NotificationName.."-Close"]["Size"] = UDim2.new(0, 15, 0, 15);
+				NewNotification[NotificationName.."-Close"]["Name"] = [[Close]];
+				NewNotification[NotificationName.."-Close"]["Text"] = [[X]];
+				NewNotification[NotificationName.."-Close"]["Font"] = Enum.Font.SourceSansBold;
+				NewNotification[NotificationName.."-Close"]["Position"] = UDim2.new(1, -5, 0, 5);
+				NewNotification[NotificationName.."-Close"]["BackgroundTransparency"] = 1;
+
+				NewNotification[NotificationName.."-Info"] = Instance.new("TextLabel", NewNotification[NotificationName]);
+				NewNotification[NotificationName.."-Info"]["TextWrapped"] = true;
+				NewNotification[NotificationName.."-Info"]["TextXAlignment"] = Enum.TextXAlignment.Left;
+				NewNotification[NotificationName.."-Info"]["TextYAlignment"] = Enum.TextYAlignment.Top;
+				NewNotification[NotificationName.."-Info"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+				NewNotification[NotificationName.."-Info"]["TextSize"] = 16;
+				NewNotification[NotificationName.."-Info"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+				NewNotification[NotificationName.."-Info"]["Size"] = UDim2.new(0.935, 0, 0,32);
+				NewNotification[NotificationName.."-Info"]["Text"] = options.text;
+				NewNotification[NotificationName.."-Info"]["Name"] = [[Info]];
+				NewNotification[NotificationName.."-Info"]["Font"] = Enum.Font.SourceSansBold;
+				NewNotification[NotificationName.."-Info"]["BackgroundTransparency"] = 1;
+				NewNotification[NotificationName.."-Info"]["Position"] = UDim2.new(0, 8, 0, 25);
+
+				NewNotification[NotificationName.."-Timer"] = Instance.new("Frame", NewNotification[NotificationName]);
+				NewNotification[NotificationName.."-Timer"]["BackgroundColor3"] = Color3.fromRGB(49, 49, 49);
+				NewNotification[NotificationName.."-Timer"]["AnchorPoint"] = Vector2.new(0, 1);
+				NewNotification[NotificationName.."-Timer"]["Size"] = UDim2.new(0,184,0,4);
+				NewNotification[NotificationName.."-Timer"]["Position"] = UDim2.new(0,8,1,-10);
+				NewNotification[NotificationName.."-Timer"]["Name"] = [[Timer]];
+
+				NewNotification[NotificationName.."-Timer-Corner"] = Instance.new("UICorner", NewNotification[NotificationName.."-Timer"]);
+
+				NewNotification[NotificationName.."-Timer-Bar"] = Instance.new("Frame", NewNotification[NotificationName.."-Timer"]);
+				NewNotification[NotificationName.."-Timer-Bar"]["Active"] = true;
+				NewNotification[NotificationName.."-Timer-Bar"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+				NewNotification[NotificationName.."-Timer-Bar"]["Size"] = UDim2.new(1, 0, 1, 0);
+				NewNotification[NotificationName.."-Timer-Bar"]["Name"] = [[Bar]];
+				
+				NewNotification[NotificationName.."-Timer-Bar-Corner"] = Instance.new("UICorner", NewNotification[NotificationName.."-Timer-Bar"]);
+			end
+			-- Handler
+			NewNotification[NotificationName.."-Close"].MouseButton1Click:Connect(function()
+				NewNotification[NotificationName]:Destroy()
+				NewNotification = nil
+			end)
+			Library:Tween(NewNotification[NotificationName.."-Timer-Bar"], TweenInfo.new(options.duration,Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {Size = UDim2.new(0,0,1,0)})
+			task.wait(options.duration)
+			if NewNotification then
+				if NewNotification[NotificationName].Parent then
+					NewNotification[NotificationName]:Destroy()
+					NewNotification = nil
+				end
+			end
+		end
 	end
 
 	function NewLibrary:CreateButton(options)
@@ -797,20 +921,20 @@ function Library:NewGui()
 					local ClickColor = Color3.fromRGB(255,255,255)
 
 					NewButton[ButtonName].MouseEnter:Connect(function()
-						Library:Tween(NewButton[ButtonName.."-Info"], {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
+						Library:Tween(NewButton[ButtonName.."-Info"], BaseTweenInfo, {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
 					end)
 					NewButton[ButtonName].MouseLeave:Connect(function()
-						Library:Tween(NewButton[ButtonName.."-Info"], {BackgroundColor3 = OldBackground})
+						Library:Tween(NewButton[ButtonName.."-Info"], BaseTweenInfo, {BackgroundColor3 = OldBackground})
 					end)
 					NewButton[ButtonName].MouseButton1Click:Connect(function()
 						spawn(function()
 							options.callback(NewButton.arguments)
 						end)
-						Library:Tween(NewButton[ButtonName.."-Info-Icon"], {ImageColor3 = Color3.fromRGB(132,132,132)})
-						Library:Tween(NewButton[ButtonName.."-Info-Text"], {TextColor3 = Color3.fromRGB(132,132,132)})
+						Library:Tween(NewButton[ButtonName.."-Info-Icon"], BaseTweenInfo, {ImageColor3 = Color3.fromRGB(132,132,132)})
+						Library:Tween(NewButton[ButtonName.."-Info-Text"], BaseTweenInfo, {TextColor3 = Color3.fromRGB(132,132,132)})
 						task.wait(0.1)
-						Library:Tween(NewButton[ButtonName.."-Info-Icon"], {ImageColor3 = ClickColor})
-						Library:Tween(NewButton[ButtonName.."-Info-Text"], {TextColor3 = ClickColor})
+						Library:Tween(NewButton[ButtonName.."-Info-Icon"], BaseTweenInfo, {ImageColor3 = ClickColor})
+						Library:Tween(NewButton[ButtonName.."-Info-Text"], BaseTweenInfo, {TextColor3 = ClickColor})
 					end)
 
 					-- Methods
@@ -982,10 +1106,10 @@ function Library:NewGui()
 				local ClickColor = Color3.fromRGB(255,255,255)
 
 				NewToggle[ToggleName].MouseEnter:Connect(function()
-					Library:Tween(NewToggle[ToggleName.."-Info"], {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
+					Library:Tween(NewToggle[ToggleName.."-Info"], BaseTweenInfo, {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
 				end)
 				NewToggle[ToggleName].MouseLeave:Connect(function()
-					Library:Tween(NewToggle[ToggleName.."-Info"], {BackgroundColor3 = OldBackground})
+					Library:Tween(NewToggle[ToggleName.."-Info"], BaseTweenInfo, {BackgroundColor3 = OldBackground})
 				end)
 
 				local ClickCooldown = false
@@ -994,9 +1118,9 @@ function Library:NewGui()
 						ClickCooldown = true
 						NewToggle.toggled = not NewToggle.toggled
 						if NewToggle.toggled == true then
-							Library:Tween(NewToggle[ToggleName.."-Info-Toggle"], {BackgroundTransparency = 0}, nil)
+							Library:Tween(NewToggle[ToggleName.."-Info-Toggle"], BaseTweenInfo, {BackgroundTransparency = 0}, nil)
 						else
-							Library:Tween(NewToggle[ToggleName.."-Info-Toggle"], {BackgroundTransparency = 1}, nil)
+							Library:Tween(NewToggle[ToggleName.."-Info-Toggle"], BaseTweenInfo, {BackgroundTransparency = 1}, nil)
 						end
 						spawn(function()
 							task.wait(0.8)
@@ -1225,10 +1349,10 @@ function Library:NewGui()
 			local ClickColor = Color3.fromRGB(255,255,255)
 
 			NewSlider[SliderName].MouseEnter:Connect(function()
-				Library:Tween(NewSlider[SliderName], {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
+				Library:Tween(NewSlider[SliderName], BaseTweenInfo, {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
 			end)
 			NewSlider[SliderName].MouseLeave:Connect(function()
-				Library:Tween(NewSlider[SliderName], {BackgroundColor3 = OldBackground})
+				Library:Tween(NewSlider[SliderName], BaseTweenInfo, {BackgroundColor3 = OldBackground})
 			end)
 
 			-- Methods
@@ -1261,12 +1385,12 @@ function Library:NewGui()
 
 				NewSlider[SliderName].MouseEnter:Connect(function()
 					NewSlider.Hovering = true
-					Library:Tween(NewSlider[SliderName], {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
+					Library:Tween(NewSlider[SliderName], BaseTweenInfo, {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
 				end)
 
 				NewSlider[SliderName].MouseLeave:Connect(function()
 					NewSlider.Hovering = false
-					Library:Tween(NewSlider[SliderName], {BackgroundColor3 = OldBackground})
+					Library:Tween(NewSlider[SliderName], BaseTweenInfo, {BackgroundColor3 = OldBackground})
 				end)
 
 				UserInputService.InputBegan:Connect(function(input, processed)
@@ -1390,10 +1514,10 @@ function Library:NewGui()
 			local ClickColor = Color3.fromRGB(255,255,255)
 
 			NewKeybind[KeybindName].MouseEnter:Connect(function()
-				Library:Tween(NewKeybind[KeybindName.."-Info"], {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
+				Library:Tween(NewKeybind[KeybindName.."-Info"], BaseTweenInfo, {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
 			end)
 			NewKeybind[KeybindName].MouseLeave:Connect(function()
-				Library:Tween(NewKeybind[KeybindName.."-Info"], {BackgroundColor3 = OldBackground})
+				Library:Tween(NewKeybind[KeybindName.."-Info"], BaseTweenInfo, {BackgroundColor3 = OldBackground})
 			end)
 
 			-- Methods
@@ -1429,11 +1553,11 @@ function Library:NewGui()
 						NewKeybind:UpdateKeybind("...", false)
 					end
 				end)
-				Library:Tween(NewKeybind[KeybindName.."-Info-Value"], {TextColor3 = Color3.fromRGB(132,132,132)})
-				Library:Tween(NewKeybind[KeybindName.."-Info-Text"], {TextColor3 = Color3.fromRGB(132,132,132)})
+				Library:Tween(NewKeybind[KeybindName.."-Info-Value"], BaseTweenInfo, {TextColor3 = Color3.fromRGB(132,132,132)})
+				Library:Tween(NewKeybind[KeybindName.."-Info-Text"], BaseTweenInfo, {TextColor3 = Color3.fromRGB(132,132,132)})
 				task.wait(0.1)
-				Library:Tween(NewKeybind[KeybindName.."-Info-Value"], {TextColor3 = ClickColor})
-				Library:Tween(NewKeybind[KeybindName.."-Info-Text"], {TextColor3 = ClickColor})
+				Library:Tween(NewKeybind[KeybindName.."-Info-Value"], BaseTweenInfo, {TextColor3 = ClickColor})
+				Library:Tween(NewKeybind[KeybindName.."-Info-Text"], BaseTweenInfo, {TextColor3 = ClickColor})
 			end)
 
 			UserInputService.InputBegan:Connect(function(input)
@@ -1556,20 +1680,20 @@ function Library:NewGui()
 			-- Tweening
 			local canpress = true
 			NewDropdown[DropdownName].MouseButton1Click:Connect(function()
-				Library:Tween(NewDropdown[DropdownName.."-Info"], {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
+				Library:Tween(NewDropdown[DropdownName.."-Info"], BaseTweenInfo, {BackgroundColor3 = Color3.fromRGB(65, 65, 65)})
 				spawn(function()
 					task.wait(0.1)
-					Library:Tween(NewDropdown[DropdownName.."-Info"], {BackgroundColor3 = Color3.fromRGB(51, 51, 51)})
+					Library:Tween(NewDropdown[DropdownName.."-Info"], BaseTweenInfo, {BackgroundColor3 = Color3.fromRGB(51, 51, 51)})
 				end)
 				if not canpress then return end
 				canpress = false
 				NewDropdown.open = not NewDropdown.open
 				if NewDropdown.open then
-					Library:Tween(NewDropdown[DropdownName], {Size = UDim2.new(1,0,0,50+(NewDropdown.optioncount*30))})
+					Library:Tween(NewDropdown[DropdownName], BaseTweenInfo, {Size = UDim2.new(1,0,0,50+(NewDropdown.optioncount*30))})
 					NewDropdown[DropdownName.."-Info-OptionHolder"].Visible = true
 				else
 					NewDropdown[DropdownName.."-Info-OptionHolder"].Visible = false
-					Library:Tween(NewDropdown[DropdownName], {Size = UDim2.new(1,0,0,50)})
+					Library:Tween(NewDropdown[DropdownName], BaseTweenInfo, {Size = UDim2.new(1,0,0,50)})
 				end
 				task.wait(0.1)
 				canpress = true
