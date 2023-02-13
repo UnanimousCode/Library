@@ -507,19 +507,19 @@ function Library:NewGui()
 		NewLibrary["Home-PlayerInfo-Id"].BackgroundTransparency = 1;
 		NewLibrary["Home-PlayerInfo-Id"].Position = UDim2.new(1, -10, 0.4998224973678589, 0);
 
-		NewLibrary["Home-PlayerInfo-Runtime"] = Instance.new("TextLabel", NewLibrary["Home-PlayerInfo"]);
-		NewLibrary["Home-PlayerInfo-Runtime"].ZIndex = 5;
-		NewLibrary["Home-PlayerInfo-Runtime"].TextXAlignment = Enum.TextXAlignment.Right;
-		NewLibrary["Home-PlayerInfo-Runtime"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
-		NewLibrary["Home-PlayerInfo-Runtime"].TextSize = 14;
-		NewLibrary["Home-PlayerInfo-Runtime"].TextColor3 = Color3.fromRGB(129, 129, 129);
-		NewLibrary["Home-PlayerInfo-Runtime"].AnchorPoint = Vector2.new(1, 0.5);
-		NewLibrary["Home-PlayerInfo-Runtime"].Size = UDim2.new(0.5, 0, 0.25, 0);
-		NewLibrary["Home-PlayerInfo-Runtime"].Text = [[0]];
-		NewLibrary["Home-PlayerInfo-Runtime"].Name = [[Runtime]];
-		NewLibrary["Home-PlayerInfo-Runtime"].Font = Enum.Font.SourceSans;
-		NewLibrary["Home-PlayerInfo-Runtime"].BackgroundTransparency = 1;
-		NewLibrary["Home-PlayerInfo-Runtime"].Position = UDim2.new(1, -10, 0.7483431696891785, 0);
+		NewLibrary["Home-PlayerInfo-Players"] = Instance.new("TextLabel", NewLibrary["Home-PlayerInfo"]);
+		NewLibrary["Home-PlayerInfo-Players"].ZIndex = 5;
+		NewLibrary["Home-PlayerInfo-Players"].TextXAlignment = Enum.TextXAlignment.Right;
+		NewLibrary["Home-PlayerInfo-Players"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+		NewLibrary["Home-PlayerInfo-Players"].TextSize = 14;
+		NewLibrary["Home-PlayerInfo-Players"].TextColor3 = Color3.fromRGB(129, 129, 129);
+		NewLibrary["Home-PlayerInfo-Players"].AnchorPoint = Vector2.new(1, 0.5);
+		NewLibrary["Home-PlayerInfo-Players"].Size = UDim2.new(0.5, 0, 0.25, 0);
+		NewLibrary["Home-PlayerInfo-Players"].Text = [[0]];
+		NewLibrary["Home-PlayerInfo-Players"].Name = [[Players]];
+		NewLibrary["Home-PlayerInfo-Players"].Font = Enum.Font.SourceSans;
+		NewLibrary["Home-PlayerInfo-Players"].BackgroundTransparency = 1;
+		NewLibrary["Home-PlayerInfo-Players"].Position = UDim2.new(1, -10, 0.7483431696891785, 0);
 
 		NewLibrary["Home-Options"] = Instance.new("Frame", NewLibrary["Home-Frame"]);
 		NewLibrary["Home-Options"].ZIndex = 4;
@@ -600,14 +600,13 @@ function Library:NewGui()
 			NewLibrary["Home-PlayerInfo-Time"].Text = Library:FormatTime()
 		end
 	end)()
-	local Runtime = 0
-	coroutine.wrap(function()
-		while wait(1) do
-			Runtime=Runtime+1
-			NewLibrary["Home-PlayerInfo-Runtime"].Text = Runtime
-		end
-	end)()
-
+	local Players = #game.Players:GetChildren()
+	local function UpdatePlayerCount()
+		NewLibrary["Home-PlayerInfo-Players"].Text #game.Players:GetChildren().." Player(s)"
+	end
+	game.Players.PlayerAdded:Connect(UpdatePlayerCount)
+	game.Players.PlayerRemoving:Connect(UpdatePlayerCount)
+	
 	-- TopBar Handler
 	NewLibrary["Home-Button"].MouseButton1Click:Connect(function()
 		--pcall(function()
