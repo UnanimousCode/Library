@@ -1984,6 +1984,7 @@ function Library:NewGui()
 		end)
 		NewLibrary["LibraryGui"].Enabled = true
 		print("🌠 This gui was made using Unanimous Code Library "..ver)
+		print("🔗 discord.gg/VQ87mk9YeE")
 		print("🔍 https://raw.githubusercontent.com/UnanimousCode/Unanimous-Code-Library/main/Source")
 	end
 	return NewLibrary
