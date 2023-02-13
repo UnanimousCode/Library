@@ -419,7 +419,7 @@ function Library:NewGui()
 		NewLibrary["Home-PlayerInfo-Icon"].Position = UDim2.new(0.025352483615279198, 0, 0.5, 0);
 
 		NewLibrary["Home-PlayerInfo-Icon-Corner"] = Instance.new("UICorner", NewLibrary["Home-PlayerInfo-Icon"]);
-		NewLibrary["Home-PlayerInfo-Icon-Corner"]["CornerRadius"] = UDim.new(1, 0);
+		NewLibrary["Home-PlayerInfo-Icon-Corner"].CornerRadius = UDim.new(1, 0);
 
 		NewLibrary["Home-PlayerInfo-Welcome"] = Instance.new("TextLabel", NewLibrary["Home-PlayerInfo"]);
 		NewLibrary["Home-PlayerInfo-Welcome"].ZIndex = 5;
@@ -462,6 +462,48 @@ function Library:NewGui()
 		NewLibrary["Home-PlayerInfo-Time"].Font = Enum.Font.SourceSans;
 		NewLibrary["Home-PlayerInfo-Time"].BackgroundTransparency = 1;
 		NewLibrary["Home-PlayerInfo-Time"].Position = UDim2.new(0.17649202048778534, 0, 0.7483431696891785, 0);
+		
+		NewLibrary["Home-PlayerInfo-Game"] = Instance.new("TextLabel", NewLibrary["Home-PlayerInfo"]);
+		NewLibrary["Home-PlayerInfo-Game"].ZIndex = 5;
+		NewLibrary["Home-PlayerInfo-Game"].TextXAlignment = Enum.TextXAlignment.Right;
+		NewLibrary["Home-PlayerInfo-Game"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+		NewLibrary["Home-PlayerInfo-Game"].TextSize = 16;
+		NewLibrary["Home-PlayerInfo-Game"].TextColor3 = Color3.fromRGB(255, 255, 255);
+		NewLibrary["Home-PlayerInfo-Game"].AnchorPoint = Vector2.new(1, 0.5);
+		NewLibrary["Home-PlayerInfo-Game"].Size = UDim2.new(0.5, 0, 0.30000001192092896, 0);
+		NewLibrary["Home-PlayerInfo-Game"].Text = [[Game]];
+		NewLibrary["Home-PlayerInfo-Game"].Name = [[GameName]];
+		NewLibrary["Home-PlayerInfo-Game"].Font = Enum.Font.SourceSansBold;
+		NewLibrary["Home-PlayerInfo-Game"].BackgroundTransparency = 1;
+		NewLibrary["Home-PlayerInfo-Game"].Position = UDim2.new(1, -10, 0.2498224824666977, 0);
+
+		NewLibrary["Home-PlayerInfo-Id"] = Instance.new("TextLabel", NewLibrary["Home-PlayerInfo"]);
+		NewLibrary["Home-PlayerInfo-Id"].ZIndex = 5;
+		NewLibrary["Home-PlayerInfo-Id"].TextXAlignment = Enum.TextXAlignment.Right;
+		NewLibrary["Home-PlayerInfo-Id"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+		NewLibrary["Home-PlayerInfo-Id"].TextSize = 14;
+		NewLibrary["Home-PlayerInfo-Id"].TextColor3 = Color3.fromRGB(255, 255, 255);
+		NewLibrary["Home-PlayerInfo-Id"].AnchorPoint = Vector2.new(1, 0.5);
+		NewLibrary["Home-PlayerInfo-Id"].Size = UDim2.new(0.5, 0, 0.25, 0);
+		NewLibrary["Home-PlayerInfo-Id"].Text = [[@0]];
+		NewLibrary["Home-PlayerInfo-Id"].Name = [[GameId]];
+		NewLibrary["Home-PlayerInfo-Id"].Font = Enum.Font.SourceSans;
+		NewLibrary["Home-PlayerInfo-Id"].BackgroundTransparency = 1;
+		NewLibrary["Home-PlayerInfo-Id"].Position = UDim2.new(1, -10, 0.4998224973678589, 0);
+
+		NewLibrary["Home-PlayerInfo-Runtime"] = Instance.new("TextLabel", NewLibrary["Home-PlayerInfo"]);
+		NewLibrary["Home-PlayerInfo-Runtime"].ZIndex = 5;
+		NewLibrary["Home-PlayerInfo-Runtime"].TextXAlignment = Enum.TextXAlignment.Right;
+		NewLibrary["Home-PlayerInfo-Runtime"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+		NewLibrary["Home-PlayerInfo-Runtime"].TextSize = 14;
+		NewLibrary["Home-PlayerInfo-Runtime"].TextColor3 = Color3.fromRGB(129, 129, 129);
+		NewLibrary["Home-PlayerInfo-Runtime"].AnchorPoint = Vector2.new(1, 0.5);
+		NewLibrary["Home-PlayerInfo-Runtime"].Size = UDim2.new(0.5, 0, 0.25, 0);
+		NewLibrary["Home-PlayerInfo-Runtime"].Text = [[0]];
+		NewLibrary["Home-PlayerInfo-Runtime"].Name = [[Runtime]];
+		NewLibrary["Home-PlayerInfo-Runtime"].Font = Enum.Font.SourceSans;
+		NewLibrary["Home-PlayerInfo-Runtime"].BackgroundTransparency = 1;
+		NewLibrary["Home-PlayerInfo-Runtime"].Position = UDim2.new(1, -10, 0.7483431696891785, 0);
 
 		NewLibrary["Home-Options"] = Instance.new("Frame", NewLibrary["Home-Frame"]);
 		NewLibrary["Home-Options"].ZIndex = 4;
@@ -535,11 +577,20 @@ function Library:NewGui()
 	NewLibrary["Home-PlayerInfo-Welcome"].Text = "Welcome, "..MyPlayer.DisplayName
 	NewLibrary["Home-PlayerInfo-User"].Text = "@"..MyPlayer.Name
 	NewLibrary["Home-PlayerInfo-Time"].Text = Library:FormatTime()
-	spawn(function()
+	NewLibrary["Home-PlayerInfo-Game"].Text = GameName
+	NewLibrary["Home-PlayerInfo-Id"].Text = "@"..PlaceId
+	coroutine.wrap(function()
 		while wait(60) do
 			NewLibrary["Home-PlayerInfo-Time"].Text = Library:FormatTime()
 		end
-	end)
+	end)()
+	local Runtime = 0
+	coroutine.wrap(function()
+		while wait(1) do
+			Runtime=Runtime+1
+			NewLibrary["Home-PlayerInfo-Runtime"].Text = Runtime
+		end
+	end)()
 
 	-- TopBar Handler
 	NewLibrary["Home-Button"].MouseButton1Click:Connect(function()
@@ -593,7 +644,7 @@ function Library:NewGui()
 				NewLibrary[TabName.."-Info"].Name = "Info";
 
 				NewLibrary[TabName.."-Info-Corner"] = Instance.new("UICorner", NewLibrary[TabName.."-Info"]);
-				NewLibrary[TabName.."-Info-Corner"]["CornerRadius"] = UDim.new(0, 6);
+				NewLibrary[TabName.."-Info-Corner"].CornerRadius = UDim.new(0, 6);
 
 				NewLibrary[TabName.."-Info-Name"] = Instance.new("TextLabel", NewLibrary[TabName.."-Info"]);
 				NewLibrary[TabName.."-Info-Name"].ZIndex = 6;
@@ -737,8 +788,8 @@ function Library:NewGui()
 						NewButton[ButtonName.."Arguments-Layout"] = Instance.new("UIListLayout", NewButton[ButtonName.."Info-Arguments"]);
 						NewButton[ButtonName.."Arguments-Layout"]["FillDirection"] = Enum.FillDirection.Horizontal;
 						NewButton[ButtonName.."Arguments-Layout"]["HorizontalAlignment"] = Enum.HorizontalAlignment.Right;
-						NewButton[ButtonName.."Arguments-Layout"]["Padding"] = UDim.new(0.029999999329447746, 0);
-						NewButton[ButtonName.."Arguments-Layout"]["SortOrder"] = Enum.SortOrder.LayoutOrder;
+						NewButton[ButtonName.."Arguments-Layout"].Padding = UDim.new(0.029999999329447746, 0);
+						NewButton[ButtonName.."Arguments-Layout"].SortOrder = Enum.SortOrder.LayoutOrder;
 					end 
 
 					-- Tweening
@@ -781,19 +832,19 @@ function Library:NewGui()
 							local NewArgument = {}
 							do
 								NewArgument[ArgumentName] = Instance.new("TextBox", NewButton[ButtonName.."Info-Arguments"]);
-								NewArgument[ArgumentName]["BorderSizePixel"] = 0;
-								NewArgument[ArgumentName]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+								NewArgument[ArgumentName].BorderSizePixel = 0;
+								NewArgument[ArgumentName].TextColor3 = Color3.fromRGB(255, 255, 255);
 								NewArgument[ArgumentName]["TextWrapped"] = true;
-								NewArgument[ArgumentName]["TextSize"] = 14;
-								NewArgument[ArgumentName]["BackgroundColor3"] = Color3.fromRGB(45, 45, 45);
+								NewArgument[ArgumentName].TextSize = 14;
+								NewArgument[ArgumentName].BackgroundColor3 = Color3.fromRGB(45, 45, 45);
 								NewArgument[ArgumentName]["PlaceholderText"] = ArgumentName;
-								NewArgument[ArgumentName]["Size"] = UDim2.new(0.30000001192092896, 0, 1, 0);
-								NewArgument[ArgumentName]["Text"] = [[]];
-								NewArgument[ArgumentName]["Font"] = Enum.Font.SourceSansBold;
-								NewArgument[ArgumentName]["Name"] = [[Argument]];
+								NewArgument[ArgumentName].Size = UDim2.new(0.30000001192092896, 0, 1, 0);
+								NewArgument[ArgumentName].Text = [[]];
+								NewArgument[ArgumentName].Font = Enum.Font.SourceSansBold;
+								NewArgument[ArgumentName].Name = [[Argument]];
 
 								NewArgument[ArgumentName.."-Corner"] = Instance.new("UICorner", NewArgument[ArgumentName]);
-								NewArgument[ArgumentName.."-Corner"]["CornerRadius"] = UDim.new(0, 5);
+								NewArgument[ArgumentName.."-Corner"].CornerRadius = UDim.new(0, 5);
 							end
 
 							-- Runner
@@ -904,12 +955,12 @@ function Library:NewGui()
 					NewToggle[ToggleName.."-Info-Toggle"].Name = "Toggle";
 
 					NewToggle[ToggleName.."-Info-Toggle-Corner"] = Instance.new("UICorner", NewToggle[ToggleName.."-Info-Toggle"]);
-					NewToggle[ToggleName.."-Info-Toggle-Corner"]["CornerRadius"] = UDim.new(0, 4);
+					NewToggle[ToggleName.."-Info-Toggle-Corner"].CornerRadius = UDim.new(0, 4);
 
 					NewToggle[ToggleName.."-Info-Toggle-Stroke"] = Instance.new("UIStroke", NewToggle[ToggleName.."-Info-Toggle"]);
-					NewToggle[ToggleName.."-Info-Toggle-Stroke"]["Color"] = Color3.fromRGB(255, 255, 255);
-					NewToggle[ToggleName.."-Info-Toggle-Stroke"]["Thickness"] = 2;
-					NewToggle[ToggleName.."-Info-Toggle-Stroke"]["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border;
+					NewToggle[ToggleName.."-Info-Toggle-Stroke"].Color = Color3.fromRGB(255, 255, 255);
+					NewToggle[ToggleName.."-Info-Toggle-Stroke"].Thickness = 2;
+					NewToggle[ToggleName.."-Info-Toggle-Stroke"].ApplyStrokeMode = Enum.ApplyStrokeMode.Border;
 
 					NewToggle[ToggleName.."Info-Arguments"] = Instance.new("Frame", NewToggle[ToggleName.."-Info"]);
 					NewToggle[ToggleName.."Info-Arguments"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
@@ -922,8 +973,8 @@ function Library:NewGui()
 					NewToggle[ToggleName.."Arguments-Layout"] = Instance.new("UIListLayout", NewToggle[ToggleName.."Info-Arguments"]);
 					NewToggle[ToggleName.."Arguments-Layout"]["FillDirection"] = Enum.FillDirection.Horizontal;
 					NewToggle[ToggleName.."Arguments-Layout"]["HorizontalAlignment"] = Enum.HorizontalAlignment.Right;
-					NewToggle[ToggleName.."Arguments-Layout"]["Padding"] = UDim.new(0.029999999329447746, 0);
-					NewToggle[ToggleName.."Arguments-Layout"]["SortOrder"] = Enum.SortOrder.LayoutOrder;
+					NewToggle[ToggleName.."Arguments-Layout"].Padding = UDim.new(0.029999999329447746, 0);
+					NewToggle[ToggleName.."Arguments-Layout"].SortOrder = Enum.SortOrder.LayoutOrder;
 				end
 
 				-- Tweening
@@ -973,19 +1024,19 @@ function Library:NewGui()
 						local NewArgument = {}
 						do
 							NewArgument[ArgumentName] = Instance.new("TextBox", NewToggle[ToggleName.."Info-Arguments"]);
-							NewArgument[ArgumentName]["BorderSizePixel"] = 0;
-							NewArgument[ArgumentName]["TextColor3"] = Color3.fromRGB(255, 255, 255);
+							NewArgument[ArgumentName].BorderSizePixel = 0;
+							NewArgument[ArgumentName].TextColor3 = Color3.fromRGB(255, 255, 255);
 							NewArgument[ArgumentName]["TextWrapped"] = true;
-							NewArgument[ArgumentName]["TextSize"] = 14;
-							NewArgument[ArgumentName]["BackgroundColor3"] = Color3.fromRGB(45, 45, 45);
+							NewArgument[ArgumentName].TextSize = 14;
+							NewArgument[ArgumentName].BackgroundColor3 = Color3.fromRGB(45, 45, 45);
 							NewArgument[ArgumentName]["PlaceholderText"] = ArgumentName;
-							NewArgument[ArgumentName]["Size"] = UDim2.new(0.30000001192092896, 0, 1, 0);
-							NewArgument[ArgumentName]["Text"] = [[]];
-							NewArgument[ArgumentName]["Font"] = Enum.Font.SourceSansBold;
-							NewArgument[ArgumentName]["Name"] = [[Argument]];
+							NewArgument[ArgumentName].Size = UDim2.new(0.30000001192092896, 0, 1, 0);
+							NewArgument[ArgumentName].Text = [[]];
+							NewArgument[ArgumentName].Font = Enum.Font.SourceSansBold;
+							NewArgument[ArgumentName].Name = [[Argument]];
 
 							NewArgument[ArgumentName.."-Corner"] = Instance.new("UICorner", NewArgument[ArgumentName]);
-							NewArgument[ArgumentName.."-Corner"]["CornerRadius"] = UDim.new(0, 5);
+							NewArgument[ArgumentName.."-Corner"].CornerRadius = UDim.new(0, 5);
 						end
 
 						-- Runner
@@ -1129,7 +1180,7 @@ function Library:NewGui()
 				NewSlider[SliderName.."-SliderBack"].Name = "SliderBack";
 
 				NewSlider[SliderName.."-SliderBack-Corner"] = Instance.new("UICorner", NewSlider[SliderName.."-SliderBack"]);
-				NewSlider[SliderName.."-SliderBack-Corner"]["CornerRadius"] = UDim.new(0, 6);
+				NewSlider[SliderName.."-SliderBack-Corner"].CornerRadius = UDim.new(0, 6);
 
 				NewSlider[SliderName.."-SliderBack-Drag"] = Instance.new("Frame", NewSlider[SliderName.."-SliderBack"]);
 				NewSlider[SliderName.."-SliderBack-Drag"].ZIndex = 6;
@@ -1138,7 +1189,7 @@ function Library:NewGui()
 				NewSlider[SliderName.."-SliderBack-Drag"].Name = "Draggable";
 
 				NewSlider[SliderName.."-SliderBack-Drag-Corner"] = Instance.new("UICorner", NewSlider[SliderName.."-SliderBack-Drag"]);
-				NewSlider[SliderName.."-SliderBack-Drag-Corner"]["CornerRadius"] = UDim.new(0, 6);
+				NewSlider[SliderName.."-SliderBack-Drag-Corner"].CornerRadius = UDim.new(0, 6);
 
 				NewSlider[SliderName.."-Text"] = Instance.new("TextLabel", NewSlider[SliderName]);
 				NewSlider[SliderName.."-Text"].ZIndex = 4;
@@ -1181,9 +1232,9 @@ function Library:NewGui()
 			end)
 
 			-- Methods
-			
+
 			local percentvalue = options.default
-			
+
 			function NewSlider:SetValue(value)
 				if value == nil then
 					local percent = math.clamp((MyMouse.X - NewSlider[SliderName.."-SliderBack"].AbsolutePosition.X) / (NewSlider[SliderName.."-SliderBack"].AbsoluteSize.X),0,1)
@@ -1275,63 +1326,63 @@ function Library:NewGui()
 			local KeybindTitle = options.title
 			do
 				NewKeybind[KeybindName] = Instance.new("TextButton", NewLibrary[options.target.."-Frame"]);
-				NewKeybind[KeybindName]["ZIndex"] = 6;
-				NewKeybind[KeybindName]["BorderSizePixel"] = 0;
-				NewKeybind[KeybindName]["TextSize"] = 14;
-				NewKeybind[KeybindName]["BackgroundColor3"] = Color3.fromRGB(49, 49, 49);
-				NewKeybind[KeybindName]["TextColor3"] = Color3.fromRGB(0, 0, 0);
-				NewKeybind[KeybindName]["Size"] = UDim2.new(1, 0, 0, 50);
-				NewKeybind[KeybindName]["Name"] = [[Keybind]];
-				NewKeybind[KeybindName]["Text"] = [[]];
-				NewKeybind[KeybindName]["Font"] = Enum.Font.SourceSans;
-				NewKeybind[KeybindName]["BackgroundTransparency"] = 1;
+				NewKeybind[KeybindName].ZIndex = 6;
+				NewKeybind[KeybindName].BorderSizePixel = 0;
+				NewKeybind[KeybindName].TextSize = 14;
+				NewKeybind[KeybindName].BackgroundColor3 = Color3.fromRGB(49, 49, 49);
+				NewKeybind[KeybindName].TextColor3 = Color3.fromRGB(0, 0, 0);
+				NewKeybind[KeybindName].Size = UDim2.new(1, 0, 0, 50);
+				NewKeybind[KeybindName].Name = [[Keybind]];
+				NewKeybind[KeybindName].Text = [[]];
+				NewKeybind[KeybindName].Font = Enum.Font.SourceSans;
+				NewKeybind[KeybindName].BackgroundTransparency = 1;
 
 				NewKeybind[KeybindName.."-Info"] = Instance.new("Frame", NewKeybind[KeybindName]);
-				NewKeybind[KeybindName.."-Info"]["ZIndex"] = 4;
-				NewKeybind[KeybindName.."-Info"]["BackgroundColor3"] = Color3.fromRGB(51, 51, 51);
-				NewKeybind[KeybindName.."-Info"]["Size"] = UDim2.new(1, 0, 1, 0);
-				NewKeybind[KeybindName.."-Info"]["Name"] = [[Info]];
+				NewKeybind[KeybindName.."-Info"].ZIndex = 4;
+				NewKeybind[KeybindName.."-Info"].BackgroundColor3 = Color3.fromRGB(51, 51, 51);
+				NewKeybind[KeybindName.."-Info"].Size = UDim2.new(1, 0, 1, 0);
+				NewKeybind[KeybindName.."-Info"].Name = [[Info]];
 
 				NewKeybind[KeybindName.."-Info-Corner"] = Instance.new("UICorner", NewKeybind[KeybindName.."-Info"]);
 
 				NewKeybind[KeybindName.."-Info-Text"] = Instance.new("TextLabel", NewKeybind[KeybindName.."-Info"]);
-				NewKeybind[KeybindName.."-Info-Text"]["ZIndex"] = 5;
-				NewKeybind[KeybindName.."-Info-Text"]["TextXAlignment"] = Enum.TextXAlignment.Left;
-				NewKeybind[KeybindName.."-Info-Text"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
-				NewKeybind[KeybindName.."-Info-Text"]["TextSize"] = 20;
-				NewKeybind[KeybindName.."-Info-Text"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
-				NewKeybind[KeybindName.."-Info-Text"]["Size"] = UDim2.new(1, -50, 1, 0);
-				NewKeybind[KeybindName.."-Info-Text"]["Text"] = KeybindTitle;
-				NewKeybind[KeybindName.."-Info-Text"]["Name"] = [[text]];
-				NewKeybind[KeybindName.."-Info-Text"]["Font"] = Enum.Font.SourceSansBold;
-				NewKeybind[KeybindName.."-Info-Text"]["BackgroundTransparency"] = 1;
-				NewKeybind[KeybindName.."-Info-Text"]["Position"] = UDim2.new(0, 10, 0, 0);
+				NewKeybind[KeybindName.."-Info-Text"].ZIndex = 5;
+				NewKeybind[KeybindName.."-Info-Text"].TextXAlignment = Enum.TextXAlignment.Left;
+				NewKeybind[KeybindName.."-Info-Text"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+				NewKeybind[KeybindName.."-Info-Text"].TextSize = 20;
+				NewKeybind[KeybindName.."-Info-Text"].TextColor3 = Color3.fromRGB(255, 255, 255);
+				NewKeybind[KeybindName.."-Info-Text"].Size = UDim2.new(1, -50, 1, 0);
+				NewKeybind[KeybindName.."-Info-Text"].Text = KeybindTitle;
+				NewKeybind[KeybindName.."-Info-Text"].Name = [[text]];
+				NewKeybind[KeybindName.."-Info-Text"].Font = Enum.Font.SourceSansBold;
+				NewKeybind[KeybindName.."-Info-Text"].BackgroundTransparency = 1;
+				NewKeybind[KeybindName.."-Info-Text"].Position = UDim2.new(0, 10, 0, 0);
 
 				NewKeybind[KeybindName.."-Info-Arguments"] = Instance.new("Frame", NewKeybind[KeybindName.."-Info"]);
-				NewKeybind[KeybindName.."-Info-Arguments"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
-				NewKeybind[KeybindName.."-Info-Arguments"]["AnchorPoint"] = Vector2.new(0, 0.5);
-				NewKeybind[KeybindName.."-Info-Arguments"]["BackgroundTransparency"] = 1;
-				NewKeybind[KeybindName.."-Info-Arguments"]["Size"] = UDim2.new(0.6000000238418579, 0, 0, 25);
-				NewKeybind[KeybindName.."-Info-Arguments"]["Position"] = UDim2.new(0.30000001192092896, 0, 0.5, 0);
-				NewKeybind[KeybindName.."-Info-Arguments"]["Name"] = [[Arguments]];
+				NewKeybind[KeybindName.."-Info-Arguments"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+				NewKeybind[KeybindName.."-Info-Arguments"].AnchorPoint = Vector2.new(0, 0.5);
+				NewKeybind[KeybindName.."-Info-Arguments"].BackgroundTransparency = 1;
+				NewKeybind[KeybindName.."-Info-Arguments"].Size = UDim2.new(0.6000000238418579, 0, 0, 25);
+				NewKeybind[KeybindName.."-Info-Arguments"].Position = UDim2.new(0.30000001192092896, 0, 0.5, 0);
+				NewKeybind[KeybindName.."-Info-Arguments"].Name = [[Arguments]];
 
 				NewKeybind[KeybindName.."-Info-Arguments-Layout"] = Instance.new("UIListLayout", NewKeybind[KeybindName.."-Info-Arguments"]);
 				NewKeybind[KeybindName.."-Info-Arguments-Layout"]["FillDirection"] = Enum.FillDirection.Horizontal;
 				NewKeybind[KeybindName.."-Info-Arguments-Layout"]["HorizontalAlignment"] = Enum.HorizontalAlignment.Right;
-				NewKeybind[KeybindName.."-Info-Arguments-Layout"]["Padding"] = UDim.new(0.029999999329447746, 0);
-				NewKeybind[KeybindName.."-Info-Arguments-Layout"]["SortOrder"] = Enum.SortOrder.LayoutOrder;
+				NewKeybind[KeybindName.."-Info-Arguments-Layout"].Padding = UDim.new(0.029999999329447746, 0);
+				NewKeybind[KeybindName.."-Info-Arguments-Layout"].SortOrder = Enum.SortOrder.LayoutOrder;
 
 				NewKeybind[KeybindName.."-Info-Value"] = Instance.new("TextLabel", NewKeybind[KeybindName.."-Info"]);
-				NewKeybind[KeybindName.."-Info-Value"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
-				NewKeybind[KeybindName.."-Info-Value"]["TextSize"] = 14;
-				NewKeybind[KeybindName.."-Info-Value"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
-				NewKeybind[KeybindName.."-Info-Value"]["AnchorPoint"] = Vector2.new(1, 0.5);
-				NewKeybind[KeybindName.."-Info-Value"]["BackgroundTransparency"] = 1;
-				NewKeybind[KeybindName.."-Info-Value"]["Size"] = UDim2.new(0, 25, 0, 25);
-				NewKeybind[KeybindName.."-Info-Value"]["Text"] = "["..options.keybind.."]";
-				NewKeybind[KeybindName.."-Info-Value"]["Position"] = UDim2.new(1, -15, 0.5, 0);
-				NewKeybind[KeybindName.."-Info-Value"]["Font"] = Enum.Font.SourceSansBold;
-				NewKeybind[KeybindName.."-Info-Value"]["Name"] = [[Value]];
+				NewKeybind[KeybindName.."-Info-Value"].TextColor3 = Color3.fromRGB(255, 255, 255);
+				NewKeybind[KeybindName.."-Info-Value"].TextSize = 14;
+				NewKeybind[KeybindName.."-Info-Value"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+				NewKeybind[KeybindName.."-Info-Value"].AnchorPoint = Vector2.new(1, 0.5);
+				NewKeybind[KeybindName.."-Info-Value"].BackgroundTransparency = 1;
+				NewKeybind[KeybindName.."-Info-Value"].Size = UDim2.new(0, 25, 0, 25);
+				NewKeybind[KeybindName.."-Info-Value"].Text = "["..options.keybind.."]";
+				NewKeybind[KeybindName.."-Info-Value"].Position = UDim2.new(1, -15, 0.5, 0);
+				NewKeybind[KeybindName.."-Info-Value"].Font = Enum.Font.SourceSansBold;
+				NewKeybind[KeybindName.."-Info-Value"].Name = [[Value]];
 			end
 
 			-- Tweening
@@ -1430,76 +1481,76 @@ function Library:NewGui()
 			local DropdownParent = options.target
 			do
 				NewDropdown[DropdownName] = Instance.new("TextButton", NewLibrary[options.target.."-Frame"]);
-				NewDropdown[DropdownName]["ZIndex"] = 6;
-				NewDropdown[DropdownName]["BorderSizePixel"] = 0;
-				NewDropdown[DropdownName]["TextSize"] = 14;
-				NewDropdown[DropdownName]["BackgroundColor3"] = Color3.fromRGB(49, 49, 49);
-				NewDropdown[DropdownName]["TextColor3"] = Color3.fromRGB(0, 0, 0);
-				NewDropdown[DropdownName]["Size"] = UDim2.new(1, 0, 0, 50);
-				NewDropdown[DropdownName]["Name"] = [[Dropdown]];
+				NewDropdown[DropdownName].ZIndex = 6;
+				NewDropdown[DropdownName].BorderSizePixel = 0;
+				NewDropdown[DropdownName].TextSize = 14;
+				NewDropdown[DropdownName].BackgroundColor3 = Color3.fromRGB(49, 49, 49);
+				NewDropdown[DropdownName].TextColor3 = Color3.fromRGB(0, 0, 0);
+				NewDropdown[DropdownName].Size = UDim2.new(1, 0, 0, 50);
+				NewDropdown[DropdownName].Name = [[Dropdown]];
 				NewDropdown[DropdownName]["ClipsDescendants"] = true;
-				NewDropdown[DropdownName]["Text"] = [[]];
-				NewDropdown[DropdownName]["Font"] = Enum.Font.SourceSans;
-				NewDropdown[DropdownName]["BackgroundTransparency"] = 1;
+				NewDropdown[DropdownName].Text = [[]];
+				NewDropdown[DropdownName].Font = Enum.Font.SourceSans;
+				NewDropdown[DropdownName].BackgroundTransparency = 1;
 
 				NewDropdown[DropdownName.."-Info"] = Instance.new("Frame", NewDropdown[DropdownName]);
-				NewDropdown[DropdownName.."-Info"]["ZIndex"] = 4;
-				NewDropdown[DropdownName.."-Info"]["BackgroundColor3"] = Color3.fromRGB(51, 51, 51);
-				NewDropdown[DropdownName.."-Info"]["Size"] = UDim2.new(1, 0, 1, 0);
-				NewDropdown[DropdownName.."-Info"]["Name"] = [[Info]];
+				NewDropdown[DropdownName.."-Info"].ZIndex = 4;
+				NewDropdown[DropdownName.."-Info"].BackgroundColor3 = Color3.fromRGB(51, 51, 51);
+				NewDropdown[DropdownName.."-Info"].Size = UDim2.new(1, 0, 1, 0);
+				NewDropdown[DropdownName.."-Info"].Name = [[Info]];
 
 				NewDropdown[DropdownName.."-Info-Corner"] = Instance.new("UICorner", NewDropdown[DropdownName.."-Info"]);
 
 				NewDropdown[DropdownName.."-Info-Text"] = Instance.new("TextLabel", NewDropdown[DropdownName.."-Info"]);
-				NewDropdown[DropdownName.."-Info-Text"]["ZIndex"] = 5;
-				NewDropdown[DropdownName.."-Info-Text"]["TextXAlignment"] = Enum.TextXAlignment.Left;
-				NewDropdown[DropdownName.."-Info-Text"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
-				NewDropdown[DropdownName.."-Info-Text"]["TextSize"] = 20;
-				NewDropdown[DropdownName.."-Info-Text"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
-				NewDropdown[DropdownName.."-Info-Text"]["Size"] = UDim2.new(1, -50, 0, 50);
-				NewDropdown[DropdownName.."-Info-Text"]["Text"] = DropdownName;
-				NewDropdown[DropdownName.."-Info-Text"]["Name"] = [[text]];
-				NewDropdown[DropdownName.."-Info-Text"]["Font"] = Enum.Font.SourceSansBold;
-				NewDropdown[DropdownName.."-Info-Text"]["BackgroundTransparency"] = 1;
-				NewDropdown[DropdownName.."-Info-Text"]["Position"] = UDim2.new(0, 10, 0, 0);
+				NewDropdown[DropdownName.."-Info-Text"].ZIndex = 5;
+				NewDropdown[DropdownName.."-Info-Text"].TextXAlignment = Enum.TextXAlignment.Left;
+				NewDropdown[DropdownName.."-Info-Text"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+				NewDropdown[DropdownName.."-Info-Text"].TextSize = 20;
+				NewDropdown[DropdownName.."-Info-Text"].TextColor3 = Color3.fromRGB(255, 255, 255);
+				NewDropdown[DropdownName.."-Info-Text"].Size = UDim2.new(1, -50, 0, 50);
+				NewDropdown[DropdownName.."-Info-Text"].Text = DropdownName;
+				NewDropdown[DropdownName.."-Info-Text"].Name = [[text]];
+				NewDropdown[DropdownName.."-Info-Text"].Font = Enum.Font.SourceSansBold;
+				NewDropdown[DropdownName.."-Info-Text"].BackgroundTransparency = 1;
+				NewDropdown[DropdownName.."-Info-Text"].Position = UDim2.new(0, 10, 0, 0);
 
 				NewDropdown[DropdownName.."-Info-Image"] = Instance.new("ImageLabel", NewDropdown[DropdownName.."-Info"]);
-				NewDropdown[DropdownName.."-Info-Image"]["ZIndex"] = 5;
-				NewDropdown[DropdownName.."-Info-Image"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
-				NewDropdown[DropdownName.."-Info-Image"]["AnchorPoint"] = Vector2.new(1, 1);
-				NewDropdown[DropdownName.."-Info-Image"]["Image"] = [[rbxassetid://12093280677]];
-				NewDropdown[DropdownName.."-Info-Image"]["Size"] = UDim2.new(0, 25, 0, 25);
-				NewDropdown[DropdownName.."-Info-Image"]["Name"] = [[Image]];
-				NewDropdown[DropdownName.."-Info-Image"]["BackgroundTransparency"] = 1;
-				NewDropdown[DropdownName.."-Info-Image"]["Position"] = UDim2.new(1, -15, 0, 40);
+				NewDropdown[DropdownName.."-Info-Image"].ZIndex = 5;
+				NewDropdown[DropdownName.."-Info-Image"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+				NewDropdown[DropdownName.."-Info-Image"].AnchorPoint = Vector2.new(1, 1);
+				NewDropdown[DropdownName.."-Info-Image"].Image = [[rbxassetid://12093280677]];
+				NewDropdown[DropdownName.."-Info-Image"].Size = UDim2.new(0, 25, 0, 25);
+				NewDropdown[DropdownName.."-Info-Image"].Name = [[Image]];
+				NewDropdown[DropdownName.."-Info-Image"].BackgroundTransparency = 1;
+				NewDropdown[DropdownName.."-Info-Image"].Position = UDim2.new(1, -15, 0, 40);
 
 				NewDropdown[DropdownName.."-Info-OptionHolder"] = Instance.new("Frame", NewDropdown[DropdownName.."-Info"]);
-				NewDropdown[DropdownName.."-Info-OptionHolder"]["ZIndex"] = 5;
-				NewDropdown[DropdownName.."-Info-OptionHolder"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
-				NewDropdown[DropdownName.."-Info-OptionHolder"]["AnchorPoint"] = Vector2.new(0.5, 0);
-				NewDropdown[DropdownName.."-Info-OptionHolder"]["BackgroundTransparency"] = 1;
-				NewDropdown[DropdownName.."-Info-OptionHolder"]["Size"] = UDim2.new(1, -25, 1, -60);
-				NewDropdown[DropdownName.."-Info-OptionHolder"]["Position"] = UDim2.new(0.5, 0, 0, 50);
-				NewDropdown[DropdownName.."-Info-OptionHolder"]["Visible"] = false;
-				NewDropdown[DropdownName.."-Info-OptionHolder"]["Name"] = [[OptionHolder]];
+				NewDropdown[DropdownName.."-Info-OptionHolder"].ZIndex = 5;
+				NewDropdown[DropdownName.."-Info-OptionHolder"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
+				NewDropdown[DropdownName.."-Info-OptionHolder"].AnchorPoint = Vector2.new(0.5, 0);
+				NewDropdown[DropdownName.."-Info-OptionHolder"].BackgroundTransparency = 1;
+				NewDropdown[DropdownName.."-Info-OptionHolder"].Size = UDim2.new(1, -25, 1, -60);
+				NewDropdown[DropdownName.."-Info-OptionHolder"].Position = UDim2.new(0.5, 0, 0, 50);
+				NewDropdown[DropdownName.."-Info-OptionHolder"].Visible = false;
+				NewDropdown[DropdownName.."-Info-OptionHolder"].Name = [[OptionHolder]];
 
 				NewDropdown[DropdownName.."-Info-OptionHolder-Layout"] = Instance.new("UIListLayout", NewDropdown[DropdownName.."-Info-OptionHolder"]);
-				NewDropdown[DropdownName.."-Info-OptionHolder-Layout"]["Padding"] = UDim.new(0, 10);
-				NewDropdown[DropdownName.."-Info-OptionHolder-Layout"]["SortOrder"] = Enum.SortOrder.LayoutOrder;
+				NewDropdown[DropdownName.."-Info-OptionHolder-Layout"].Padding = UDim.new(0, 10);
+				NewDropdown[DropdownName.."-Info-OptionHolder-Layout"].SortOrder = Enum.SortOrder.LayoutOrder;
 
 				NewDropdown[DropdownName.."-Info-Selected"] = Instance.new("TextLabel", NewDropdown[DropdownName.."-Info"]);
-				NewDropdown[DropdownName.."-Info-Selected"]["ZIndex"] = 5;
-				NewDropdown[DropdownName.."-Info-Selected"]["BackgroundColor3"] = Color3.fromRGB(45, 45, 45);
-				NewDropdown[DropdownName.."-Info-Selected"]["TextSize"] = 14;
-				NewDropdown[DropdownName.."-Info-Selected"]["TextColor3"] = Color3.fromRGB(179, 179, 179);
-				NewDropdown[DropdownName.."-Info-Selected"]["Size"] = UDim2.new(0, 100, 0, 25);
-				NewDropdown[DropdownName.."-Info-Selected"]["Text"] = "0 selected";
-				NewDropdown[DropdownName.."-Info-Selected"]["Name"] = [[Selected]];
-				NewDropdown[DropdownName.."-Info-Selected"]["Font"] = Enum.Font.SourceSansBold;
-				NewDropdown[DropdownName.."-Info-Selected"]["Position"] = UDim2.new(0, 398, 0, 15);
+				NewDropdown[DropdownName.."-Info-Selected"].ZIndex = 5;
+				NewDropdown[DropdownName.."-Info-Selected"].BackgroundColor3 = Color3.fromRGB(45, 45, 45);
+				NewDropdown[DropdownName.."-Info-Selected"].TextSize = 14;
+				NewDropdown[DropdownName.."-Info-Selected"].TextColor3 = Color3.fromRGB(179, 179, 179);
+				NewDropdown[DropdownName.."-Info-Selected"].Size = UDim2.new(0, 100, 0, 25);
+				NewDropdown[DropdownName.."-Info-Selected"].Text = "0 selected";
+				NewDropdown[DropdownName.."-Info-Selected"].Name = [[Selected]];
+				NewDropdown[DropdownName.."-Info-Selected"].Font = Enum.Font.SourceSansBold;
+				NewDropdown[DropdownName.."-Info-Selected"].Position = UDim2.new(0, 398, 0, 15);
 
 				NewDropdown[DropdownName.."-Info-Selected-Corner"] = Instance.new("UICorner", NewDropdown[DropdownName.."-Info-Selected"]);
-				NewDropdown[DropdownName.."-Info-Selected-Corner"]["CornerRadius"] = UDim.new(0, 5);
+				NewDropdown[DropdownName.."-Info-Selected-Corner"].CornerRadius = UDim.new(0, 5);
 			end
 
 			-- Tweening
@@ -1533,23 +1584,23 @@ function Library:NewGui()
 					local NewOption = {}
 
 					NewOption[OptionName] = Instance.new("TextButton", NewDropdown[DropdownName.."-Info-OptionHolder"]);
-					NewOption[OptionName]["ZIndex"] = 6;
-					NewOption[OptionName]["BorderSizePixel"] = 0;
-					NewOption[OptionName]["BackgroundColor3"] = Color3.fromRGB(57, 57, 57);
-					NewOption[OptionName]["TextSize"] = 14;
-					NewOption[OptionName]["TextColor3"] = Color3.fromRGB(255, 255, 255);
-					NewOption[OptionName]["Size"] = UDim2.new(1, 0, 0, 20);
-					NewOption[OptionName]["Text"] = OptionName;
-					NewOption[OptionName]["Name"] = OptionName;
-					NewOption[OptionName]["Font"] = Enum.Font.SourceSansBold;
+					NewOption[OptionName].ZIndex = 6;
+					NewOption[OptionName].BorderSizePixel = 0;
+					NewOption[OptionName].BackgroundColor3 = Color3.fromRGB(57, 57, 57);
+					NewOption[OptionName].TextSize = 14;
+					NewOption[OptionName].TextColor3 = Color3.fromRGB(255, 255, 255);
+					NewOption[OptionName].Size = UDim2.new(1, 0, 0, 20);
+					NewOption[OptionName].Text = OptionName;
+					NewOption[OptionName].Name = OptionName;
+					NewOption[OptionName].Font = Enum.Font.SourceSansBold;
 
 					NewOption[OptionName.."-Corner"] = Instance.new("UICorner", NewOption[OptionName]);
-					NewOption[OptionName.."-Corner"]["CornerRadius"] = UDim.new(0, 5);
+					NewOption[OptionName.."-Corner"].CornerRadius = UDim.new(0, 5);
 
 					NewOption[OptionName.."-Stroke"] = Instance.new("UIStroke", NewOption[OptionName]);
-					NewOption[OptionName.."-Stroke"]["Color"] = Color3.fromRGB(63, 63, 63);
-					NewOption[OptionName.."-Stroke"]["Thickness"] = 2;
-					NewOption[OptionName.."-Stroke"]["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border;
+					NewOption[OptionName.."-Stroke"].Color = Color3.fromRGB(63, 63, 63);
+					NewOption[OptionName.."-Stroke"].Thickness = 2;
+					NewOption[OptionName.."-Stroke"].ApplyStrokeMode = Enum.ApplyStrokeMode.Border;
 
 					function NewOption:ToggleVal()
 						NewDropdown.options[OptionName] = not NewDropdown.options[OptionName]
@@ -1560,7 +1611,7 @@ function Library:NewGui()
 							NewDropdown.enabled = NewDropdown.enabled - 1
 							NewOption[OptionName.."-Stroke"].Color = Color3.fromRGB(62,62,62)
 						end
-						NewDropdown[DropdownName.."-Info-Selected"]["Text"] = NewDropdown.enabled.." selected";
+						NewDropdown[DropdownName.."-Info-Selected"].Text = NewDropdown.enabled.." selected";
 						options.callback(OptionName)
 					end
 
@@ -1568,7 +1619,7 @@ function Library:NewGui()
 						NewDropdown.options[OptionName] = nil
 						NewDropdown.optioncount=NewDropdown.optioncount-1
 						NewOption[OptionName]:Destroy()
-						NewDropdown[DropdownName.."-Info-Selected"]["Text"] = NewDropdown.enabled.." selected";
+						NewDropdown[DropdownName.."-Info-Selected"].Text = NewDropdown.enabled.." selected";
 					end
 
 					NewOption[OptionName].MouseButton1Click:Connect(function() NewOption:ToggleVal() end)
