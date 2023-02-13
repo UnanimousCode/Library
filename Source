@@ -595,7 +595,7 @@ function Library:NewGui()
 	NewLibrary["Home-PlayerInfo-Time"].Text = Library:FormatTime()
 	NewLibrary["Home-PlayerInfo-Game"].Text = GameName
 	NewLibrary["Home-PlayerInfo-Id"].Text = PlaceId
-	NewLibrary["Home-PlayerInfo-Players"].Text = #game.Players:GetChildren()
+	NewLibrary["Home-PlayerInfo-Players"].Text = #game.Players:GetChildren().. " Player(s)"
 	coroutine.wrap(function()
 		while wait(60) do
 			NewLibrary["Home-PlayerInfo-Time"].Text = Library:FormatTime()
