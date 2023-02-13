@@ -197,7 +197,7 @@ function Library:NewGui()
 		NewLibrary["Notifcations"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
 		NewLibrary["Notifcations"]["AnchorPoint"] = Vector2.new(1, 0.5);
 		NewLibrary["Notifcations"]["BackgroundTransparency"] = 1;
-		NewLibrary["Notifcations"]["Size"] = UDim2.new(0.20000000298023224, 0, 0.8999999761581421, 0);
+		NewLibrary["Notifcations"]["Size"] = UDim2.new(0.2, 0, 0.95, 0);
 		NewLibrary["Notifcations"]["Position"] = UDim2.new(1, -20, 0.5, 0);
 		NewLibrary["Notifcations"]["Name"] = [[Notifications]];
 		
@@ -766,7 +766,7 @@ function Library:NewGui()
 				NewNotification[NotificationName.."-Shadow"]["SliceCenter"] = Rect.new(49, 49, 450, 450);
 				NewNotification[NotificationName.."-Shadow"]["ScaleType"] = Enum.ScaleType.Slice;
 				NewNotification[NotificationName.."-Shadow"]["ImageColor3"] = Color3.fromRGB(0, 0, 0);
-				NewNotification[NotificationName.."-Shadow"]["ImageTransparency"] = 0.8;
+				NewNotification[NotificationName.."-Shadow"]["ImageTransparency"] = 0.5;
 				NewNotification[NotificationName.."-Shadow"]["AnchorPoint"] = Vector2.new(0.5, 0.5);
 				NewNotification[NotificationName.."-Shadow"]["Image"] = [[rbxassetid://6014261993]];
 				NewNotification[NotificationName.."-Shadow"]["Size"] = UDim2.new(1, 47, 1, 47);
