@@ -190,7 +190,7 @@ function Library:NewGui()
 		NewLibrary["Main-Corner"] = Instance.new("UICorner", NewLibrary["Main"])
 		NewLibrary["Main-Corner"].CornerRadius = UDim.new(0, 6)
 	end
-	
+
 	-- Gui.Notifications
 	do
 		NewLibrary["Notifcations"] = Instance.new("Frame", NewLibrary["LibraryGui"]);
@@ -200,7 +200,7 @@ function Library:NewGui()
 		NewLibrary["Notifcations"]["Size"] = UDim2.new(0.2, 0, 0.95, 0);
 		NewLibrary["Notifcations"]["Position"] = UDim2.new(1, -20, 0.5, 0);
 		NewLibrary["Notifcations"]["Name"] = [[Notifications]];
-		
+
 		NewLibrary["Notifcations-Layout"] = Instance.new("UIListLayout", NewLibrary["Notifcations"]);
 		NewLibrary["Notifcations-Layout"]["VerticalAlignment"] = Enum.VerticalAlignment.Bottom;
 		NewLibrary["Notifcations-Layout"]["HorizontalAlignment"] = Enum.HorizontalAlignment.Right;
@@ -478,7 +478,7 @@ function Library:NewGui()
 		NewLibrary["Home-PlayerInfo-Time"].Font = Enum.Font.SourceSans;
 		NewLibrary["Home-PlayerInfo-Time"].BackgroundTransparency = 1;
 		NewLibrary["Home-PlayerInfo-Time"].Position = UDim2.new(0.17649202048778534, 0, 0.7483431696891785, 0);
-		
+
 		NewLibrary["Home-PlayerInfo-Game"] = Instance.new("TextLabel", NewLibrary["Home-PlayerInfo"]);
 		NewLibrary["Home-PlayerInfo-Game"].ZIndex = 5;
 		NewLibrary["Home-PlayerInfo-Game"].TextXAlignment = Enum.TextXAlignment.Right;
@@ -530,10 +530,10 @@ function Library:NewGui()
 		NewLibrary["Home-Options"].Position = UDim2.new(0.5, 0, 0.3159763216972351, 8);
 		NewLibrary["Home-Options"].Name = "Options";
 
-		NewLibrary["Home-Options-Corner"] = Instance.new("UIGridLayout", NewLibrary["Home-Options"]);
-		NewLibrary["Home-Options-Corner"].SortOrder = Enum.SortOrder.LayoutOrder;
-		NewLibrary["Home-Options-Corner"].CellSize = UDim2.new(0, 75, 0, 75);
-		NewLibrary["Home-Options-Corner"].CellPadding = UDim2.new(0, 10, 0, 10);
+		NewLibrary["Home-Options-Layout"] = Instance.new("UIGridLayout", NewLibrary["Home-Options"]);
+		NewLibrary["Home-Options-Layout"].SortOrder = Enum.SortOrder.LayoutOrder;
+		NewLibrary["Home-Options-Layout"].CellSize = UDim2.new(0, 75, 0, 75);
+		NewLibrary["Home-Options-Layout"].CellPadding = UDim2.new(0, 14, 0, 14);
 	end
 
 	-- Gui.Main.ContentHolder
@@ -601,13 +601,13 @@ function Library:NewGui()
 			NewLibrary["Home-PlayerInfo-Time"].Text = Library:FormatTime()
 		end
 	end)()
-	
+
 	local function UpdatePlayerCount()
 		NewLibrary["Home-PlayerInfo-Players"].Text = #game.Players:GetChildren().." Player(s)"
 	end
 	game.Players.PlayerAdded:Connect(UpdatePlayerCount)
 	game.Players.PlayerRemoving:Connect(UpdatePlayerCount)
-	
+
 	-- TopBar Handler
 	NewLibrary["Home-Button"].MouseButton1Click:Connect(function()
 		--pcall(function()
@@ -724,7 +724,7 @@ function Library:NewGui()
 		end
 		return nil
 	end
-	
+
 	function NewLibrary:Notify(options)
 		options = Library:Validate({title = "Notification", text = nil, duration = 3}, options or {})
 		if options.text then
@@ -814,7 +814,7 @@ function Library:NewGui()
 				NewNotification[NotificationName.."-Timer-Bar"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
 				NewNotification[NotificationName.."-Timer-Bar"]["Size"] = UDim2.new(1, 0, 1, 0);
 				NewNotification[NotificationName.."-Timer-Bar"]["Name"] = [[Bar]];
-				
+
 				NewNotification[NotificationName.."-Timer-Bar-Corner"] = Instance.new("UICorner", NewNotification[NotificationName.."-Timer-Bar"]);
 			end
 			-- Handler
