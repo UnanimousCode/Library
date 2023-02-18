@@ -99,6 +99,14 @@ local ExampleTitle2 = NewLibrary:CreateInfo({
     title = "For information on all the different buttons, check the 'info' tab"
 })
 
+-- DROPDOWN
+
+local PlayerDropdown = NewLibrary:CreateDropdown({
+    target = ExampleTab2,
+    title = "Player List Dropdown"
+})
+PlayerDropdown:BindToParent(game:GetService("Players"))
+
 -- INITIALIZATION
 
 NewLibrary:Initialize()
@@ -106,5 +114,11 @@ NewLibrary:Initialize()
 -- NOTIFICATIONS
 
 coroutine.wrap(function()
-    MyLibrary:Notify({title = "Welcome!", text = "Make sure to join: discord.gg/VQ87mk9YeE", duration = 8})
+    NewLibrary:Notify({
+        title = "Welcome!",
+        text = "Make sure to join: discord.gg/VQ87mk9YeE",
+        duration = 8
+        
+    })
 end)()
+NewLibrary:Notify({title = "Note:", text = "Notify UC#8523 of any problems!", duration = 8})
