@@ -1,31 +1,58 @@
--- Created by UC#8523
--- EXAMPLES
+-- CREATED BY UC#8523
 
--- LOADING THE LIBRARY
+-- SERVICES
 
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/UnanimousCode/Unanimous-Code-Library/main/Source"))()
-local NewLibrary = Library:NewGui()
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local StarterGui = game:GetService("StarterGui")
+local TpService = game:GetService("TeleportService")
+local HttpService = game:GetService("HttpService")
+local TeleportService = game:GetService("TeleportService")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 
 -- VARIABLES
 
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/UnanimousCode/Library/main/Source"))()
 local player = game.Players.LocalPlayer
-local mouse = player:GetMouse()
 
--- EXAMPLE TAB 1
+-- FUNCTIONS
 
-local ExampleTab1 = NewLibrary:CreateTab({
-    title = "Example 1"
+local function FindPlayer(name)
+	local nametofind = string.lower(name)
+	local plr = nil
+	local prevMax = math.huge
+	if name ~= "" and name ~= nil then
+		for _, player in pairs(game.Players:GetPlayers()) do
+			local playername = string.lower(player.Name)
+			local displayname = string.lower(player.DisplayName)
+			if string.find(displayname, name) or string.find(playername, name) then
+				plr = player
+				break
+			end
+		end
+	end
+	return plr
+end
+
+-- CODE
+
+local MyLibrary = library:NewGui()
+
+-- Local Tab
+local LocalTab = MyLibrary:CreateTab({
+	title = "Local Player",
+	icon = "rbxassetid://12094157128" or nil,
+	buttoncount = 12
 })
 
--- Title
-local ExampleTitle1 = NewLibrary:CreateInfo({
-	target = ExampleTab1,
-	title = "Example 1, Local Player"
+local LocalPlayerTitle = MyLibrary:CreateInfo({
+	target = LocalTab,
+	title = "Local Player"
 })
 
 -- Walkspeed
-local WalkspeedSlider = NewLibrary:CreateSlider({
-	target = ExampleTab1,
+local WalkspeedSlider = MyLibrary:CreateSlider({
+	target = LocalTab,
 	title = "Walkspeed",
 	default = 16,
 	max = 150
@@ -36,22 +63,21 @@ end)
 WalkspeedSlider:SetValue(player.Character.Humanoid.WalkSpeed)
 
 -- Jumppower
-local JumpSlider = NewLibrary:CreateSlider({
-	target = ExampleTab1,
+local JumpSlider = MyLibrary:CreateSlider({
+	target = LocalTab,
 	title = "Jumppower",
-	default = 50,
+	default = player.Character.Humanoid.JumpPower,
 	min = 0,
-	max = 200
+	max = 200,
+	callback = function(value)
+		player.Character.Humanoid.JumpPower = value
+	end
 })
-JumpSlider:SetCallback(function(value)
-	player.Character.Humanoid.JumpPower = value
-end)
-JumpSlider:SetValue(player.Character.Humanoid.JumpPower)
 
 -- Spawnpoints
 local Spawnpoint = nil
-local SetSpawnpoint = NewLibrary:CreateButton({
-	target = ExampleTab1,
+local SetSpawnpoint = MyLibrary:CreateButton({
+	target = LocalTab,
 	title = "Set Spawnpoint"
 })
 SetSpawnpoint:SetCallback(function()
@@ -59,12 +85,12 @@ SetSpawnpoint:SetCallback(function()
 		local root = player.Character:FindFirstChild("HumanoidRootPart")
 		if root then
 			Spawnpoint = root.CFrame
-			SetSpawnpoint:SetText("Set Spawnpoint: ("..Library:Round(Spawnpoint.X)..","..Library:Round(Spawnpoint.Y)..","..Library:Round(Spawnpoint.Z)..")")
+			SetSpawnpoint:SetText("Set Spawnpoint: ("..library:Round(Spawnpoint.X)..","..library:Round(Spawnpoint.Y)..","..library:Round(Spawnpoint.Z)..")")
 		end
 	end
 end)
-local RemoveSpawnpoint = NewLibrary:CreateButton({
-	target = ExampleTab1,
+local RemoveSpawnpoint = MyLibrary:CreateButton({
+	target = LocalTab,
 	title = "Remove Spawnpoint"
 })
 RemoveSpawnpoint:SetCallback(function()
@@ -79,46 +105,113 @@ player.CharacterAdded:Connect(function(NewCharacter)
 	end
 end)
 
--- Tp Keybind
-local TpKeybind = NewLibrary:CreateKeybindButton({
-    target = ExampleTab1,
-    title = "TP Keybind",
-    callback = function()
-        player.Character.HumanoidRootPart.CFrame = CFrame.new(mouse.hit.p + Vector3.new(0,1,0))
+-- Noclip
+local Noclipping = false
+local Noclip = nil
+local NoclipToggle = MyLibrary:CreateToggle({
+    target = LocalTab,
+    title = "No-Clip",
+    callback = function(val)
+        Noclipping = val
+        if Noclipping then
+            Noclip = RunService.Stepped:Connect(function()
+                for _, child in pairs(player.Character:GetChildren()) do
+                    if child:IsA("BasePart") and child.CanCollide == true then
+                        child.CanCollide = false
+                    end
+                end
+            end)
+        else
+            Noclip:Disconnect()
+        end
     end
 })
 
--- EXAMPLE TAB 2
-
-local ExampleTab2 = NewLibrary:CreateTab({
-    title = "Example 2"
+-- TP Keybind
+local TpKeybind = MyLibrary:CreateKeybindButton({
+    target = LocalTab,
+    title = "TP Keybind",
+    callback = function()
+        if not UserInputService:GetFocusedTextBox() then
+            player.Character.HumanoidRootPart.CFrame = CFrame.new(mousepos+Vector3.new(0,1,0))
+        end
+    end
 })
 
-local ExampleTitle2 = NewLibrary:CreateInfo({
-    target = ExampleTab2,
-    title = "For information on all the different buttons, check the 'info' tab"
+-- Teleport to player
+local PlayerTp = MyLibrary:CreateButton({
+    target = LocalTab,
+    title = "Teleport to Player",
+    arguments = {"playername"},
+    callback = function(args)
+       pcall(function()
+           player.Character.HumanoidRootPart.CFrame = FindPlayer(args["playername"]).Character.HumanoidRootPart.CFrame
+       end)
+    end
 })
 
--- DROPDOWN
-
-local PlayerDropdown = NewLibrary:CreateDropdown({
-    target = ExampleTab2,
-    title = "Player List Dropdown"
+-- View player
+local ViewingPlayer = false
+local ViewPlayer = MyLibrary:CreateToggle({
+    target = LocalTab,
+    title = "View Player",
+    arguments = {"playername"},
+    callback = function(val, args)
+        ViewingPlayer = val
+        if not ViewingPlayer then
+            workspace.CurrentCamera.CameraSubject = player.Character
+        else
+            pcall(function()
+                workspace.CurrentCamera.CameraSubject = FindPlayer(args["playername"]).Character
+            end)
+        end 
+    end
 })
-PlayerDropdown:BindToParent(game:GetService("Players"))
 
--- INITIALIZATION
-
-NewLibrary:Initialize()
-
--- NOTIFICATIONS
-
-coroutine.wrap(function()
-    NewLibrary:Notify({
-        title = "Welcome!",
-        text = "Make sure to join: discord.gg/VQ87mk9YeE",
-        duration = 8
-        
-    })
-end)()
-NewLibrary:Notify({title = "Note:", text = "Notify UC#8523 of any problems!", duration = 8})
+-- Bang player
+local Banging = false
+local BangSpeed = 2
+local BangAnimation = Instance.new("Animation")
+BangAnimation.AnimationId = "rbxassetid://148840371"
+local BangTrack = nil
+local BangConnection = nil
+local BangPlayer = MyLibrary:CreateToggle({
+    target = LocalTab,
+    title = "Bang",
+    arguments = {"playername"},
+    callback = function(value,args)
+        banging = value
+        if banging then
+            BangTrack = player.Character.Humanoid:LoadAnimation(BangAnimation)
+            BangTrack:Play(0.1,1,BangSpeed)
+            local BangPlayer = FindPlayer(args["playername"])
+            if BangPlayer then
+                BangConnection = RunService.Stepped:Connect(function()
+                    pcall(function()
+                        player.Character.HumanoidRootPart.CFrame = BangPlayer.Character.HumanoidRootPart.CFrame*CFrame.new(0,0,1.1)
+                    end)
+                end)
+            end
+        else
+            BangTrack:Stop()
+            BangTrack = nil
+            if BangConnection then
+                BangConnection:Disconnect()
+                BangConnection = nil
+            end
+        end
+    end
+})
+local BangSlider = MyLibrary:CreateSlider({
+    target = LocalTab,
+    title = "Bang Speed",
+    min = 1,
+    max = 10,
+    default = BangSpeed,
+    callback = function(speed)
+       BangSpeed = speed
+       if BangTrack then
+          BangTrack:AdjustSpeed(BangSpeed) 
+       end
+    end
+})
