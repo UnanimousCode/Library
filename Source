@@ -109,8 +109,8 @@ local NumberAbbreviations = {
 	M = 7,
 	B = 10,
 	T = 13,
-	Qd = 16,
-	Qn = 19
+	Qa = 16,
+	Qi = 19
 }
 function Library:AbbreviateNumber(number)
 	local text = tostring(math.floor(number))
