@@ -332,49 +332,6 @@ function Library:NewGui()
 		NewLibrary["Settings-Info-Name"].BackgroundTransparency = 1
 		NewLibrary["Settings-Info-Name"].Position = UDim2.new(0, 35, 0.5, 1)
 
-		NewLibrary["Info-Button"] = Instance.new("TextButton", NewLibrary["TopBar"])
-		NewLibrary["Info-Button"].TextSize = 14
-		NewLibrary["Info-Button"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		NewLibrary["Info-Button"].TextColor3 = Color3.fromRGB(0, 0, 0)
-		NewLibrary["Info-Button"].AnchorPoint = Vector2.new(0.5, 0.5)
-		NewLibrary["Info-Button"].Size = UDim2.new(0, 100, 0, 33)
-		NewLibrary["Info-Button"].Name = "Info"
-		NewLibrary["Info-Button"].Text = ""
-		NewLibrary["Info-Button"].Font = Enum.Font.SourceSans
-		NewLibrary["Info-Button"].BackgroundTransparency = 1
-
-		NewLibrary["Info-Info"] = Instance.new("Frame", NewLibrary["Info-Button"])
-		NewLibrary["Info-Info"].BackgroundColor3 = Color3.fromRGB(43, 43, 43)
-		NewLibrary["Info-Info"].BackgroundTransparency = 1
-		NewLibrary["Info-Info"].Size = UDim2.new(0, 100, 0, 33)
-		NewLibrary["Info-Info"].Name = "Info"
-
-		NewLibrary["Info-Info-Corner"] = Instance.new("UICorner", NewLibrary["Info-Info"])
-		NewLibrary["Info-Info-Corner"].CornerRadius = UDim.new(0, 6)
-
-		NewLibrary["Info-Info-Icon"] = Instance.new("ImageLabel", NewLibrary["Info-Info"])
-		NewLibrary["Info-Info-Icon"].BackgroundColor3 = Color3.fromRGB(129, 129, 129)
-		NewLibrary["Info-Info-Icon"].ImageColor3 = Color3.fromRGB(129, 129, 129)
-		NewLibrary["Info-Info-Icon"].AnchorPoint = Vector2.new(0, 0.5)
-		NewLibrary["Info-Info-Icon"].Image = "rbxassetid://12083920357"
-		NewLibrary["Info-Info-Icon"].Size = UDim2.new(0, 25, 0, 25)
-		NewLibrary["Info-Info-Icon"].Name = "Icon"
-		NewLibrary["Info-Info-Icon"].BackgroundTransparency = 1
-		NewLibrary["Info-Info-Icon"].Position = UDim2.new(0, 4, 0.5, 0)
-
-		NewLibrary["Info-Info-Name"] = Instance.new("TextLabel", NewLibrary["Info-Info"])
-		NewLibrary["Info-Info-Name"].TextXAlignment = Enum.TextXAlignment.Left
-		NewLibrary["Info-Info-Name"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		NewLibrary["Info-Info-Name"].TextSize = 15
-		NewLibrary["Info-Info-Name"].TextColor3 = Color3.fromRGB(129, 129, 129)
-		NewLibrary["Info-Info-Name"].AnchorPoint = Vector2.new(0, 0.5)
-		NewLibrary["Info-Info-Name"].Size = UDim2.new(0, 50, 0.5, 0)
-		NewLibrary["Info-Info-Name"].Text = "Info"
-		NewLibrary["Info-Info-Name"].Name = "name"
-		NewLibrary["Info-Info-Name"].Font = Enum.Font.Gotham
-		NewLibrary["Info-Info-Name"].BackgroundTransparency = 1
-		NewLibrary["Info-Info-Name"].Position = UDim2.new(0, 35, 0.5, 1)
-
 		NewLibrary["Exit-Button"] = Instance.new("TextButton", NewLibrary["Main"])
 		NewLibrary["Exit-Button"].TextSize = 24
 		NewLibrary["Exit-Button"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -566,27 +523,6 @@ function Library:NewGui()
 		NewLibrary["Settings-Layout"].SortOrder = Enum.SortOrder.LayoutOrder;
 	end
 
-	-- Gui.Main.ContentHolder.Examples
-	do
-		NewLibrary["Info-Frame"] = Instance.new("ScrollingFrame", NewLibrary["ContentHolder"]);
-		NewLibrary["Info-Frame"].Active = true;
-		NewLibrary["Info-Frame"].ZIndex = 3;
-		NewLibrary["Info-Frame"].BorderSizePixel = 0;
-		NewLibrary["Info-Frame"].ScrollBarImageTransparency = 1;
-		NewLibrary["Info-Frame"].BackgroundColor3 = Color3.fromRGB(255, 255, 255);
-		NewLibrary["Info-Frame"].BackgroundTransparency = 1;
-		NewLibrary["Info-Frame"].Size = UDim2.new(0.965, 0, 0.965, 0);
-		NewLibrary["Info-Frame"].ScrollBarImageColor3 = Color3.fromRGB(33, 33, 33);
-		NewLibrary["Info-Frame"].ScrollBarThickness = 0;
-		NewLibrary["Info-Frame"].Position = UDim2.new(0.017273858189582825, 0, 0.03454773873090744, 0);
-		NewLibrary["Info-Frame"].Name = "Info";
-		NewLibrary["Info-Frame"].CanvasSize = UDim2.new(0,0,0,600)
-
-		NewLibrary["Info-Layout"] = Instance.new("UIListLayout", NewLibrary["Info-Frame"]);
-		NewLibrary["Info-Layout"].Padding = UDim.new(0, 8);
-		NewLibrary["Info-Layout"].SortOrder = Enum.SortOrder.LayoutOrder;
-	end
-
 	-- GUI HANDLING
 	-- PlayerInfo Handler
 	NewLibrary["Home-PlayerInfo-Icon"].Image = Library:GetPlayerIcon(MyUserId)
@@ -617,11 +553,6 @@ function Library:NewGui()
 	NewLibrary["Settings-Button"].MouseButton1Click:Connect(function()
 		--pcall(function()
 		ChangeDisplaying("Settings")
-		--end)
-	end)
-	NewLibrary["Info-Button"].MouseButton1Click:Connect(function()
-		--pcall(function()
-		ChangeDisplaying("Info")
 		--end)
 	end)
 
@@ -1905,75 +1836,6 @@ function Library:NewGui()
 			MyPlayer.Character.Humanoid.Health = 0
 		end)
 	end)
-
-	-- Examples
-
-	local ExampleInfo = NewLibrary:CreateInfo({
-		target = "Info",
-		title = "Info Bar"
-	})
-
-	local ExampleButton = NewLibrary:CreateButton({
-		target = "Info",
-		title = "Normal Button",
-	})
-
-	local ExampleButton2 = NewLibrary:CreateButton({
-		target = "Info",
-		title = "Button with arguments",
-		arguments = {"Argument 1", "Argument 2"}
-	})
-	ExampleButton2:SetCallback(function(args)
-		print(args["Argument 1"], args["Argument 2"])
-	end)
-
-	local ExampleToggle = NewLibrary:CreateToggle({
-		target = "Info",
-		title = "Toggle"
-	})
-
-	local ExampleToggle2 = NewLibrary:CreateToggle({
-		target = "Info",
-		title = "Toggle with arguments",
-		arguments = {"Argument 1"},
-		callback = function(toggled, args)
-			if toggled == true then
-				print(args["Argument 1"], args["Argument 2"])
-			end
-		end,
-	})
-	local ToggleArg = ExampleToggle2:AddArgument("Argument 2")
-
-	local ExampleSlider = NewLibrary:CreateSlider({
-		target = "Info",
-		title = "Slider",
-		default = 16,
-		min = 0,
-		max = 100
-	})
-
-	local ExampleKeybind = NewLibrary:CreateKeybindButton({
-		target = "Info",
-		title = "Keybind"
-	})
-
-	local ExampleDropdown = nil
-	local DropdownPrint = NewLibrary:CreateButton({
-		target = "Info",
-		title = "Print Dropdown Options",
-		callback = function()
-			local args = ExampleDropdown:GetOptions()
-			for i,v in pairs(args) do
-				print(i,v)
-			end
-		end,
-	})
-	ExampleDropdown = NewLibrary:CreateDropdown({
-		target = "Info",
-		title = "Dropdown",
-		options = {"Option 1"}
-	})
-	ExampleDropdown:AddOption("Option 2")
 
 	-- RETURNING
 	function NewLibrary:Initialize()
