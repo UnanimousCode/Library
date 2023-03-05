@@ -937,6 +937,7 @@ function Library:NewGui()
 								NewArgument[ArgumentName].Text = [[]];
 								NewArgument[ArgumentName].Font = Enum.Font.SourceSansBold;
 								NewArgument[ArgumentName].Name = [[Argument]];
+								NewArgument[ArgumentName].TextWrapped = true;
 
 								NewArgument[ArgumentName.."-Corner"] = Instance.new("UICorner", NewArgument[ArgumentName]);
 								NewArgument[ArgumentName.."-Corner"].CornerRadius = UDim.new(0, 5);
@@ -1129,6 +1130,7 @@ function Library:NewGui()
 							NewArgument[ArgumentName].Text = [[]];
 							NewArgument[ArgumentName].Font = Enum.Font.SourceSansBold;
 							NewArgument[ArgumentName].Name = [[Argument]];
+							NewArgument[ArgumentName].TextWrapped = true;
 
 							NewArgument[ArgumentName.."-Corner"] = Instance.new("UICorner", NewArgument[ArgumentName]);
 							NewArgument[ArgumentName.."-Corner"].CornerRadius = UDim.new(0, 5);
