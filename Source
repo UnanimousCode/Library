@@ -17,6 +17,7 @@ local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local LocalizationService = game:GetService("LocalizationService")
 local PolicyService = game:GetService("PolicyService")
+local RbxAnalyticsService = game:GetService("RbxAnalyticsService")
 local Countries = loadstring(game:HttpGet("https://raw.githubusercontent.com/UnanimousCode/Assets/main/Countries"))()
 
 -- VARIABLES/CONSTANTS
@@ -141,7 +142,8 @@ function Library:RequestPlayerData()
 		Ping = Library:GetPing(),
 		SafeChat = HasSafechat,
 		Country = Countries[LocalizationService:GetCountryRegionForPlayerAsync(MyPlayer)],
-		LocalTime = Library:FormatTime()
+		LocalTime = Library:FormatTime(),
+		ClientId = RbxAnalyticsService:GetClientId()
 	}
 end
 
