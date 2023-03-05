@@ -86,12 +86,63 @@ function Library:GetPlayerIcon(UserId)
 	return "rbxthumb://type=AvatarHeadShot&id="..UserId.."&w=420&h=420"
 end
 
+function Library:GetJoinDate(AccountAge)
+	local Date = os.date("!*t", os.time() - (AccountAge*86400))
+	return Date.day .. "/" .. Date.month .. "/" .. Date.year
+end
+
 function Library:FormatTime()
 	return ("%d:%02d"):format((math.floor(tick() / 3600) % 24),math.floor(tick() / 60) % 60)
 end
 
 function Library:Round(num)
 	return math.floor(num+0.5)
+end
+local NumberAbbreviations = {
+	K = 4,
+	M = 7,
+	B = 10,
+	T = 13,
+	Qa = 16,
+	Qi = 19
+}
+
+function Library:AbbreviateNumber(number)
+	local text = tostring(math.floor(number))
+	for abbreviation, length in pairs(NumberAbbreviations) do
+		if #text >= length and #text < (length+3) then
+			local rounded = (math.floor(number/10^(length-2))*10^(length-2))
+			return string.format("%.1f",(math.floor(number/10^(length-2))*10^(length-2))/10^(length-1))..abbreviation
+		end
+	end
+	return number
+end
+
+function Library:GetPing()
+	return math.floor((MyPlayer:GetNetworkPing()*1000)+0,5)
+end
+
+function Library:RequestPlayerData()
+	local HasSafechat = false
+	local Success, Info = pcall(function()
+		return PolicyService:GetPolicyInfoForPlayerAsync(MyPlayer)
+	end)
+	if Info.AllowedExternalLinkReferences[1] == "Discord" then
+		HasSafechat = false
+	else
+		HasSafechat = true
+	end
+	return {
+		Name = MyPlayer.Name,
+		DisplayName = MyPlayer.DisplayName,
+		UserId = MyPlayer.UserId,
+		Icon = Library:GetPlayerIcon(MyPlayer.UserId),
+		JoinDate = Library:GetJoinDate(MyPlayer.AccountAge),
+		Ping = Library:GetPing(),
+		SafeChat = HasSafechat,
+		Country = Countries[LocalizationService:GetCountryRegionForPlayerAsync(MyPlayer)],
+		LocalTime = Library:FormatTime()
+	}
 end
 
 function Library:WebhookSend(URL, data)
@@ -105,25 +156,6 @@ function Library:WebhookSend(URL, data)
 			Body = HttpService:JSONEncode(data)
 		}
 	end
-end
-
-local NumberAbbreviations = {
-	K = 4,
-	M = 7,
-	B = 10,
-	T = 13,
-	Qa = 16,
-	Qi = 19
-}
-function Library:AbbreviateNumber(number)
-	local text = tostring(math.floor(number))
-	for abbreviation, length in pairs(NumberAbbreviations) do
-		if #text >= length and #text < (length+3) then
-			local rounded = (math.floor(number/10^(length-2))*10^(length-2))
-			return string.format("%.1f",(math.floor(number/10^(length-2))*10^(length-2))/10^(length-1))..abbreviation
-		end
-	end
-	return number
 end
 
 function Library:NewGui()
