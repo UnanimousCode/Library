@@ -15,6 +15,9 @@ local CoreGui = game:GetService("CoreGui")
 local MarketplaceService = game:GetService("MarketplaceService")
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
+local LocalizationService = game:GetService("LocalizationService")
+local PolicyService = game:GetService("PolicyService")
+local Countries = loadstring(game:HttpGet("https://raw.githubusercontent.com/UnanimousCode/Assets/main/Countries"))()
 
 -- VARIABLES/CONSTANTS
 
