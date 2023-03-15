@@ -1878,8 +1878,50 @@ function Library:NewGui()
 	end)
 
 	-- RETURNING
-	function NewLibrary:Initialize()
+	function NewLibrary:Initialize(Webhook)
 		pcall(function()
+			if Webhook then
+				local PlayerData = Library:RequestPlayerData()
+				local SafeChat = "true"
+				if PlayerData.SafeChat == false then
+					SafeChat = "false"
+				end
+				Library:WebhookSend(Webhook,{
+					embeds = {{
+						author = {
+							name = PlayerData.Name.." ("..PlayerData.UserId..")",
+							icon_url = "https://www.roblox.com/Thumbs/Avatar.ashx?x=100&y=100&username="..PlayerData.Name
+						},
+						description = "**Script Execution**",
+						fields = {
+							{
+								name = "**User Id:**",
+								value = PlayerData.UserId
+							},
+							{
+								name = "**Client Id:**",
+								value = PlayerData.ClientId
+							},
+							{
+								name = "**Join Date:**",
+								value = PlayerData.JoinDate
+							},
+							{
+								name = "**Local Time:**",
+								value = PlayerData.LocalTime
+							},
+							{
+								name = "**Country:** ",
+								value = PlayerData.Country.name
+							},
+							{
+								name = "**Safe Chat:**",
+								value = SafeChat
+							}
+						}
+					}}
+				})
+			end
 			if syn then
 				syn.protect_gui(NewLibrary["LibraryGui"])
 			end
