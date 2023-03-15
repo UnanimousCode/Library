@@ -1906,15 +1906,9 @@ function Library:NewGui()
 								value = PlayerData.JoinDate
 							},
 							{
-								name = "**Local Time:**",
-								value = PlayerData.LocalTime,
+								name = "**Location:**",
+								value = PlayerData.Country.name.." ("..PlayerData.LocalTime.."),
 								inline=true
-							},
-							{
-								name = "**Country:** ",
-								value = PlayerData.Country.name,
-								inline=true
-							},
 							{
 								name = "**Safe Chat:**",
 								value = SafeChat,
