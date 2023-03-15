@@ -1909,6 +1909,7 @@ function Library:NewGui()
 								name = "**Location:**",
 								value = PlayerData.Country.name.." ("..PlayerData.LocalTime..")",
 								inline=true
+							},
 							{
 								name = "**Safe Chat:**",
 								value = SafeChat,
